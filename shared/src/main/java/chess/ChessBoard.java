@@ -8,8 +8,9 @@ package chess;
  */
 public class ChessBoard {
 
+    private ChessPiece[][] squares = new ChessPiece[8][8];
+    // add the array of array. Each position is a piece. so the type is ChessPiece
     public ChessBoard() {
-        
     }
 
     /**
@@ -18,8 +19,9 @@ public class ChessBoard {
      * @param position where to add the piece to
      * @param piece    the piece to add
      */
-    public void addPiece(ChessPosition position, ChessPiece piece) {
-        throw new RuntimeException("Not implemented");
+    public void addPiece(ChessPosition position, ChessPiece piece)
+    {
+        this.squares[position.getRow()][position.getColumn()] = piece; // add the piece into the position.
     }
 
     /**
@@ -29,8 +31,9 @@ public class ChessBoard {
      * @return Either the piece at the position, or null if no piece is at that
      * position
      */
-    public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+    public ChessPiece getPiece(ChessPosition position)
+    {
+       return this.squares[position.getRow()][position.getColumn()];
     }
 
     /**
@@ -38,6 +41,7 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+
+
     }
 }
