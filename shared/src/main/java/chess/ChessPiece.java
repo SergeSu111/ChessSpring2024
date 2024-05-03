@@ -16,6 +16,7 @@ public class ChessPiece {
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
+        this.type = type;
     }
 
     /**
@@ -52,8 +53,18 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        BishopMovesCalculator bishopMoves = new BishopMovesCalculator();
-        bishopMoves.pieceMoves(board, myPosition);
-        return new ArrayList<>();
+        ArrayList<ChessMove> thatPieceMoves = new ArrayList<>();
+        // get the piece
+        ChessPiece currentPiece = board.getPiece(myPosition);
+        switch (currentPiece.type)
+        {
+            case BISHOP:
+                BishopMovesCalculator bishopMoves = new BishopMovesCalculator();
+                thatPieceMoves.addAll(bishopMoves.pieceMoves(board, myPosition)); // addAll means add all elements in a collection into another one.
+                break;
+
+        }
+     ;
+        return thatPieceMoves;
     }
 }
