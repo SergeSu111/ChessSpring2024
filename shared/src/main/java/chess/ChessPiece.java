@@ -52,6 +52,8 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        BishopMovesCalculator bishopMoves = new BishopMovesCalculator();
+        bishopMoves.pieceMoves(board, myPosition);
         return new ArrayList<>();
     }
 }

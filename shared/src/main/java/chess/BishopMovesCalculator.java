@@ -13,7 +13,7 @@ public class BishopMovesCalculator implements PieceMovesCalculator
         return diagonal(board, thePiece, myPosition);
     }
 
-    public Collection<ChessMove> diagonal(ChessBoard board, ChessPiece thePiece, ChessPosition startPosition)
+    public static Collection<ChessMove>  diagonal(ChessBoard board, ChessPiece thePiece, ChessPosition startPosition)
     {
         // get the start row and column
         int startColumn = startPosition.getColumn();
@@ -57,15 +57,49 @@ public class BishopMovesCalculator implements PieceMovesCalculator
         }
 
         // down right
-        for (int nextRow = startRow - 1, )
+        for (int nextRow = startRow - 1, nextColumn = startColumn + 1; nextRow >= 1 && nextColumn <= 8; nextRow--, nextColumn++)
+        {
+            ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
+            ChessPiece nextPiece = board.getPiece(nextPosition);
+            if (nextPiece.getPieceType() == null)
+            {
+                ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
+                allBishopMoves.add(smallMove);
+            }
+            else {
+                if (nextPiece.getTeamColor() != thePiece.getTeamColor())
+                {
+                    ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
+                    allBishopMoves.add(smallMove);
+                }
+                break;
+            }
+
+        }
 
         // down left
+        for (int nextRow = startRow - 1, nextColumn = startColumn - 1; nextRow >= 1 && nextColumn >= 1; nextRow--, nextColumn--)
+        {
+            ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
+            ChessPiece nextPiece = board.getPiece(nextPosition);
+            if (nextPiece.getTeamColor() == null)
+            {
+                ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
+                allBishopMoves.add(smallMove);
+            }
+            else {
+                if (nextPiece.getTeamColor() != thePiece.getTeamColor())
+                {
+                    ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
+                    allBishopMoves.add(smallMove);
+                }
+                break;
+            }
+        }
         return allBishopMoves;
     }
 }
 
 
 
-
-        // down left
 
