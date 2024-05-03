@@ -49,6 +49,11 @@ public class ChessGame {
         throw new RuntimeException("Not implemented");
     }
 
+    @Override
+    public String toString() {
+        return "ChessGame{}";
+    }
+
     /**
      * Makes a move in a chess game
      *

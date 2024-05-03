@@ -13,6 +13,11 @@ public class BishopMovesCalculator implements PieceMovesCalculator
         return diagonal(board, thePiece, myPosition);
     }
 
+    @Override
+    public String toString() {
+        return "BishopMovesCalculator{}";
+    }
+
     public static Collection<ChessMove>  diagonal(ChessBoard board, ChessPiece thePiece, ChessPosition startPosition)
     {
         // get the start row and column
@@ -21,10 +26,10 @@ public class BishopMovesCalculator implements PieceMovesCalculator
 
         ArrayList<ChessMove> allBishopMoves = new ArrayList<>();
         // up right
-        for (int nextRow = startRow + 1, nextColumn = startColumn + 1; nextRow <= 8 && nextColumn <= 8; nextRow++, nextRow++) {
+        for (int nextRow = startRow + 1, nextColumn = startColumn + 1; nextRow <= 8 && nextColumn <= 8; nextRow++, nextColumn++) {
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn); // after moving once.
             ChessPiece nextPiece = board.getPiece(nextPosition); // get the current piece based on the moving position
-            if (nextPiece.getPieceType() == null) {
+            if (nextPiece == null) {
                 ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
                 allBishopMoves.add(smallMove); // put into big arrayList
             } else {
@@ -40,10 +45,10 @@ public class BishopMovesCalculator implements PieceMovesCalculator
         }
 
         // up left
-        for (int nextRow = startRow + 1, nextColumn = startRow - 1; nextRow <= 8 && nextColumn >= 1; nextRow++, nextColumn--) {
+        for (int nextRow = startRow + 1, nextColumn = startColumn - 1; nextRow <= 8 && nextColumn >= 1; nextRow++, nextColumn--) {
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
             ChessPiece nextPiece = board.getPiece(nextPosition); // get the nextPiece
-            if (nextPiece.getPieceType() == null) {
+            if (nextPiece == null) {
                 ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
                 allBishopMoves.add(smallMove);
             } else {
@@ -61,7 +66,7 @@ public class BishopMovesCalculator implements PieceMovesCalculator
         {
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
             ChessPiece nextPiece = board.getPiece(nextPosition);
-            if (nextPiece.getPieceType() == null)
+            if (nextPiece == null)
             {
                 ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
                 allBishopMoves.add(smallMove);
@@ -82,7 +87,7 @@ public class BishopMovesCalculator implements PieceMovesCalculator
         {
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
             ChessPiece nextPiece = board.getPiece(nextPosition);
-            if (nextPiece.getTeamColor() == null)
+            if (nextPiece == null)
             {
                 ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
                 allBishopMoves.add(smallMove);
