@@ -34,6 +34,7 @@ public class RookMovesCalculator implements PieceMovesCalculator
                     ChessMove smallMove = new ChessMove(startPosition, nextPosition, null); // if Color is different, enemy's piece get it.
                     rookMoves.add(smallMove);
                 }
+                break;
             }
         }
         // down
@@ -53,6 +54,7 @@ public class RookMovesCalculator implements PieceMovesCalculator
                     ChessMove smallMove = new ChessMove(startPosition, nextPosition, null); // if Color is different, enemy's piece get it.
                     rookMoves.add(smallMove);
                 }
+                break;
             }
         }
         // right
@@ -64,6 +66,7 @@ public class RookMovesCalculator implements PieceMovesCalculator
             {
                 ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
                 rookMoves.add(smallMove);
+
             }
             else
             {
@@ -72,6 +75,7 @@ public class RookMovesCalculator implements PieceMovesCalculator
                     ChessMove smallMove = new ChessMove(startPosition, nextPosition, null); // if Color is different, enemy's piece get it.
                     rookMoves.add(smallMove);
                 }
+                break;
             }
         }
         // left
@@ -91,6 +95,7 @@ public class RookMovesCalculator implements PieceMovesCalculator
                     ChessMove smallMove = new ChessMove(startPosition, nextPosition, null); // if Color is different, enemy's piece get it.
                     rookMoves.add(smallMove);
                 }
+                break;
             }
         }
         return rookMoves;
