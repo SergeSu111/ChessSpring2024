@@ -84,9 +84,15 @@ public class ChessPiece {
                 BishopMovesCalculator bishopMoves = new BishopMovesCalculator();
                 thatPieceMoves.addAll(bishopMoves.pieceMoves(board, myPosition)); // addAll means add all elements in a collection into another one.
                 break;
+            case ROOK:
+                RookMovesCalculator rookMoves = new RookMovesCalculator();
+                thatPieceMoves.addAll(rookMoves.pieceMoves(board, myPosition));
+            case KING, QUEEN:
+
+
+
 
         }
-     ;
         return thatPieceMoves;
     }
 }
