@@ -36,6 +36,27 @@ public class PawnMovesCalculator implements PieceMovesCalculator
         setUpRow = 7;
         nextRow = startRow - 1;
 
+        // if it is in bound for nextRow
+        if (rowInBound(nextRow))
+        {
+            ChessPiece nextPiece = board.getPiece(new ChessPosition(nextRow, startColumn)); // get the nextPiece
+            if (nextPiece == null) // if nextPiece is null
+            {
+                empty = true; // means no pieces in front of me
+                if (nextRow == 1 || nextRow == 8)  // means need to promote
+                {
+                    ChessMove smallMove1 = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.ROOK);
+                    ChessMove smallMove2 = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.BISHOP);
+                    ChessMove smallMove3 = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.KNIGHT);
+                    ChessMove smallMove4 = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.QUEEN);
+                }
+                // else just regular moving without promotion
+                ChessMove smallMove = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), null);
+            }
+        }
+
+        // if
+
 
 
     }
