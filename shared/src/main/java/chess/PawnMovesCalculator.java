@@ -86,9 +86,59 @@ public class PawnMovesCalculator implements PieceMovesCalculator
             }
         }
 
+        // right
+        int nextColumn = startColumn + 1;
+        ChessPosition nextPositionRight = new ChessPosition(nextRow, nextColumn); // 右斜方的位置
+        if (KnightMovesCalculator.isInBound(nextPositionRight)) // if the nextPosition is in bound
+        {
 
+            ChessPiece nextPiece = board.getPiece(nextPositionRight);
+            if (nextPiece != null && nextPiece.getTeamColor() != thePiece.getTeamColor())  // I can eat
+            {
+                if (nextPositionRight.getRow() == 1 || nextPositionRight.getRow() == 8) // needs promote
+                {
+                    ChessMove smallMove1 = new ChessMove(startPosition, nextPositionRight, ChessPiece.PieceType.ROOK);
+                    pawnMoves.add(smallMove1);
+                    ChessMove smallMove2 = new ChessMove(startPosition, nextPositionRight, ChessPiece.PieceType.QUEEN);
+                    pawnMoves.add(smallMove2);
+                    ChessMove smallMove3 = new ChessMove(startPosition, nextPositionRight, ChessPiece.PieceType.KNIGHT);
+                    pawnMoves.add(smallMove3);
+                    ChessMove smallMove4 = new ChessMove(startPosition, nextPositionRight, ChessPiece.PieceType.BISHOP);
+                    pawnMoves.add(smallMove4);
+                }
+                ChessMove smallMove = new ChessMove(startPosition, nextPositionRight, null); // else not in 1 or 8 line
+                pawnMoves.add(smallMove);
 
+            }
+        }
 
+        // left
+        nextColumn -= 2; // because we just got the right. we want to turned it left. -2
+        ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn); // 右斜方的位置
+        if (KnightMovesCalculator.isInBound(nextPosition)) // if the nextPosition is in bound
+        {
+
+            ChessPiece nextPieceLeft = board.getPiece(nextPosition);
+            if (nextPieceLeft != null && nextPieceLeft.getTeamColor() != thePiece.getTeamColor())  // I can eat
+            {
+                if (nextPosition.getRow() == 1 || nextPosition.getRow() == 8) // needs promote
+                {
+                    ChessMove smallMove1 = new ChessMove(startPosition, nextPosition, ChessPiece.PieceType.ROOK);
+                    pawnMoves.add(smallMove1);
+                    ChessMove smallMove2 = new ChessMove(startPosition, nextPosition, ChessPiece.PieceType.QUEEN);
+                    pawnMoves.add(smallMove2);
+                    ChessMove smallMove3 = new ChessMove(startPosition, nextPosition, ChessPiece.PieceType.KNIGHT);
+                    pawnMoves.add(smallMove3);
+                    ChessMove smallMove4 = new ChessMove(startPosition, nextPosition, ChessPiece.PieceType.BISHOP);
+                    pawnMoves.add(smallMove4);
+                }
+                ChessMove smallMove = new ChessMove(startPosition, nextPosition, null); // else not in 1 or 8 line
+                pawnMoves.add(smallMove);
+
+            }
+        }
+
+        return pawnMoves;
 
     }
 
