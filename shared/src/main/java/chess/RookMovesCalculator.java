@@ -36,6 +36,10 @@ public class RookMovesCalculator implements PieceMovesCalculator
                 }
                 break;
             }
+            if(thePiece.getPieceType() == ChessPiece.PieceType.KING)
+            {
+                break; // because King can only go one step
+            }
         }
         // down
         for (int nextRow = startRow - 1; nextRow >= 1; nextRow--)
@@ -55,6 +59,10 @@ public class RookMovesCalculator implements PieceMovesCalculator
                     rookMoves.add(smallMove);
                 }
                 break;
+            }
+            if(thePiece.getPieceType() == ChessPiece.PieceType.KING)
+            {
+                break; // because King can only go one step
             }
         }
         // right
@@ -77,6 +85,10 @@ public class RookMovesCalculator implements PieceMovesCalculator
                 }
                 break;
             }
+            if(thePiece.getPieceType() == ChessPiece.PieceType.KING)
+            {
+                break; // because King can only go one step
+            }
         }
         // left
         for (int nextColumn = startColumn - 1; nextColumn >= 1; nextColumn--)
@@ -96,6 +108,10 @@ public class RookMovesCalculator implements PieceMovesCalculator
                     rookMoves.add(smallMove);
                 }
                 break;
+            }
+            if(thePiece.getPieceType() == ChessPiece.PieceType.KING)
+            {
+                break; // because King can only go one step
             }
         }
         return rookMoves;
