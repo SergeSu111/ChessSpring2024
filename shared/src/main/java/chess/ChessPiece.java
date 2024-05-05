@@ -96,6 +96,9 @@ public class ChessPiece {
             case KNIGHT:
                 KnightMovesCalculator knightMoves = new KnightMovesCalculator();
                 thatPieceMoves.addAll(knightMoves.pieceMoves(board, myPosition));
+            case PAWN:
+                PawnMovesCalculator pawnMoves = new PawnMovesCalculator();
+                thatPieceMoves.addAll();
 
 
 
