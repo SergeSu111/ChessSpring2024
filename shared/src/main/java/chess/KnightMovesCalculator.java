@@ -195,7 +195,7 @@ public class KnightMovesCalculator implements PieceMovesCalculator
 
     }
 
-    boolean isInBound(ChessPosition currentPosition)
+    public static boolean isInBound(ChessPosition currentPosition)
     {
         return currentPosition.getColumn() >= 1 && currentPosition.getColumn() <= 8 && currentPosition.getRow() >= 1 && currentPosition.getRow() <= 8;
     }
