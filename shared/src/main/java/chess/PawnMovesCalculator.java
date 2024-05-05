@@ -12,6 +12,11 @@ public class PawnMovesCalculator implements PieceMovesCalculator
         return pawnMoves(board, thePiece, myPosition);
     }
 
+    @Override
+    public String toString() {
+        return "PawnMovesCalculator{}";
+    }
+
     public Collection<ChessMove> pawnMoves(ChessBoard board, ChessPiece thePiece, ChessPosition startPosition)
     {
         ArrayList<ChessMove> pawnMoves = new ArrayList<>();
@@ -83,8 +88,10 @@ public class PawnMovesCalculator implements PieceMovesCalculator
 
                 if (nextNextPiece == null && nextPiece == null)
                 {
-                    ChessMove smallMove = new ChessMove(startPosition, nextNextPosition, null);
-                    pawnMoves.add(smallMove);
+                    ChessMove smallMove1 = new ChessMove(startPosition, nextNextPosition, null); // for step 2
+                    ChessMove smallMove2 = new ChessMove(startPosition, nextPosition, null); // for step1
+                    pawnMoves.add(smallMove1);
+                    pawnMoves.add(smallMove2);
                 }
                 if (nextPiece == null && nextNextPiece != null)  // if nextPiece is null but nextNext is not . I can go 1 step even if I am in the setup Line
                 {
@@ -95,7 +102,7 @@ public class PawnMovesCalculator implements PieceMovesCalculator
             }
             else
             {
-                int nextNextRow = nextRow + 1;  // just in case you have to make sure the nextRow has not same color pieces
+                int nextNextRow = nextRow - 1;  // just in case you have to make sure the nextRow has not same color pieces
                 ChessPosition nextNextPosition = new ChessPosition(nextNextRow, startColumn);
                 ChessPiece nextNextPiece = board.getPiece(nextNextPosition);
 
@@ -105,8 +112,10 @@ public class PawnMovesCalculator implements PieceMovesCalculator
 
                 if (nextNextPiece == null && nextPiece == null)
                 {
-                    ChessMove smallMove = new ChessMove(startPosition, nextNextPosition, null);
-                    pawnMoves.add(smallMove);
+                    ChessMove smallMove1 = new ChessMove(startPosition, nextNextPosition, null);
+                    ChessMove smallMove2 = new ChessMove(startPosition, nextPosition, null);
+                    pawnMoves.add(smallMove1);
+                    pawnMoves.add(smallMove2);
                 }
                 if (nextPiece == null && nextNextPiece != null)  // if nextPiece is null but nextNext is not . I can go 1 step even if I am in the setup Line
                 {
