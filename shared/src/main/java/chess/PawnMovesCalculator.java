@@ -73,24 +73,49 @@ public class PawnMovesCalculator implements PieceMovesCalculator
             // we can go ahead 2
             if (thePiece.getTeamColor() == ChessGame.TeamColor.WHITE)
             {
-                nextRow += 1;
+                int nextNextRow = nextRow + 1;  // just in case you have to make sure the nextRow has not same color pieces
+                ChessPosition nextNextPosition = new ChessPosition(nextNextRow, startColumn);
+                ChessPiece nextNextPiece = board.getPiece(nextNextPosition);
+
+                // also has to test if the nextPiece is the same color
                 ChessPosition nextPosition = new ChessPosition(nextRow, startColumn);
                 ChessPiece nextPiece = board.getPiece(nextPosition);
-                if (nextPiece == null)
+
+                if (nextNextPiece == null && nextPiece == null)
+                {
+                    ChessMove smallMove = new ChessMove(startPosition, nextNextPosition, null);
+                    pawnMoves.add(smallMove);
+                }
+                if (nextPiece == null && nextNextPiece != null)  // if nextPiece is null but nextNext is not . I can go 1 step even if I am in the setup Line
                 {
                     ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
                     pawnMoves.add(smallMove);
                 }
 
             }
-            nextRow -= 1; // black -= 1 based on nextRow
-            ChessPosition nextPosition = new ChessPosition(nextRow, startColumn);
-            ChessPiece nextPiece = board.getPiece(nextPosition);
-            if (nextPiece == null)
+            else
             {
-                ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
-                pawnMoves.add(smallMove);
+                int nextNextRow = nextRow + 1;  // just in case you have to make sure the nextRow has not same color pieces
+                ChessPosition nextNextPosition = new ChessPosition(nextNextRow, startColumn);
+                ChessPiece nextNextPiece = board.getPiece(nextNextPosition);
+
+                // also has to test if the nextPiece is the same color
+                ChessPosition nextPosition = new ChessPosition(nextRow, startColumn);
+                ChessPiece nextPiece = board.getPiece(nextPosition);
+
+                if (nextNextPiece == null && nextPiece == null)
+                {
+                    ChessMove smallMove = new ChessMove(startPosition, nextNextPosition, null);
+                    pawnMoves.add(smallMove);
+                }
+                if (nextPiece == null && nextNextPiece != null)  // if nextPiece is null but nextNext is not . I can go 1 step even if I am in the setup Line
+                {
+                    ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
+                    pawnMoves.add(smallMove);
+                }
+
             }
+
         }
 
         // right
