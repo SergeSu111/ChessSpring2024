@@ -94,7 +94,7 @@ public class ChessPiece {
                 thatPieceMoves.addAll(kingMoves.pieceMoves(board, myPosition));
                 break;
             case KNIGHT:
-                KingMovesCalculator knightMoves = new KingMovesCalculator();
+                KnightMovesCalculator knightMoves = new KnightMovesCalculator();
                 thatPieceMoves.addAll(knightMoves.pieceMoves(board, myPosition));
 
 
