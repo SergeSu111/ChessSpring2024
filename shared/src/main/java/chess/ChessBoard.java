@@ -14,7 +14,7 @@ public class ChessBoard {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChessBoard that = (ChessBoard) o;
-        return Arrays.equals(squares, that.squares);
+        return Arrays.deepEquals(squares, that.squares);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class ChessBoard {
     public String toString() {
         return "ChessBoard{" +
                 "squares=" + Arrays.toString(squares) +
-                '}';
+                "\n}";
     }
 
     private ChessPiece[][] squares = new ChessPiece[8][8];
@@ -54,19 +54,30 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position)
     {
-       return this.squares[position.getRow() -1][position.getColumn() -1];
+        if (this.squares[position.getRow()-1][position.getRow()-1] == null)
+        {
+            return null;
+        }
+        else
+        {
+            return this.squares[position.getRow() -1][position.getColumn() -1];
+        }
+
     }
+
 
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        for (int i = 0; i < squares.length; i++)
+        for (int i = 0; i < 8; i++)
         {
             this.squares[1][i] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
             this.squares[6][i] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
         }
+
+
         this.squares[0][0] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
         this.squares[0][1] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
         this.squares[0][2] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);

@@ -21,7 +21,7 @@ public class ChessMove {
                 "startPosition=" + startPosition +
                 ", endPosition=" + endPosition +
                 ", promotionPiece=" + promotionPiece +
-                "}\n";
+                "}";
     }
 
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
