@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -87,8 +88,14 @@ public class ChessPiece {
             case ROOK:
                 RookMovesCalculator rookMoves = new RookMovesCalculator();
                 thatPieceMoves.addAll(rookMoves.pieceMoves(board, myPosition));
+                break;
             case KING, QUEEN:
-
+                KingMovesCalculator kingMoves = new KingMovesCalculator();
+                thatPieceMoves.addAll(kingMoves.pieceMoves(board, myPosition));
+                break;
+            case KNIGHT:
+                KingMovesCalculator knightMoves = new KingMovesCalculator();
+                thatPieceMoves.addAll()
 
 
 
