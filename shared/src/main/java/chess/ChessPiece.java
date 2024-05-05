@@ -101,9 +101,6 @@ public class ChessPiece {
                 PawnMovesCalculator pawnMoves = new PawnMovesCalculator();
                 thatPieceMoves.addAll(pawnMoves.pieceMoves(board, myPosition));
                 break;
-            case null, default:
-                break;
-
 
 
         }

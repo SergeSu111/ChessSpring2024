@@ -54,15 +54,7 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position)
     {
-        if (this.squares[position.getRow()-1][position.getRow()-1] == null)
-        {
-            return null;
-        }
-        else
-        {
-            return this.squares[position.getRow() -1][position.getColumn() -1];
-        }
-
+        return this.squares[position.getRow() -1][position.getColumn() -1];
     }
 
 
