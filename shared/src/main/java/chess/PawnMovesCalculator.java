@@ -46,16 +46,47 @@ public class PawnMovesCalculator implements PieceMovesCalculator
                 if (nextRow == 1 || nextRow == 8)  // means need to promote
                 {
                     ChessMove smallMove1 = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.ROOK);
+                    pawnMoves.add(smallMove1);
                     ChessMove smallMove2 = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.BISHOP);
+                    pawnMoves.add(smallMove2);
                     ChessMove smallMove3 = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.KNIGHT);
+                    pawnMoves.add(smallMove3);
                     ChessMove smallMove4 = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.QUEEN);
+                    pawnMoves.add(smallMove4);
                 }
                 // else just regular moving without promotion
                 ChessMove smallMove = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), null);
+                pawnMoves.add(smallMove);
             }
         }
 
-        // if
+        // if the startRow is just the setupRow
+        if (startRow == setUpRow)
+        {
+            // we can go ahead 2
+            if (thePiece.getTeamColor() == ChessGame.TeamColor.WHITE)
+            {
+                nextRow += 1;
+                ChessPosition nextPosition = new ChessPosition(nextRow, startColumn);
+                ChessPiece nextPiece = board.getPiece(nextPosition);
+                if (nextPiece == null)
+                {
+                    ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
+                    pawnMoves.add(smallMove);
+                }
+
+            }
+            nextRow -= 1; // black -= 1 based on nextRow
+            ChessPosition nextPosition = new ChessPosition(nextRow, startColumn);
+            ChessPiece nextPiece = board.getPiece(nextPosition);
+            if (nextPiece == null)
+            {
+                ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
+                pawnMoves.add(smallMove);
+            }
+        }
+
+
 
 
 
