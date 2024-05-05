@@ -41,6 +41,10 @@ public class BishopMovesCalculator implements PieceMovesCalculator
                 }
                 break; // if the color is the same, just also break;
             }
+            if(thePiece.getPieceType() == ChessPiece.PieceType.KING)
+            {
+                break; // because King can only go one step
+            }
 
         }
 
@@ -58,6 +62,10 @@ public class BishopMovesCalculator implements PieceMovesCalculator
                     allBishopMoves.add(smallMove);
                 }
                 break;
+            }
+            if(thePiece.getPieceType() == ChessPiece.PieceType.KING)
+            {
+                break; // because King can only go one step
             }
         }
 
@@ -79,6 +87,10 @@ public class BishopMovesCalculator implements PieceMovesCalculator
                 }
                 break;
             }
+            if(thePiece.getPieceType() == ChessPiece.PieceType.KING)
+            {
+                break; // because King can only go one step
+            }
 
         }
 
@@ -99,6 +111,10 @@ public class BishopMovesCalculator implements PieceMovesCalculator
                     allBishopMoves.add(smallMove);
                 }
                 break;
+            }
+            if(thePiece.getPieceType() == ChessPiece.PieceType.KING)
+            {
+                break; // because King can only go one step
             }
         }
         return allBishopMoves;

@@ -18,4 +18,8 @@ public class KingMovesCalculator implements PieceMovesCalculator
     }
 
 
+    @Override
+    public String toString() {
+        return "KingMovesCalculator{}";
+    }
 }
