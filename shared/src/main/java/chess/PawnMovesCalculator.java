@@ -33,8 +33,12 @@ public class PawnMovesCalculator implements PieceMovesCalculator
             nextRow = startRow + 1;
         }
         // else is Black
-        setUpRow = 7;
-        nextRow = startRow - 1;
+        else
+        {
+            setUpRow = 7;
+            nextRow = startRow - 1;
+        }
+
 
         // if it is in bound for nextRow
         if (rowInBound(nextRow))
@@ -55,8 +59,11 @@ public class PawnMovesCalculator implements PieceMovesCalculator
                     pawnMoves.add(smallMove4);
                 }
                 // else just regular moving without promotion
-                ChessMove smallMove = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), null);
-                pawnMoves.add(smallMove);
+                else
+                {
+                    ChessMove smallMove = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), null);
+                    pawnMoves.add(smallMove);
+                }
             }
         }
 
@@ -106,8 +113,12 @@ public class PawnMovesCalculator implements PieceMovesCalculator
                     ChessMove smallMove4 = new ChessMove(startPosition, nextPositionRight, ChessPiece.PieceType.BISHOP);
                     pawnMoves.add(smallMove4);
                 }
-                ChessMove smallMove = new ChessMove(startPosition, nextPositionRight, null); // else not in 1 or 8 line
-                pawnMoves.add(smallMove);
+                else
+                {
+                    ChessMove smallMove = new ChessMove(startPosition, nextPositionRight, null); // else not in 1 or 8 line
+                    pawnMoves.add(smallMove);
+                }
+
 
             }
         }
@@ -132,8 +143,12 @@ public class PawnMovesCalculator implements PieceMovesCalculator
                     ChessMove smallMove4 = new ChessMove(startPosition, nextPosition, ChessPiece.PieceType.BISHOP);
                     pawnMoves.add(smallMove4);
                 }
-                ChessMove smallMove = new ChessMove(startPosition, nextPosition, null); // else not in 1 or 8 line
-                pawnMoves.add(smallMove);
+                else
+                {
+                    ChessMove smallMove = new ChessMove(startPosition, nextPosition, null); // else not in 1 or 8 line
+                    pawnMoves.add(smallMove);
+
+                }
 
             }
         }
