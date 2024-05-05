@@ -108,8 +108,8 @@ public class KnightMovesCalculator implements PieceMovesCalculator
             }
         }
         // right 1 down 2
-        nextColumn += 1;
-        nextRow -= 2;
+        nextColumn += startColumn + 1;
+        nextRow -= startRow - 2;
         if (isInBound(new ChessPosition(nextRow, nextColumn)))  // if the endPosition is inBound
         {
             ChessPosition endPosition = new ChessPosition(nextRow, nextColumn); // get the end Position
@@ -129,8 +129,8 @@ public class KnightMovesCalculator implements PieceMovesCalculator
             }
         }
         // left 1 down 2
-        nextColumn -= 1;
-        nextRow -= 2;
+        nextColumn -= startColumn - 1;
+        nextRow -= startRow - 2;
         if (isInBound(new ChessPosition(nextRow, nextColumn)))  // if the endPosition is inBound
         {
             ChessPosition endPosition = new ChessPosition(nextRow, nextColumn); // get the end Position
@@ -150,8 +150,8 @@ public class KnightMovesCalculator implements PieceMovesCalculator
             }
         }
         // right 2 down 1
-        nextColumn += 2;
-        nextRow -= 1;
+        nextColumn = startColumn + 2;
+        nextRow -= startRow - 1;
         if (isInBound(new ChessPosition(nextRow, nextColumn)))  // if the endPosition is inBound
         {
             ChessPosition endPosition = new ChessPosition(nextRow, nextColumn); // get the end Position
@@ -171,8 +171,8 @@ public class KnightMovesCalculator implements PieceMovesCalculator
             }
         }
         // left 2 down 1
-        nextColumn -= 2;
-        nextRow -= 1;
+        nextColumn -= startColumn - 2;
+        nextRow -= startRow - 1;
         if (isInBound(new ChessPosition(nextRow, nextColumn)))  // if the endPosition is inBound
         {
             ChessPosition endPosition = new ChessPosition(nextRow, nextColumn); // get the end Position
