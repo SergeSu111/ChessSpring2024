@@ -78,9 +78,13 @@ public class ChessGame {
      * @param move chess move to preform
      * @throws InvalidMoveException if move is invalid
      */
-    public void makeMove(ChessMove move) throws InvalidMoveException
-    {
-        // call validMove
+    public void makeMove(ChessMove move) throws InvalidMoveException {
+        // call validMove to get all validMoves
+        Collection<ChessMove> validMoves = validMoves(move.startPosition);
+        if (!validMoves.isEmpty()) // we have validMoves
+        {
+
+        }
 
     }
 
