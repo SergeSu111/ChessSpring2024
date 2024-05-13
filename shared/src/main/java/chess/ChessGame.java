@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -52,7 +53,16 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece currentPiece= this.board.getPiece(startPosition);
+        Collection<ChessMove> potentialMoves = currentPiece.pieceMoves(this.board, startPosition); // get all potential moves but need to plus isinCheck
+        for (ChessMove smallMove : potentialMoves)
+        {
+            if (isInCheck(currentPiece.getTeamColor()))
+            {
+
+            }
+        }
+
     }
 
     @Override
@@ -77,7 +87,8 @@ public class ChessGame {
      * @param teamColor which team to check for check
      * @return True if the specified team is in check
      */
-    public boolean isInCheck(TeamColor teamColor) {
+    public boolean isInCheck(TeamColor teamColor)
+    {
 
     }
 
