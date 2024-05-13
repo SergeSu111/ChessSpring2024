@@ -183,7 +183,30 @@ public class ChessGame {
     public boolean isInStalemate(TeamColor teamColor)
     {
         // it is only called
-        return true;
+        Collection<ChessMove> validMoves;
+        // call isInCheck. IS TRUE
+        if (!isInCheck(teamColor))
+        {
+            // call valid moves, which is empty
+            for (int row = 0; row < 8; row++)
+            {
+                for (int col = 0; col < 8; col++)
+                {
+                    ChessPosition currentPosition = new ChessPosition(row + 1, col + 1);
+                    ChessPiece currentPiece = this.board.getPiece(currentPosition);
+                    validMoves = validMoves(currentPosition);
+                    if (!validMoves.isEmpty())
+                    {
+                        return false;
+                    }
+
+                }
+            }
+            return true;
+        }
+        return false;
+        // is true
+
     }
 
     /**
