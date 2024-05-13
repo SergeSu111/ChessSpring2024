@@ -156,12 +156,8 @@ public class ChessGame {
                 }
             }
             return true;
-
-
-
-
         }
-
+        return false;
         // is true
     }
 
@@ -175,6 +171,7 @@ public class ChessGame {
     public boolean isInStalemate(TeamColor teamColor)
     {
         // it is only called
+        return true;
     }
 
     /**
