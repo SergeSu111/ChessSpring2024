@@ -22,6 +22,14 @@ public class ChessGame {
         this.turn = TeamColor.WHITE; // the default turn is white
     }
 
+    public ChessGame(ChessBoard board, TeamColor turn)
+    {
+        this.board = board;
+        this.turn  = turn;
+
+    }
+
+
     /**
      * @return Which team's turn it is
      */
@@ -61,7 +69,10 @@ public class ChessGame {
         {
             potentialMoves = currentPiece.pieceMoves(this.board, startPosition); // get all potential moves but need to plus isinCheck
             for (ChessMove smallMove : potentialMoves) {
-                if (!isInCheck(currentPiece.getTeamColor()))
+                ChessGame checkGame = new ChessGame(board, turn);
+                checkGame.board.addPiece(smallMove.startPosition, null);
+                checkGame.board.addPiece(smallMove.endPosition, currentPiece);
+                if (!checkGame.isInCheck(currentPiece.getTeamColor()))
                 {
                     resultValid.add(smallMove);
                 }
@@ -101,6 +112,7 @@ public class ChessGame {
                     {
                         this.board.addPiece(smallMove.startPosition, startPiece);
                         this.board.addPiece(smallMove.endPosition, endPiece);
+                        throw new InvalidMoveException("The move is not valid");
                     }
                 }
 
