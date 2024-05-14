@@ -10,7 +10,7 @@ import java.util.HashSet;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessGame {
+public class ChessGame implements Cloneable{
 
     private ChessBoard board;
 
@@ -87,6 +87,16 @@ public class ChessGame {
         return "ChessGame{}";
     }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException
+    {
+        ChessGame cloned = (ChessGame) super.clone();
+        cloned.board = (ChessBoard) board.clone();
+        return cloned;
+    }
+
+
+
     /**
      * Makes a move in a chess game
      *
@@ -108,12 +118,16 @@ public class ChessGame {
                     this.board.addPiece(smallMove.endPosition, startPiece);
                     this.board.addPiece(smallMove.startPosition, null);
 
-                    if (isInCheck(startPiece.getTeamColor())) // if the move make me danger
+                    if (startPiece != null)
                     {
-                        this.board.addPiece(smallMove.startPosition, startPiece);
-                        this.board.addPiece(smallMove.endPosition, endPiece);
-                        throw new InvalidMoveException("The move is not valid");
+                        if (isInCheck(startPiece.getTeamColor())) // if the move make me danger
+                        {
+                            this.board.addPiece(smallMove.startPosition, startPiece);
+                            this.board.addPiece(smallMove.endPosition, endPiece);
+                            throw new InvalidMoveException("The move is not valid");
+                        }
                     }
+
                 }
 
             }
