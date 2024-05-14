@@ -55,12 +55,16 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece currentPiece= this.board.getPiece(startPosition);
-        Collection<ChessMove> potentialMoves = currentPiece.pieceMoves(this.board, startPosition); // get all potential moves but need to plus isinCheck
+        Collection<ChessMove> potentialMoves;
         HashSet<ChessMove> resultValid =  new HashSet<>();
-        for (ChessMove smallMove : potentialMoves) {
-            if (!isInCheck(currentPiece.getTeamColor()))
-            {
-                resultValid.add(smallMove);
+        if (currentPiece != null)
+        {
+            potentialMoves = currentPiece.pieceMoves(this.board, startPosition); // get all potential moves but need to plus isinCheck
+            for (ChessMove smallMove : potentialMoves) {
+                if (!isInCheck(currentPiece.getTeamColor()))
+                {
+                    resultValid.add(smallMove);
+                }
             }
         }
         return resultValid;
@@ -107,11 +111,14 @@ public class ChessGame {
         ChessPosition kingPosition = null;
 
         // to get the King's position
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                ChessPosition currentPosition = new ChessPosition(row + 1, col + 1);
+        for (int row = 1; row < 9; row++) {
+            for (int col = 1; col < 9; col++) {
+                ChessPosition currentPosition = new ChessPosition(row, col);
                 ChessPiece currentPiece = currentBoard.getPiece(currentPosition); // get the currentPiece
-
+                if (currentPiece == null)
+                {
+                    continue;
+                }
                 if (currentPiece.getPieceType() == ChessPiece.PieceType.KING && currentPiece.getTeamColor() == teamColor) {
                     kingPosition = currentPosition; // get the King's position
                     break;
@@ -120,10 +127,14 @@ public class ChessGame {
         }
 
         // to make sure the current spot's end position is the King's position
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                ChessPosition currentPosition = new ChessPosition(row + 1, col + 1);
+        for (int row = 1; row < 9; row++) {
+            for (int col = 1; col < 9; col++) {
+                ChessPosition currentPosition = new ChessPosition(row, col);
                 ChessPiece currentPiece = currentBoard.getPiece(currentPosition); // get the currentPiece
+                if (currentPiece == null)
+                {
+                    continue;
+                }
                 if (currentPiece.getTeamColor() != teamColor) {
                     Collection<ChessMove> allMoves = currentPiece.pieceMoves(currentBoard, currentPosition);
                     for (ChessMove smallMove : allMoves) {
