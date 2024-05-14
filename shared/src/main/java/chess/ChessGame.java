@@ -90,11 +90,20 @@ public class ChessGame {
         {
             for (ChessMove smallMove : validMoves)
             {
-                ChessPiece startPiece = this.board.getPiece(smallMove.getStartPosition());
-                ChessPiece endPiece = this.board.getPiece(smallMove.getEndPosition());
+                if (smallMove.equals(move))
+                {
+                    ChessPiece startPiece = this.board.getPiece(smallMove.getStartPosition());
+                    ChessPiece endPiece = this.board.getPiece(smallMove.getEndPosition());
+                    this.board.addPiece(smallMove.endPosition, startPiece);
+                    this.board.addPiece(smallMove.startPosition, null);
 
-                endPiece = startPiece;
-                startPiece = null;
+                    if (isInCheck(startPiece.getTeamColor())) // if the move make me danger
+                    {
+                        this.board.addPiece(smallMove.startPosition, startPiece);
+                        this.board.addPiece(smallMove.endPosition, endPiece);
+                    }
+                }
+
             }
         }
 
@@ -138,7 +147,7 @@ public class ChessGame {
                 if (currentPiece.getTeamColor() != teamColor) {
                     Collection<ChessMove> allMoves = currentPiece.pieceMoves(currentBoard, currentPosition);
                     for (ChessMove smallMove : allMoves) {
-                        if (smallMove.endPosition == kingPosition)
+                        if (smallMove.endPosition.equals(kingPosition))
                         {
                             return true;
                         }
@@ -170,10 +179,14 @@ public class ChessGame {
                 {
                     ChessPosition currentPosition = new ChessPosition(row + 1, col + 1);
                     ChessPiece currentPiece = this.board.getPiece(currentPosition);
-                    validMoves = validMoves(currentPosition);
-                    if (!validMoves.isEmpty())
+                    if (currentPiece != null)
                     {
-                        return false;
+                        if (currentPiece.getTeamColor() == teamColor) {
+                            validMoves = validMoves(currentPosition);
+                            if (!validMoves.isEmpty()) {
+                                return false;
+                            }
+                        }
                     }
 
                 }
