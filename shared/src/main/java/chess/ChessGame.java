@@ -107,7 +107,7 @@ public class ChessGame{
             //making move
             if (validMoves.contains(move) && startPiece.getTeamColor() == this.turn) {
                 this.board.addPiece(move.startPosition, null);
-                if (move.getEndPosition() == null) {
+                if (move.getPromotionPiece() == null) {
                     this.board.addPiece(move.endPosition, startPiece); // regular move
                 } else // need to promote
                 {
