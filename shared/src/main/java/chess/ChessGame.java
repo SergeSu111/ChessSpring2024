@@ -71,7 +71,7 @@ public class ChessGame implements Cloneable{
             for (ChessMove smallMove : potentialMoves) {
                 try
                 {
-                    ChessBoard newBoard = this.board
+                    ChessBoard newBoard = (ChessBoard) this.board.clone();
                     newBoard.addPiece(smallMove.startPosition, null);
                     newBoard.addPiece(smallMove.endPosition, currentPiece);
                     ChessGame checkedGame = new ChessGame(newBoard, turn);
@@ -80,7 +80,7 @@ public class ChessGame implements Cloneable{
                     {
                         resultValid.add(smallMove);
                     }
-                    checkedGame.board.resetBoard();
+                    // checkedGame.board.resetBoard();
                 }
                 catch (CloneNotSupportedException e)
                 {
