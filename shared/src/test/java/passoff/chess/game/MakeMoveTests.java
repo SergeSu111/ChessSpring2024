@@ -352,7 +352,7 @@ public class MakeMoveTests {
                 | | | | |p| | | |
                 | | | | | |Q| | |
                 """));
-        game.setTeamTurn(ChessGame.TeamColor.WHITE);
+        game.setTeamTurn(ChessGame.TeamColor.WHITE); 
 
         //White promotion
         ChessMove whitePromotion = new ChessMove(new ChessPosition(7, 3), new ChessPosition(8, 3), promotionType);
