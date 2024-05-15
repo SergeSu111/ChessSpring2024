@@ -244,53 +244,70 @@ public class ChessGame{
         Collection<ChessMove> validMoves;
         // call isInCheck. IS TRUE
         boolean isStaleMate = true;
-        if ( this.turn == teamColor)
+        if (!isInCheck(teamColor))
         {
-            // call valid moves, which is empty
-            for (int row = 0; row < 8; row++)
+            while(true)
             {
-                for (int col = 0; col < 8; col++) {
-                    ChessPosition currentPosition = new ChessPosition(row + 1, col + 1);
-                    ChessPiece currentPiece = this.board.getPiece(currentPosition);
-                    if (currentPiece != null && currentPiece.getTeamColor() == teamColor)
+                if ( this.turn == teamColor)
+                {
+                    // call valid moves, which is empty
+                    for (int row = 0; row < 8; row++)
                     {
-                        try
-                        {
-                            validMoves = validMoves(currentPosition);
-                            if (!validMoves.isEmpty())
+                        for (int col = 0; col < 8; col++) {
+                            ChessPosition currentPosition = new ChessPosition(row + 1, col + 1);
+                            ChessPiece currentPiece = this.board.getPiece(currentPosition);
+                            if (currentPiece != null && currentPiece.getTeamColor() == teamColor)
                             {
-                                isStaleMate = false;
-                            }
-                            if (this.turn == TeamColor.WHITE)
-                            {
-                                this.turn = TeamColor.BLACK;
-                            }
-                            else
-                            {
-                                this.turn = TeamColor.WHITE;
-                            }
-                        }
-                        catch ( RuntimeException e)
-                        {
-                            System.err.println(e.getMessage());
-                        }
+                                try
+                                {
+                                    validMoves = validMoves(currentPosition);
+                                    if (!validMoves.isEmpty())
+                                    {
+                                        isStaleMate = false;
+                                    }
+                                    if (this.turn == TeamColor.WHITE)
+                                    {
+                                        this.turn = TeamColor.BLACK;
+                                    }
+                                    else
+                                    {
+                                        this.turn = TeamColor.WHITE;
+                                    }
+                                }
+                                catch ( RuntimeException e)
+                                {
+                                    System.err.println(e.getMessage());
+                                }
 
+                            }
+                        }
                     }
-
-
+                    if (!isStaleMate)
+                    {
+                        return isStaleMate;
+                    }
+                    break;
+                }
+                else
+                {
+                    if (this.turn == TeamColor.WHITE)
+                    {
+                        this.turn = TeamColor.BLACK;
+                    }
+                    else
+                    {
+                        this.turn = TeamColor.WHITE;
+                    }
                 }
             }
-            if (!isStaleMate)
-            {
-                return isStaleMate;
-            }
+            return isStaleMate;
+            // is true
         }
         else
         {
-            isStaleMate = false;
+            return false;
         }
-        return isStaleMate;
-        // is true
+
 
     }
 
