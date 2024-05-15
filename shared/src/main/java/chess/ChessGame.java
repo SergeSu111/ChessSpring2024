@@ -114,16 +114,22 @@ public class ChessGame implements Cloneable{
         Collection<ChessMove> validMoves = validMoves(move.startPosition);
         ChessPosition expectedEnd = move.endPosition;
         boolean notInValid = false;
+        ChessPiece startPiece = this.board.getPiece(move.getStartPosition());
+        if (this.turn != startPiece.getTeamColor())
+        {
+            throw new InvalidMoveException("Not your turn.");
+        }
         if (!validMoves.isEmpty()) // we have validMoves
         {
-            for (ChessMove smallMove : validMoves) {
-                if (smallMove.endPosition.equals(expectedEnd)) {
-                    notInValid = true;
-                }
-                if (smallMove.equals(move)) {
 
-                    ChessPiece startPiece = this.board.getPiece(smallMove.getStartPosition());
+            for (ChessMove smallMove : validMoves) {
+                if (!smallMove.endPosition.equals(expectedEnd)) {
+                    continue;
+                }
+                if (smallMove.equals(move) && this.turn == startPiece.getTeamColor()) {
+                    notInValid = true;
                     ChessPiece endPiece = this.board.getPiece(smallMove.getEndPosition());
+
                     if (this.turn != startPiece.getTeamColor()) {
                         throw new InvalidMoveException("It is not your turn.");
                     }
@@ -138,20 +144,33 @@ public class ChessGame implements Cloneable{
                             throw new InvalidMoveException("The move is not valid");
                         }
                     }
-
+                    if (getTeamTurn() == TeamColor.WHITE)
+                    {
+                        setTeamTurn(TeamColor.BLACK);
+                    }
+                    else
+                    {
+                        setTeamTurn(TeamColor.WHITE);
+                    }
                 }
-
-                if (!notInValid) {
-                    throw new InvalidMoveException("The move is not valid.");
+                else
+                {
+                    throw new InvalidMoveException("Not your turn, cannot move.");
                 }
 
             }
         }
-        else
-        {
+//        else if (!notInValid) {
+//            throw new InvalidMoveException("The move is not valid.");
+//        }
+        else {
             throw new InvalidMoveException("You shouldn't make the move due to the rule.");
         }
 
+        if (!notInValid)
+        {
+            throw new InvalidMoveException("The move is not valid.");
+        }
     }
 
     /**
