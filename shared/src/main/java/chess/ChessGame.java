@@ -101,34 +101,34 @@ public class ChessGame{
     public void makeMove(ChessMove move) throws InvalidMoveException {
         // call validMove to get all validMoves
 
-            Collection<ChessMove> validMoves = validMoves(move.startPosition);
-            ChessPiece startPiece = this.board.getPiece(move.getStartPosition());
+        Collection<ChessMove> validMoves = validMoves(move.startPosition);
+        ChessPiece startPiece = this.board.getPiece(move.getStartPosition());
 
-            if (validMoves == null)
+        if (validMoves == null)
+        {
+            throw new InvalidMoveException("Valid Moves are null");
+        }
+        //making move
+        if (validMoves.contains(move) && startPiece.getTeamColor() == this.turn) {
+            this.board.addPiece(move.startPosition, null);
+            if (move.getPromotionPiece() == null) {
+                this.board.addPiece(move.endPosition, startPiece); // regular move
+            } else // need to promote
             {
-                throw new InvalidMoveException("Valid Moves are null");
+                // get the promotedPiece
+                ChessPiece promotedPiece = new ChessPiece(startPiece.getTeamColor(), move.getPromotionPiece());
+                this.board.addPiece(move.endPosition, promotedPiece);
             }
-            //making move
-            if (validMoves.contains(move) && startPiece.getTeamColor() == this.turn) {
-                this.board.addPiece(move.startPosition, null);
-                if (move.getPromotionPiece() == null) {
-                    this.board.addPiece(move.endPosition, startPiece); // regular move
-                } else // need to promote
-                {
-                    // get the promotedPiece
-                    ChessPiece promotedPiece = new ChessPiece(startPiece.getTeamColor(), move.getPromotionPiece());
-                    this.board.addPiece(move.endPosition, promotedPiece);
-                }
 
-                // changed the turn
-                if (this.turn == TeamColor.WHITE) {
-                    this.turn = TeamColor.BLACK;
-                } else {
-                    this.turn = TeamColor.WHITE;
-                }
+            // changed the turn
+            if (this.turn == TeamColor.WHITE) {
+                this.turn = TeamColor.BLACK;
             } else {
-                throw new InvalidMoveException("not valid move.");
+                this.turn = TeamColor.WHITE;
             }
+        } else {
+            throw new InvalidMoveException("not valid move.");
+        }
 
 
     }
@@ -243,38 +243,46 @@ public class ChessGame{
         // it is only called
         Collection<ChessMove> validMoves;
         // call isInCheck. IS TRUE
-        boolean result = true;
-        if (isInCheck(teamColor))
+        boolean isStaleMate = true;
+        if (!isInCheck(teamColor) && this.turn == teamColor)
         {
             // call valid moves, which is empty
             for (int row = 0; row < 8; row++)
             {
-                for (int col = 0; col < 8; col++)
-                {
+                for (int col = 0; col < 8; col++) {
                     ChessPosition currentPosition = new ChessPosition(row + 1, col + 1);
                     ChessPiece currentPiece = this.board.getPiece(currentPosition);
-                    try
+                    if (currentPiece != null && currentPiece.getTeamColor() == teamColor)
                     {
-                        validMoves = validMoves(currentPosition);
-                        if (!validMoves.isEmpty())
+                        try
                         {
-                            result = false;
+                            validMoves = validMoves(currentPosition);
+                            if (!validMoves.isEmpty())
+                            {
+                                isStaleMate = false;
+                            }
+                            if (this.turn == TeamColor.WHITE)
+                            {
+                                this.turn = TeamColor.BLACK;
+                            }
+                            else
+                            {
+                                this.turn = TeamColor.WHITE;
+                            }
                         }
+                        catch ( RuntimeException e)
+                        {
+                            System.err.println(e.getMessage());
+                        }
+
                     }
-                    catch ( RuntimeException e)
-                    {
-                        System.err.println(e.getMessage());
-                    }
+
 
 
                 }
             }
         }
-        else
-        {
-            result = false;
-        }
-        return result;
+        return isStaleMate;
         // is true
 
     }
