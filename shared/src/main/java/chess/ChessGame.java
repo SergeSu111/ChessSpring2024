@@ -124,9 +124,13 @@ public class ChessGame implements Cloneable{
                 }
                 if (smallMove.equals(move))
                 {
-                    if (this.turn)
+
                         ChessPiece startPiece = this.board.getPiece(smallMove.getStartPosition());
                         ChessPiece endPiece = this.board.getPiece(smallMove.getEndPosition());
+                        if (this.turn != startPiece.getTeamColor())
+                        {
+                            throw new InvalidMoveException("It is not your turn.");
+                        }
                         this.board.addPiece(smallMove.endPosition, startPiece);
                         this.board.addPiece(smallMove.startPosition, null);
 
