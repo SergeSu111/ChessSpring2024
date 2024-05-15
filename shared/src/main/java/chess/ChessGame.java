@@ -116,26 +116,21 @@ public class ChessGame implements Cloneable{
         boolean notInValid = false;
         if (!validMoves.isEmpty()) // we have validMoves
         {
-            for (ChessMove smallMove : validMoves)
-            {
-                if (smallMove.endPosition.equals(expectedEnd))
-                {
+            for (ChessMove smallMove : validMoves) {
+                if (smallMove.endPosition.equals(expectedEnd)) {
                     notInValid = true;
                 }
-                if (smallMove.equals(move))
-                {
+                if (smallMove.equals(move)) {
 
-                        ChessPiece startPiece = this.board.getPiece(smallMove.getStartPosition());
-                        ChessPiece endPiece = this.board.getPiece(smallMove.getEndPosition());
-                        if (this.turn != startPiece.getTeamColor())
-                        {
-                            throw new InvalidMoveException("It is not your turn.");
-                        }
-                        this.board.addPiece(smallMove.endPosition, startPiece);
-                        this.board.addPiece(smallMove.startPosition, null);
+                    ChessPiece startPiece = this.board.getPiece(smallMove.getStartPosition());
+                    ChessPiece endPiece = this.board.getPiece(smallMove.getEndPosition());
+                    if (this.turn != startPiece.getTeamColor()) {
+                        throw new InvalidMoveException("It is not your turn.");
+                    }
+                    this.board.addPiece(smallMove.endPosition, startPiece);
+                    this.board.addPiece(smallMove.startPosition, null);
 
-                    if (startPiece != null)
-                    {
+                    if (startPiece != null) {
                         if (isInCheck(startPiece.getTeamColor())) // if the move make me danger
                         {
                             this.board.addPiece(smallMove.startPosition, startPiece);
@@ -146,19 +141,15 @@ public class ChessGame implements Cloneable{
 
                 }
 
-                if (!notInValid)
-                {
+                if (!notInValid) {
                     throw new InvalidMoveException("The move is not valid.");
                 }
 
             }
-
-
-
-
-            // for test if the given move is not valid
-
-
+        }
+        else
+        {
+            throw new InvalidMoveException("You shouldn't make the move due to the rule.");
         }
 
     }
