@@ -71,14 +71,16 @@ public class ChessGame implements Cloneable{
             for (ChessMove smallMove : potentialMoves) {
                 try
                 {
-                    ChessBoard newBoard = (ChessBoard) board.clone(); // get the copied newBoard.
+                    ChessBoard newBoard = this.board
+                    newBoard.addPiece(smallMove.startPosition, null);
+                    newBoard.addPiece(smallMove.endPosition, currentPiece);
                     ChessGame checkedGame = new ChessGame(newBoard, turn);
-                    checkedGame.board.addPiece(smallMove.startPosition, null);
-                    checkedGame.board.addPiece(smallMove.endPosition, currentPiece);
+
                     if (!checkedGame.isInCheck(currentPiece.getTeamColor()))
                     {
                         resultValid.add(smallMove);
                     }
+                    checkedGame.board.resetBoard();
                 }
                 catch (CloneNotSupportedException e)
                 {
@@ -90,18 +92,14 @@ public class ChessGame implements Cloneable{
 
     }
 
-    @Override
-    public String toString() {
-        return "ChessGame{}";
-    }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException
-    {
-        ChessGame cloned = (ChessGame) super.clone();
-        cloned.board = (ChessBoard) board.clone();
-        return cloned;  // cloned a new ChessGame with a cloned ChessBoard.
-    }
+//    @Override
+//    protected Object clone() throws CloneNotSupportedException
+//    {
+//        ChessGame cloned = (ChessGame) super.clone();
+//        cloned.board = (ChessBoard) board.clone();
+//        return cloned;  // cloned a new ChessGame with a cloned ChessBoard.
+//    }
 
 
 
@@ -281,5 +279,10 @@ public class ChessGame implements Cloneable{
      */
     public ChessBoard getBoard() {
         return this.board;
+    }
+
+    @Override
+    public String toString() {
+        return "ChessGame{}";
     }
 }

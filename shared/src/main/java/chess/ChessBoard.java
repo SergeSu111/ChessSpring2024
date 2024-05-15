@@ -8,26 +8,7 @@ import java.util.Arrays;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard  {
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ChessBoard that = (ChessBoard) o;
-        return Arrays.deepEquals(squares, that.squares);
-    }
-
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(squares);
-    }
-
-    @Override
-    public String toString() {
-        return "ChessBoard{" +
-                "squares=" + Arrays.toString(squares) +
-                "\n}";
-    }
+public class ChessBoard implements Cloneable {
 
     private ChessPiece[][] squares = new ChessPiece[8][8];
     // add the array of array. Each position is a piece. so the type is ChessPiece
@@ -56,6 +37,9 @@ public class ChessBoard  {
     {
         return this.squares[position.getRow() -1][position.getColumn() -1];
     }
+
+
+
 
 
     /**
@@ -89,6 +73,47 @@ public class ChessBoard  {
         this.squares[7][7] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
 
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessBoard that = (ChessBoard) o;
+        return Arrays.deepEquals(squares, that.squares);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(squares);
+    }
+
+    @Override
+    public String toString() {
+        return "ChessBoard{" +
+                "squares=" + Arrays.toString(squares) +
+                "\n}";
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException
+    {
+        ChessBoard copiedBoard = new ChessBoard();
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                ChessPiece piece = this.squares[row][col];
+                if (piece == null)
+                {
+                    copiedBoard.squares[row][col] = null;
+                }
+                else
+                {
+                    copiedBoard.squares[row][col] = (ChessPiece) piece.clone();
+                }
+            }
+        }
+        return copiedBoard;
+    }
+
 
 
 }

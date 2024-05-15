@@ -89,9 +89,9 @@ public class PawnMovesCalculator implements PieceMovesCalculator
                 if (nextNextPiece == null && nextPiece == null)
                 {
                     ChessMove smallMove1 = new ChessMove(startPosition, nextNextPosition, null); // for step 2
-                    ChessMove smallMove2 = new ChessMove(startPosition, nextPosition, null); // for step1
+                    //ChessMove smallMove2 = new ChessMove(startPosition, nextPosition, null); // for step1
                     pawnMoves.add(smallMove1);
-                    pawnMoves.add(smallMove2);
+                    //pawnMoves.add(smallMove2);
                 }
                 if (nextPiece == null && nextNextPiece != null)  // if nextPiece is null but nextNext is not . I can go 1 step even if I am in the setup Line
                 {
@@ -113,9 +113,9 @@ public class PawnMovesCalculator implements PieceMovesCalculator
                 if (nextNextPiece == null && nextPiece == null)
                 {
                     ChessMove smallMove1 = new ChessMove(startPosition, nextNextPosition, null);
-                    ChessMove smallMove2 = new ChessMove(startPosition, nextPosition, null);
+//                    ChessMove smallMove2 = new ChessMove(startPosition, nextPosition, null);
                     pawnMoves.add(smallMove1);
-                    pawnMoves.add(smallMove2);
+//                    pawnMoves.add(smallMove2);
                 }
                 if (nextPiece == null && nextNextPiece != null)  // if nextPiece is null but nextNext is not . I can go 1 step even if I am in the setup Line
                 {
