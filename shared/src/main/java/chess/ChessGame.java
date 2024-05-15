@@ -61,7 +61,7 @@ public class ChessGame implements Cloneable{
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
-    public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+    public Collection<ChessMove> validMoves(ChessPosition startPosition)  {
         ChessPiece currentPiece= this.board.getPiece(startPosition);
         Collection<ChessMove> potentialMoves;
         HashSet<ChessMove> resultValid =  new HashSet<>();
@@ -69,12 +69,20 @@ public class ChessGame implements Cloneable{
         {
             potentialMoves = currentPiece.pieceMoves(this.board, startPosition); // get all potential moves but need to plus isinCheck
             for (ChessMove smallMove : potentialMoves) {
-                ChessGame checkGame = new ChessGame(board, turn);
-                checkGame.board.addPiece(smallMove.startPosition, null);
-                checkGame.board.addPiece(smallMove.endPosition, currentPiece);
-                if (!checkGame.isInCheck(currentPiece.getTeamColor()))
+                try
                 {
-                    resultValid.add(smallMove);
+                    ChessBoard newBoard = (ChessBoard) board.clone(); // get the copied newBoard.
+                    ChessGame checkedGame = new ChessGame(newBoard, turn);
+                    checkedGame.board.addPiece(smallMove.startPosition, null);
+                    checkedGame.board.addPiece(smallMove.endPosition, currentPiece);
+                    if (!checkedGame.isInCheck(currentPiece.getTeamColor()))
+                    {
+                        resultValid.add(smallMove);
+                    }
+                }
+                catch (CloneNotSupportedException e)
+                {
+                    throw new RuntimeException(e);
                 }
             }
         }
@@ -92,7 +100,7 @@ public class ChessGame implements Cloneable{
     {
         ChessGame cloned = (ChessGame) super.clone();
         cloned.board = (ChessBoard) board.clone();
-        return cloned;
+        return cloned;  // cloned a new ChessGame with a cloned ChessBoard.
     }
 
 
@@ -113,10 +121,10 @@ public class ChessGame implements Cloneable{
             {
                 if (smallMove.equals(move))
                 {
-                    ChessPiece startPiece = this.board.getPiece(smallMove.getStartPosition());
-                    ChessPiece endPiece = this.board.getPiece(smallMove.getEndPosition());
-                    this.board.addPiece(smallMove.endPosition, startPiece);
-                    this.board.addPiece(smallMove.startPosition, null);
+                        ChessPiece startPiece = this.board.getPiece(smallMove.getStartPosition());
+                        ChessPiece endPiece = this.board.getPiece(smallMove.getEndPosition());
+                        this.board.addPiece(smallMove.endPosition, startPiece);
+                        this.board.addPiece(smallMove.startPosition, null);
 
                     if (startPiece != null)
                     {
@@ -192,8 +200,7 @@ public class ChessGame implements Cloneable{
      * @param teamColor which team to check for checkmate
      * @return True if the specified team is in checkmate
      */
-    public boolean isInCheckmate(TeamColor teamColor)
-    {
+    public boolean isInCheckmate(TeamColor teamColor) {
         Collection<ChessMove> validMoves;
         // call isInCheck. IS TRUE
         if (isInCheck(teamColor))
@@ -230,8 +237,7 @@ public class ChessGame implements Cloneable{
      * @param teamColor which team to check for stalemate
      * @return True if the specified team is in stalemate, otherwise false
      */
-    public boolean isInStalemate(TeamColor teamColor)
-    {
+    public boolean isInStalemate(TeamColor teamColor) {
         // it is only called
         Collection<ChessMove> validMoves;
         // call isInCheck. IS TRUE
