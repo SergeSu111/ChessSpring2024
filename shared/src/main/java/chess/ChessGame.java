@@ -244,7 +244,7 @@ public class ChessGame{
         Collection<ChessMove> validMoves;
         // call isInCheck. IS TRUE
         boolean isStaleMate = true;
-        if (!isInCheck(teamColor) && this.turn == teamColor)
+        if ( this.turn == teamColor)
         {
             // call valid moves, which is empty
             for (int row = 0; row < 8; row++)
@@ -278,9 +278,16 @@ public class ChessGame{
                     }
 
 
-
                 }
             }
+            if (!isStaleMate)
+            {
+                return isStaleMate;
+            }
+        }
+        else
+        {
+            isStaleMate = false;
         }
         return isStaleMate;
         // is true
