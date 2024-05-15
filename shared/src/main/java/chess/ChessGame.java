@@ -112,13 +112,19 @@ public class ChessGame implements Cloneable{
     public void makeMove(ChessMove move) throws InvalidMoveException {
         // call validMove to get all validMoves
         Collection<ChessMove> validMoves = validMoves(move.startPosition);
-
+        ChessPosition expectedEnd = move.endPosition;
+        boolean notInValid = false;
         if (!validMoves.isEmpty()) // we have validMoves
         {
             for (ChessMove smallMove : validMoves)
             {
+                if (smallMove.endPosition.equals(expectedEnd))
+                {
+                    notInValid = true;
+                }
                 if (smallMove.equals(move))
                 {
+                    if (this.turn)
                         ChessPiece startPiece = this.board.getPiece(smallMove.getStartPosition());
                         ChessPiece endPiece = this.board.getPiece(smallMove.getEndPosition());
                         this.board.addPiece(smallMove.endPosition, startPiece);
@@ -136,7 +142,19 @@ public class ChessGame implements Cloneable{
 
                 }
 
+                if (!notInValid)
+                {
+                    throw new InvalidMoveException("The move is not valid.");
+                }
+
             }
+
+
+
+
+            // for test if the given move is not valid
+
+
         }
 
     }
@@ -199,7 +217,7 @@ public class ChessGame implements Cloneable{
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        Collection<ChessMove> validMoves;
+        Collection<ChessMove> canValidMoves;
         // call isInCheck. IS TRUE
         if (isInCheck(teamColor))
         {
@@ -213,8 +231,8 @@ public class ChessGame implements Cloneable{
                     if (currentPiece != null)
                     {
                         if (currentPiece.getTeamColor() == teamColor) {
-                            validMoves = validMoves(currentPosition);
-                            if (!validMoves.isEmpty()) {
+                            canValidMoves = validMoves(currentPosition);
+                            if (!canValidMoves.isEmpty()) {
                                 return false;
                             }
                         }
@@ -224,7 +242,11 @@ public class ChessGame implements Cloneable{
             }
             return true;
         }
-        return false;
+        else
+        {
+           return false;
+        }
+
         // is true
     }
 
@@ -239,7 +261,8 @@ public class ChessGame implements Cloneable{
         // it is only called
         Collection<ChessMove> validMoves;
         // call isInCheck. IS TRUE
-        if (!isInCheck(teamColor))
+        boolean result = true;
+        if (isInCheck(teamColor))
         {
             // call valid moves, which is empty
             for (int row = 0; row < 8; row++)
@@ -251,14 +274,17 @@ public class ChessGame implements Cloneable{
                     validMoves = validMoves(currentPosition);
                     if (!validMoves.isEmpty())
                     {
-                        return false;
+                        result = false;
                     }
 
                 }
             }
-            return true;
         }
-        return false;
+        else
+        {
+            result = false;
+        }
+        return result;
         // is true
 
     }
