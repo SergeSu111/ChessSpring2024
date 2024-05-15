@@ -98,11 +98,9 @@ public class ChessGame{
      * @param move chess move to preform
      * @throws InvalidMoveException if move is invalid
      */
-    public void makeMove(ChessMove move) {
+    public void makeMove(ChessMove move) throws InvalidMoveException{
         // call validMove to get all validMoves
 
-        try
-        {
             Collection<ChessMove> validMoves = validMoves(move.startPosition);
             ChessPiece startPiece = this.board.getPiece(move.getStartPosition());
 
@@ -127,11 +125,7 @@ public class ChessGame{
             } else {
                 throw new InvalidMoveException("not valid move.");
             }
-        }
-        catch (InvalidMoveException e)
-        {
-            System.err.println("Invalid move attempted: " + e.getMessage());
-        }
+
 
     }
 
