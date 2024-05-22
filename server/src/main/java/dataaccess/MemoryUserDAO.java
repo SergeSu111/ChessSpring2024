@@ -16,16 +16,18 @@ public class MemoryUserDAO implements UserDAO
 
     @Override
     public AuthData getUser(String username) throws DataAccessException {
-       try
-       {
+
            for (UserData singleUserData : userDataMemory)
            {
                if (singleUserData.username().equals(username))
                {
                    // call getAuth
                }
+               else
+               {
+                   // call createUser and create Auth
+               }
            }
-       }
     }
 
     @Override
