@@ -14,7 +14,7 @@ public interface UserDAO {
         return;
     }
 
-    default UserData getUser(String username) throws DataAccessException
+    default AuthData getUser(String username) throws DataAccessException
     {
         return null;
     }
