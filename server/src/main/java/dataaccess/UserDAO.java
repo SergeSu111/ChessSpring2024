@@ -5,8 +5,8 @@ import Model.UserData;
 
 public interface UserDAO {
 
-    default AuthData createUser(UserData u) throws DataAccessException{
-        return null;
+    default void createUser(UserData u) throws DataAccessException{
+        return;
     }
 
     default void clear() throws DataAccessException
@@ -14,7 +14,7 @@ public interface UserDAO {
         return;
     }
 
-    default AuthData getUser(String username) throws DataAccessException
+    default UserData getUser(String username) throws DataAccessException
     {
         return null;
     }

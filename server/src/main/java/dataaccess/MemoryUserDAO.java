@@ -9,25 +9,22 @@ public class MemoryUserDAO implements UserDAO
 {
     HashSet<UserData> userDataMemory = new HashSet<>();
     @Override
-    public AuthData createUser(UserData u) throws DataAccessException {
+    public void createUser(UserData u) throws DataAccessException {
         userDataMemory.add(u); // add the UserData into the HashSet to create in the hashSet
 
     }
 
     @Override
-    public AuthData getUser(String username) throws DataAccessException {
+    public UserData getUser(String username) throws DataAccessException {
 
            for (UserData singleUserData : userDataMemory)
            {
                if (singleUserData.username().equals(username))
                {
-                   // call getAuth
-               }
-               else
-               {
-                   // call createUser and create Auth
+                   return singleUserData;
                }
            }
+           return null;
     }
 
     @Override
