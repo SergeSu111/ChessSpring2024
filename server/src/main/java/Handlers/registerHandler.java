@@ -6,6 +6,10 @@ import spark.Request;
 
 public class registerHandler extends baseHandler
 {
+    registerHandler(Request request, Response response) {
+        super(request, response);
+    }
+
     @Override
     public Object httpHandlerRequest(Request request, Response response)
     {
