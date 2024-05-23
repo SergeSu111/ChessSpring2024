@@ -1,4 +1,4 @@
 package HttpRequest;
 
-public record CreateGameRequest(int gameName) {
+public record CreateGameRequest(String gameName) {
 }
