@@ -2,16 +2,14 @@ package service;
 
 import HttpRequest.CreateGameRequest;
 import HttpResponse.CreateGameResponse;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
+import dataaccess.*;
 
 public class createGameService
 {
     MemoryGameDAO gameDAO = new MemoryGameDAO();
     MemoryAuthDAO authDAO = new MemoryAuthDAO();
 
-    public CreateGameResponse createGame(CreateGameRequest createGameRequest, String authToken) throws DataAccessException {
+    public CreateGameResponse createGame(CreateGameRequest createGameRequest, String authToken) throws DataAccessException, ClientException, ServerException {
         String username = authDAO.getAuth(authToken);
         if (username == null)
         {
@@ -19,7 +17,8 @@ public class createGameService
         }
         else
         {
-            gameDAO.createGame(createGameRequest.gameName())
+            int gameID = gameDAO.createGame(createGameRequest.gameName());
+            return new CreateGameResponse(gameID);
         }
     }
 }
