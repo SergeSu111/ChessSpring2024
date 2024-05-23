@@ -57,6 +57,7 @@ public class registerHandler extends baseHandler
             jsonResponse = gson.toJson(new MessageResponse(e.getMessage()));
         }
 
+        response.type("application/json");
         return jsonResponse;
     }
 
