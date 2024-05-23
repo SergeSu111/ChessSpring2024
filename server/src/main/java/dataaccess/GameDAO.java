@@ -6,25 +6,30 @@ import chess.ChessGame;
 import java.util.ArrayList;
 
 public interface GameDAO {
-    public default String createGame(String gameName) throws DataAccessException {
-        return null;
+    public default int createGame(String gameName) throws DataAccessException {
+        return 1;
     }
 
     public default GameData getGame(ChessGame.TeamColor playerColor, int gameID) throws DataAccessException {
         return null;
     }
 
-    public default ArrayList<ChessGame> listGames(String authToken) throws DataAccessException
+    public default ArrayList<GameData> listGames(String authToken) throws DataAccessException
     {
         return null;
     }
 
-    public default void updateGame(String username, ChessGame.TeamColor playerColor, String gameID) throws DataAccessException
+    public default void updateGame(String username, ChessGame.TeamColor playerColor, GameData targetGame) throws DataAccessException
     {
         return;
     }
 
     public default void clear() throws DataAccessException
+    {
+        return;
+    }
+
+    public default void joinGame(int gameID, ChessGame.TeamColor playerColor, String username) throws DataAccessException
     {
         return;
     }
