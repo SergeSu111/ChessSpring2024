@@ -11,7 +11,7 @@ public class clearService
     MemoryUserDAO userDAO = new MemoryUserDAO();
 
 
-    void clear() throws DataAccessException, ServerException {
+    public void clear() throws DataAccessException, ServerException {
         gameDAO.clear();
         authDAO.clear();
         userDAO.clear();

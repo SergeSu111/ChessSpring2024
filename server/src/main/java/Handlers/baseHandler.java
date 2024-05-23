@@ -3,6 +3,7 @@ package Handlers;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
+import dataaccess.ServerException;
 import org.eclipse.jetty.server.Response;
 import spark.Request;
 
@@ -18,7 +19,7 @@ public abstract class  baseHandler {
         this.request = request;
     }
 
-    public abstract Object httpHandlerRequest(Request request, spark.Response response);
+    public abstract Object httpHandlerRequest(Request request, spark.Response response) throws ServerException, DataAccessException;
 
     protected String validAuthToken(Request request, Response response) throws DataAccessException {
         // get the token
