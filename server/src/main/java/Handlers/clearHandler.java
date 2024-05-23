@@ -11,7 +11,7 @@ import spark.Response;
 public class clearHandler extends baseHandler
 {
     clearService clearServiceRefer = new clearService();
-    clearHandler(Request request, Response response) {
+    public clearHandler(Request request, Response response) {
         super(request, response);
     }
 
