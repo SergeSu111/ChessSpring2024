@@ -11,14 +11,14 @@ public abstract class  baseHandler {
 
     // use spark to create the request and response classes.
     private Request request;
-    private Response response;
-    baseHandler(Request request, Response response)
+    private spark.Response response;
+    baseHandler(Request request, spark.Response response)
     {
         this.request = request;
         this.response = response;
     }
 
-    public abstract Object httpHandlerRequest(Request request, Response response);
+    public abstract Object httpHandlerRequest(Request request, spark.Response response);
 
     protected String validAuthToken(Request request, Response response) throws DataAccessException {
         // get the token
