@@ -13,7 +13,7 @@ public class logoutHandler extends baseHandler
 {
     private final logoutService logoutServiceRefer = new logoutService();
 
-    logoutHandler(Request request, Response response) {
+    public logoutHandler(Request request, Response response) {
         super(request, response);
     }
 
