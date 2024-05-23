@@ -14,7 +14,7 @@ import spark.Response;
 public class createGameHandler extends baseHandler{
 
     createGameService createGameServiceRefer = new createGameService();
-    createGameHandler(Request request, Response response) {
+    public createGameHandler(Request request, Response response) {
         super(request, response);
     }
 

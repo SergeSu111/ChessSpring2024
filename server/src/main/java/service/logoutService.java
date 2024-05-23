@@ -8,6 +8,7 @@ public class logoutService
 {
     MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();
 
+
     public void logout (String authToken) throws DataAccessException, ServerException {
        String username = memoryAuthDAO.getAuth(authToken);
        if (username == null)

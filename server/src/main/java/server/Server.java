@@ -1,9 +1,6 @@
 package server;
 
-import Handlers.listGamesHandler;
-import Handlers.loginHandler;
-import Handlers.logoutHandler;
-import Handlers.registerHandler;
+import Handlers.*;
 import spark.*;
 
 public class Server {
@@ -17,6 +14,7 @@ public class Server {
         Spark.post("/session", (req, res) -> new loginHandler(req, res).httpHandlerRequest(req, res));
         Spark.delete("/session", (req, res) -> new logoutHandler(req, res).httpHandlerRequest(req, res));
         Spark.get("/game", (req, res) -> new listGamesHandler(req, res).httpHandlerRequest(req, res));
+        Spark.post("/game", (req, res) -> new createGameHandler(req, res).httpHandlerRequest(req, res));
         Spark.awaitInitialization();
         return Spark.port();
     }
