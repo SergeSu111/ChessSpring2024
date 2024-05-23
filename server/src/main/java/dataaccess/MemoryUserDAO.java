@@ -7,7 +7,7 @@ import java.util.HashSet;
 
 public class MemoryUserDAO implements UserDAO
 {
-    HashSet<UserData> userDataMemory = new HashSet<>();
+    private static final HashSet<UserData> userDataMemory = new HashSet<>();
     @Override
     public void createUser(UserData u) throws DataAccessException {
         userDataMemory.add(u); // add the UserData into the HashSet to create in the hashSet

@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class MemoryAuthDAO implements AuthDAO
 {
-    HashSet<AuthData> authDataInMemory = new HashSet<>();
+    private static final HashSet<AuthData> authDataInMemory = new HashSet<>();
     @Override
     public String createAuth(String username) throws DataAccessException {
         String newAuthToken = UUID.randomUUID().toString(); // get the new AuthToken

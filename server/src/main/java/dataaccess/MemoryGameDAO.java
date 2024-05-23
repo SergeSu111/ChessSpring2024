@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class MemoryGameDAO implements GameDAO{
 
-    private HashSet<GameData> gameDataMemory = new HashSet<>();
+    private static final HashSet<GameData> gameDataMemory = new HashSet<>();
     /**
      * @param gameName
      * @return
