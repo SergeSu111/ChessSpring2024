@@ -3,16 +3,13 @@ package service;
 import HttpRequest.RegisterRequest;
 import HttpResponse.RegisterResponse;
 import Model.UserData;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryUserDAO;
-import dataaccess.UserDAO;
+import dataaccess.*;
 
 public class registerService
 {
     MemoryUserDAO memoryUser = new MemoryUserDAO();
     MemoryAuthDAO memoryAuth = new MemoryAuthDAO();
-    public RegisterResponse register(RegisterRequest registerRequest) throws DataAccessException {
+    public RegisterResponse register(RegisterRequest registerRequest) throws DataAccessException, ClientException {
         UserData userData = memoryUser.getUser(registerRequest.username());
         if (userData != null)
         {
@@ -20,16 +17,15 @@ public class registerService
         }
         else // else the userDate is not in db
         {
-          // CREATE one
+            // CREATE one
             UserData createdData = new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email());
             memoryUser.createUser(createdData);
             // create Auth for the user
-            memoryAuth.createAuth(registerRequest.username());
-            RegisterResponse returnedRegisterResponse = new RegisterResponse()
+            String returnedAuthToken = memoryAuth.createAuth(registerRequest.username());
+
+            // get the RegisterResponse by the returned authToken and return to handler
+            return new RegisterResponse(registerRequest.username(), returnedAuthToken);
         }
-
-
-
 
     }
 }

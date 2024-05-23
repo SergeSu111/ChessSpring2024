@@ -9,10 +9,11 @@ public class MemoryAuthDAO implements AuthDAO
 {
     HashSet<AuthData> authDataInMemory = new HashSet<>();
     @Override
-    public void createAuth(String username) throws DataAccessException {
+    public String createAuth(String username) throws DataAccessException {
         String newAuthToken = UUID.randomUUID().toString(); // get the new AuthToken
         AuthData newAuthData = new AuthData(newAuthToken, username); // create a new AuthData
         authDataInMemory.add(newAuthData); // put this new authData into authDataInMemory
+        return newAuthData.authToken();
     }
 
     @Override
