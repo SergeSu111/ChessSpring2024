@@ -9,13 +9,13 @@ import spark.Request;
 public abstract class  baseHandler {
     // if the web API requires an authToken, write the logic to valid the authToken in base handler class
 
-    // use spark to create the request and response classes.
-    private Request request;
     private spark.Response response;
+    private spark.Request request;
     baseHandler(Request request, spark.Response response)
     {
-        this.request = request;
+        // use spark to create the request and response classes.
         this.response = response;
+        this.request = request;
     }
 
     public abstract Object httpHandlerRequest(Request request, spark.Response response);

@@ -60,11 +60,4 @@ public class registerHandler extends baseHandler
         response.type("application/json");
         return jsonResponse;
     }
-
-    /**
-     * @param request
-     * @param response
-     * @return
-     */
-
 }
