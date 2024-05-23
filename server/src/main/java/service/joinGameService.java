@@ -14,7 +14,7 @@ public class joinGameService
         String username = authDAO.getAuth(authToken);
         if (username == null)
         {
-            throw new DataAccessException("Error: unauthorized");
+            throw new DataAccessException("Error: already taken");
         }
         else
         {
