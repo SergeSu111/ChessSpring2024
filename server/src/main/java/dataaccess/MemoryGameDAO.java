@@ -23,6 +23,7 @@ public class MemoryGameDAO implements GameDAO{
         Random random = new Random();
         int randomInt = random.nextInt(10000); // get the random number between 0 - 10000
         GameData newGame = new GameData(randomInt, null, null, gameName, new ChessGame(new ChessBoard(), ChessGame.TeamColor.WHITE));
+        gameDataMemory.add(newGame);
         return randomInt;
     }
 
