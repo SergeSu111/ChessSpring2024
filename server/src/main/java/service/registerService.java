@@ -15,6 +15,10 @@ public class registerService
         {
             throw new DataAccessException("Error: already taken");
         }
+        if (registerRequest.password() == null)
+        {
+            throw new ClientException("Error: bad request");
+        }
         else // else the userDate is not in db
         {
             // CREATE one
