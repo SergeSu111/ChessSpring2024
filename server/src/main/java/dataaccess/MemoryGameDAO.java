@@ -17,6 +17,8 @@ public class MemoryGameDAO implements GameDAO{
      * @return
      * @throws DataAccessException
      */
+
+    private GameData usedGame;
     @Override
     public int createGame(String gameName) throws DataAccessException
     {
@@ -62,13 +64,13 @@ public class MemoryGameDAO implements GameDAO{
         GameData temGame;
         if (playerColor.equals(ChessGame.TeamColor.WHITE))
         {
-            temGame = new GameData(targetGame.gameID(), username, targetGame.blackUsername(), targetGame.gameName(), targetGame.game()); // create a temporary GameData. because we cannot change GameData's property
+            temGame = new GameData(usedGame.gameID(), username, usedGame.blackUsername(), usedGame.gameName(), usedGame.game()); // create a temporary GameData. because we cannot change GameData's property
             targetGame = temGame;
             gameDataMemory.add(targetGame);
         }
         else if(playerColor.equals(ChessGame.TeamColor.BLACK))
         {
-           temGame = new GameData(targetGame.gameID(), targetGame.blackUsername(), username, targetGame.gameName(), targetGame.game());
+           temGame = new GameData(usedGame.gameID(), usedGame.whiteUsername(), username, usedGame.gameName(), usedGame.game());
            targetGame = temGame;
            gameDataMemory.add(targetGame); // then add a new updated one
         }
@@ -84,6 +86,7 @@ public class MemoryGameDAO implements GameDAO{
     @Override
     public void joinGame(int gameID, ChessGame.TeamColor playerColor, String username) throws DataAccessException {
         GameData foundGame = getGame(playerColor, gameID);
+        usedGame = foundGame;
         gameDataMemory.remove(foundGame); // we removed the old one first.
         updateGame(username, playerColor, foundGame);
 
