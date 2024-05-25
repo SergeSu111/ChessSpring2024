@@ -3,6 +3,7 @@ package Handlers;
 import HttpRequest.JoinGameRequest;
 import HttpResponse.MessageResponse;
 import com.google.gson.Gson;
+import dataaccess.AlreadyTakenException;
 import dataaccess.ClientException;
 import dataaccess.DataAccessException;
 import dataaccess.ServerException;
@@ -26,8 +27,7 @@ public class joinGameHandler extends baseHandler
     public Object httpHandlerRequest(Request request, Response response) {
         Gson gson = new Gson();
         String jsonResponse;
-        try
-        {
+        try {
             String authToken = request.headers("Authorization");
             JoinGameRequest joinGameRequest = getBody(request, JoinGameRequest.class);
             joinGameServiceRefer.joinGame(joinGameRequest, authToken);
@@ -42,6 +42,10 @@ public class joinGameHandler extends baseHandler
             jsonResponse = gson.toJson(new MessageResponse(e.getMessage()));
         } catch (DataAccessException e) {
             response.status(401);
+            jsonResponse = gson.toJson(new MessageResponse(e.getMessage()));
+        } catch (AlreadyTakenException e)
+        {
+            response.status(403);
             jsonResponse = gson.toJson(new MessageResponse(e.getMessage()));
         }
         response.type("application/json");

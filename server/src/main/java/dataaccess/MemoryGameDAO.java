@@ -85,10 +85,8 @@ public class MemoryGameDAO implements GameDAO{
     public void joinGame(int gameID, ChessGame.TeamColor playerColor, String username) throws DataAccessException {
         GameData foundGame = getGame(playerColor, gameID);
         gameDataMemory.remove(foundGame); // we removed the old one first.
-        if (foundGame != null)
-        {
-            updateGame(username, playerColor, foundGame);
-        }
+        updateGame(username, playerColor, foundGame);
+
     }
 
     /**
