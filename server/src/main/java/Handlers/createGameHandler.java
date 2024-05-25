@@ -37,7 +37,7 @@ public class createGameHandler extends baseHandler{
             String authToken = request.headers("Authorization");
             CreateGameResponse createGameResponse = createGameServiceRefer.createGame(createGameRequest, authToken);
             int gameID = createGameResponse.gameID();
-            createdGameJsonReturn = gson.toJson(gameID);
+            createdGameJsonReturn = gson.toJson(createGameResponse);
             response.status(200);
 
         } catch (ServerException e)

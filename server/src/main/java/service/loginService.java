@@ -23,7 +23,7 @@ public class loginService
         {
             throw new DataAccessException("Error: unauthorized");
         }
-        if (loginRequest.password() != userData.password())
+        if (!loginRequest.password().equals(userData.password()))
         {
             throw new DataAccessException("Error: unauthorized");
         }
