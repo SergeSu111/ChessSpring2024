@@ -41,7 +41,7 @@ public class joinGameHandler extends baseHandler
             response.status(400);
             jsonResponse = gson.toJson(new MessageResponse(e.getMessage()));
         } catch (DataAccessException e) {
-            response.status(403);
+            response.status(401);
             jsonResponse = gson.toJson(new MessageResponse(e.getMessage()));
         }
         response.type("application/json");

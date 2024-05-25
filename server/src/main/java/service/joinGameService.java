@@ -16,6 +16,10 @@ public class joinGameService
         {
             throw new DataAccessException("Error: unauthorized");
         }
+        if (joinGameRequest.playerColor() == null)
+        {
+            throw new ClientException("Error: bad request");
+        }
         else
         {
             // just need to call joinGame Because joinGame will call updateGame in it.
