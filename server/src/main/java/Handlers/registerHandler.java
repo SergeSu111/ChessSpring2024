@@ -27,7 +27,7 @@ public class registerHandler extends baseHandler
         {
             // make the json request to be java request objects
             RegisterRequest body = getBody(request, RegisterRequest.class); // change the request to java object
-
+            // body.password();
             // call the register service
             RegisterResponse registerResponse =  registerServiceRefer.register(body);
 

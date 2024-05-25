@@ -1,4 +1,4 @@
 package HttpResponse;
 
-public record MessageResponse(String Message) {
+public record MessageResponse(String message) {
 }
