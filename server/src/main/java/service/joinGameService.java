@@ -16,7 +16,7 @@ public class joinGameService
         {
             throw new DataAccessException("Error: unauthorized");
         }
-        if (joinGameRequest.playerColor() == null)
+        if (joinGameRequest.playerColor() == null || joinGameRequest.gameID() == 0)
         {
             throw new ClientException("Error: bad request");
         }
