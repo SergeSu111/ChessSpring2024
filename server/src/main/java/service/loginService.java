@@ -19,6 +19,14 @@ public class loginService
         {
             throw new DataAccessException("Error: unauthorized");
         }
+        if (loginRequest.password() == null)
+        {
+            throw new DataAccessException("Error: unauthorized");
+        }
+        if (loginRequest.password() != userData.password())
+        {
+            throw new DataAccessException("Error: unauthorized");
+        }
         else
         {
             String authToken = memoryAuth.createAuth(userData.username());
