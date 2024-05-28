@@ -6,17 +6,17 @@ import java.util.HashSet;
 
 public class MemoryUserDAO implements UserDAO
 {
-    private static final HashSet<UserData> UserDataMemory = new HashSet<>();
+    private static final HashSet<UserData> USER_DATA_MEMORY = new HashSet<>();
     @Override
     public void createUser(UserData u) throws DataAccessException {
-        UserDataMemory.add(u); // add the UserData into the HashSet to create in the hashSet
+        USER_DATA_MEMORY.add(u); // add the UserData into the HashSet to create in the hashSet
 
     }
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
 
-           for (UserData singleUserData : UserDataMemory)
+           for (UserData singleUserData : USER_DATA_MEMORY)
            {
                if (singleUserData.username().equals(username))
                {
@@ -28,6 +28,6 @@ public class MemoryUserDAO implements UserDAO
 
     @Override
     public void clear() throws DataAccessException {
-        UserDataMemory.clear();
+        USER_DATA_MEMORY.clear();
     }
 }
