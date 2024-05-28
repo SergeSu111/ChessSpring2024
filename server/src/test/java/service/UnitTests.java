@@ -1,21 +1,12 @@
 package service;
 
-import Handlers.clearHandler;
-import Handlers.loginHandler;
-import Handlers.logoutHandler;
-import Handlers.registerHandler;
 import HttpRequest.RegisterRequest;
 import HttpResponse.RegisterResponse;
-import Model.UserData;
 import dataaccess.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.testng.asserts.Assertion;
-import spark.Request;
-import spark.Response;
+import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class UnitTests
 {
@@ -28,13 +19,17 @@ public class UnitTests
     private final MemoryGameDAO gameDAO = new MemoryGameDAO();
 
     private final registerService registerServiceTest = new registerService();
+
+
     @Test
+    @Order(1)
     public void clear() throws ServerException, DataAccessException {
         clearService clearServiceTest = new clearService();
         assertDoesNotThrow(clearServiceTest::clear);
     }
 
     @Test
+    @Order(2)
     public void registerSuccess() throws ServerException, ClientException, DataAccessException {
 
 
@@ -46,9 +41,10 @@ public class UnitTests
     }
 
     @Test
+    @Order(3)
     public void registerFailed() throws ServerException, ClientException, DataAccessException {
-        RegisterResponse registerResponseTest = registerServiceTest.register(registerRequestTest);
-        assertEquals(registerResponseTest, "Error: already taken");
+        DataAccessException daException = assertThrows(DataAccessException.class, () ->  registerServiceTest.register(registerRequestTest));
+        assertEquals(daException.getMessage(), "Error: already taken");
 
     }
 
