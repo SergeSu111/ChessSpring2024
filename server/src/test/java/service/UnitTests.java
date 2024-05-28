@@ -61,6 +61,16 @@ public class UnitTests
        assertEquals(username, loginResponse.username());
     }
 
+    @Test
+    @Order(5)
+    public void loginFailed() throws ServerException, DataAccessException, ClientException {
+        LoginRequest loginBadRequestTest = new LoginRequest("Su", null);
+        DataAccessException daException = assertThrows(DataAccessException.class, () ->  loginServiceTest.login(loginBadRequestTest));
+        assertEquals(daException.getMessage(), "Error: unauthorized");
+
+    }
+
+
 
 
 
