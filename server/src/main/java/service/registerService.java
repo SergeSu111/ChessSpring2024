@@ -9,7 +9,7 @@ public class registerService
 {
     private final MemoryUserDAO memoryUser = new MemoryUserDAO();
     private final MemoryAuthDAO memoryAuth = new MemoryAuthDAO();
-    public RegisterResponse register(RegisterRequest registerRequest) throws DataAccessException, ClientException, ServerException{
+    public  RegisterResponse register(RegisterRequest registerRequest) throws DataAccessException, ClientException, ServerException{
         UserData userData = memoryUser.getUser(registerRequest.username());
         if (userData != null)
         {
