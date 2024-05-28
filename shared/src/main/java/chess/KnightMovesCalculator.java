@@ -9,16 +9,16 @@ public class KnightMovesCalculator implements PieceMovesCalculator
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition)
     {
         ChessPiece thePiece = board.getPiece(myPosition);
-        return KnightMove(board, thePiece, myPosition);
+        return knightMove(board, thePiece, myPosition);
     }
 
-    private Collection<ChessMove> KnightMove(ChessBoard board, ChessPiece thePiece, ChessPosition startPosition) {
+    private Collection<ChessMove> knightMove(ChessBoard board, ChessPiece thePiece, ChessPosition startPosition) {
         int startColumn = startPosition.getColumn();
         int startRow = startPosition.getRow();
         int nextRow;
         int nextColumn;
 
-        ArrayList<ChessMove> KnightMoves = new ArrayList<>();
+        ArrayList<ChessMove> knightMoves = new ArrayList<>();
         // right 1 up 2
         nextRow = startRow + 2;
         nextColumn = startColumn + 1;
@@ -29,14 +29,14 @@ public class KnightMovesCalculator implements PieceMovesCalculator
             if (endPiece == null)
             {
                 ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                KnightMoves.add(smallMove);
+                knightMoves.add(smallMove);
             }
             else
             {
                 if (endPiece.getTeamColor() != thePiece.getTeamColor())
                 {
                     ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                    KnightMoves.add(smallMove);
+                    knightMoves.add(smallMove);
                 }
             }
         }
@@ -52,14 +52,14 @@ public class KnightMovesCalculator implements PieceMovesCalculator
             if (endPiece == null)
             {
                 ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                KnightMoves.add(smallMove);
+                knightMoves.add(smallMove);
             }
             else
             {
                 if (endPiece.getTeamColor() != thePiece.getTeamColor())
                 {
                     ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                    KnightMoves.add(smallMove);
+                    knightMoves.add(smallMove);
                 }
             }
         }
@@ -74,14 +74,14 @@ public class KnightMovesCalculator implements PieceMovesCalculator
             if (endPiece == null)
             {
                 ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                KnightMoves.add(smallMove);
+                knightMoves.add(smallMove);
             }
             else
             {
                 if (endPiece.getTeamColor() != thePiece.getTeamColor())
                 {
                     ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                    KnightMoves.add(smallMove);
+                    knightMoves.add(smallMove);
                 }
             }
         }
@@ -96,14 +96,14 @@ public class KnightMovesCalculator implements PieceMovesCalculator
             if (endPiece == null)
             {
                 ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                KnightMoves.add(smallMove);
+                knightMoves.add(smallMove);
             }
             else
             {
                 if (endPiece.getTeamColor() != thePiece.getTeamColor())
                 {
                     ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                    KnightMoves.add(smallMove);
+                    knightMoves.add(smallMove);
                 }
             }
         }
@@ -117,14 +117,14 @@ public class KnightMovesCalculator implements PieceMovesCalculator
             if (endPiece == null)
             {
                 ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                KnightMoves.add(smallMove);
+                knightMoves.add(smallMove);
             }
             else
             {
                 if (endPiece.getTeamColor() != thePiece.getTeamColor())
                 {
                     ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                    KnightMoves.add(smallMove);
+                    knightMoves.add(smallMove);
                 }
             }
         }
@@ -138,14 +138,14 @@ public class KnightMovesCalculator implements PieceMovesCalculator
             if (endPiece == null)
             {
                 ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                KnightMoves.add(smallMove);
+                knightMoves.add(smallMove);
             }
             else
             {
                 if (endPiece.getTeamColor() != thePiece.getTeamColor())
                 {
                     ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                    KnightMoves.add(smallMove);
+                    knightMoves.add(smallMove);
                 }
             }
         }
@@ -159,14 +159,14 @@ public class KnightMovesCalculator implements PieceMovesCalculator
             if (endPiece == null)
             {
                 ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                KnightMoves.add(smallMove);
+                knightMoves.add(smallMove);
             }
             else
             {
                 if (endPiece.getTeamColor() != thePiece.getTeamColor())
                 {
                     ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                    KnightMoves.add(smallMove);
+                    knightMoves.add(smallMove);
                 }
             }
         }
@@ -180,18 +180,18 @@ public class KnightMovesCalculator implements PieceMovesCalculator
             if (endPiece == null)
             {
                 ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                KnightMoves.add(smallMove);
+                knightMoves.add(smallMove);
             }
             else
             {
                 if (endPiece.getTeamColor() != thePiece.getTeamColor())
                 {
                     ChessMove smallMove = new ChessMove(startPosition, endPosition, null);
-                    KnightMoves.add(smallMove);
+                    knightMoves.add(smallMove);
                 }
             }
         }
-        return KnightMoves;
+        return knightMoves;
 
     }
 

@@ -1,17 +1,16 @@
 package dataaccess;
 
-import Model.GameData;
+import model.GameData;
 import chess.ChessBoard;
 import chess.ChessGame;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
-import java.util.UUID;
 
 public class MemoryGameDAO implements GameDAO{
 
-    private static final HashSet<GameData> gameDataMemory = new HashSet<>();
+    private static final HashSet<GameData> GameDataMemory = new HashSet<>();
     /**
      * @param gameName
      * @return
@@ -25,7 +24,7 @@ public class MemoryGameDAO implements GameDAO{
         Random random = new Random();
         int randomInt = random.nextInt(10000); // get the random number between 0 - 10000
         GameData newGame = new GameData(randomInt, null, null, gameName, new ChessGame(new ChessBoard(), ChessGame.TeamColor.WHITE));
-        gameDataMemory.add(newGame);
+        GameDataMemory.add(newGame);
         return randomInt;
     }
 
@@ -37,7 +36,7 @@ public class MemoryGameDAO implements GameDAO{
      */
     @Override
     public GameData getGame(ChessGame.TeamColor playerColor, int gameID) throws DataAccessException {
-        for (GameData singleGame : gameDataMemory)
+        for (GameData singleGame : GameDataMemory)
         {
             if (singleGame.gameID() == gameID)
             {
@@ -54,7 +53,7 @@ public class MemoryGameDAO implements GameDAO{
      */
     @Override
     public ArrayList<GameData> listGames(String authToken) throws DataAccessException {
-        return new ArrayList<>(gameDataMemory);
+        return new ArrayList<>(GameDataMemory);
     }
 
 
@@ -66,13 +65,13 @@ public class MemoryGameDAO implements GameDAO{
         {
             temGame = new GameData(usedGame.gameID(), username, usedGame.blackUsername(), usedGame.gameName(), usedGame.game()); // create a temporary GameData. because we cannot change GameData's property
             targetGame = temGame;
-            gameDataMemory.add(targetGame);
+            GameDataMemory.add(targetGame);
         }
         else if(playerColor.equals(ChessGame.TeamColor.BLACK))
         {
            temGame = new GameData(usedGame.gameID(), usedGame.whiteUsername(), username, usedGame.gameName(), usedGame.game());
            targetGame = temGame;
-           gameDataMemory.add(targetGame); // then add a new updated one
+           GameDataMemory.add(targetGame); // then add a new updated one
         }
 
     }
@@ -87,7 +86,7 @@ public class MemoryGameDAO implements GameDAO{
     public void joinGame(int gameID, ChessGame.TeamColor playerColor, String username) throws DataAccessException {
         GameData foundGame = getGame(playerColor, gameID);
         usedGame = foundGame;
-        gameDataMemory.remove(foundGame); // we removed the old one first.
+        GameDataMemory.remove(foundGame); // we removed the old one first.
         updateGame(username, playerColor, foundGame);
 
     }
@@ -97,7 +96,7 @@ public class MemoryGameDAO implements GameDAO{
      */
     @Override
     public void clear() throws DataAccessException {
-        gameDataMemory.clear();
+        GameDataMemory.clear();
     }
 
 

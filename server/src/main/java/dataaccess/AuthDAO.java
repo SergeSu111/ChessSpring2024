@@ -1,7 +1,5 @@
 package dataaccess;
 
-import Model.AuthData;
-
 public interface AuthDAO {
 
     public default String createAuth(String username) throws DataAccessException

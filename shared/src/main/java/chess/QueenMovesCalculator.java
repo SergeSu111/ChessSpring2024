@@ -8,12 +8,12 @@ public class QueenMovesCalculator implements PieceMovesCalculator
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition)
     {
-        ArrayList<ChessMove> QueenMoves = new ArrayList<>();
+        ArrayList<ChessMove> queenMoves = new ArrayList<>();
 //        ChessPiece thePiece = board.getPiece(myPosition); // get the current piece
         RookMovesCalculator rookMoves = new RookMovesCalculator();
         BishopMovesCalculator bishopMoves = new BishopMovesCalculator();
-        QueenMoves.addAll(rookMoves.pieceMoves(board, myPosition));
-        QueenMoves.addAll(bishopMoves.pieceMoves(board, myPosition));
-        return QueenMoves;
+        queenMoves.addAll(rookMoves.pieceMoves(board, myPosition));
+        queenMoves.addAll(bishopMoves.pieceMoves(board, myPosition));
+        return queenMoves;
     }
 }

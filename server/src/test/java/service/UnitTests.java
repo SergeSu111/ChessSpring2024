@@ -1,18 +1,17 @@
 package service;
 
-import HttpRequest.CreateGameRequest;
-import HttpRequest.JoinGameRequest;
-import HttpRequest.LoginRequest;
-import HttpRequest.RegisterRequest;
-import HttpResponse.CreateGameResponse;
-import HttpResponse.LIstGameResponse;
-import HttpResponse.LoginResponse;
-import HttpResponse.RegisterResponse;
-import Model.GameData;
+import httprequest.CreateGameRequest;
+import httprequest.JoinGameRequest;
+import httprequest.LoginRequest;
+import httprequest.RegisterRequest;
+import httpresponse.CreateGameResponse;
+import httpresponse.LIstGameResponse;
+import httpresponse.LoginResponse;
+import httpresponse.RegisterResponse;
+import model.GameData;
 import chess.ChessGame;
 import dataaccess.*;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.ArrayList;
 
@@ -33,13 +32,13 @@ public class UnitTests
 
     private final MemoryGameDAO gameDAO = new MemoryGameDAO();
 
-    private final registerService registerServiceTest = new registerService();
-    private final loginService loginServiceTest = new loginService();
+    private final RegisterService registerServiceTest = new RegisterService();
+    private final LoginService loginServiceTest = new LoginService();
 
-    private final createGameService createGameServiceTest = new createGameService();
-    private final joinGameService joinGameServiceTest = new joinGameService();
-    private final listGamesService listGamesServiceTest = new listGamesService();
-    private final logoutService logoutServiceTest = new logoutService();
+    private final CreateGameService createGameServiceTest = new CreateGameService();
+    private final JoinGameService joinGameServiceTest = new JoinGameService();
+    private final ListGamesService listGamesServiceTest = new ListGamesService();
+    private final LogoutService logoutServiceTest = new LogoutService();
 
 
     private final RegisterRequest registerRequestTest = new RegisterRequest("Serge", "Serge666", "sjh666@byu.edu");
@@ -59,7 +58,7 @@ public class UnitTests
     @Test
     @Order(1)
     public void clear() throws ServerException, DataAccessException {
-        clearService clearServiceTest = new clearService();
+        ClearService clearServiceTest = new ClearService();
         assertDoesNotThrow(clearServiceTest::clear);
     }
 
