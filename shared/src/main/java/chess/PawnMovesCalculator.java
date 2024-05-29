@@ -22,23 +22,17 @@ public class PawnMovesCalculator implements PieceMovesCalculator
         ArrayList<ChessMove> pawnMoves = new ArrayList<>();
         int startRow = startPosition.getRow();
         int startColumn = startPosition.getColumn();
-        int nextRow;
-        boolean empty = false;
-        int setUpRow;
+        int nextRow, setUpRow;
         if (thePiece.getTeamColor() == ChessGame.TeamColor.WHITE)
         {
             setUpRow = 2;
             nextRow = startRow + 1;
         }
-        // else is Black
         else
         {
             setUpRow = 7;
             nextRow = startRow - 1;
         }
-
-
-        // if it is in bound for nextRow
         if (rowInBound(nextRow))
         {
             ChessPiece nextPiece = board.getPiece(new ChessPosition(nextRow, startColumn)); // get the nextPiece
@@ -46,19 +40,14 @@ public class PawnMovesCalculator implements PieceMovesCalculator
             {
                 if (nextRow == 1 || nextRow == 8)  // means need to promote
                 {
-                    ChessMove smallMove1 = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.ROOK);
-                    pawnMoves.add(smallMove1);
-                    ChessMove smallMove2 = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.BISHOP);
-                    pawnMoves.add(smallMove2);
-                    ChessMove smallMove3 = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.KNIGHT);
-                    pawnMoves.add(smallMove3);
-                    ChessMove smallMove4 = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.QUEEN);
-                    pawnMoves.add(smallMove4);
+                    pawnMoves.add(new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.ROOK));
+                    pawnMoves.add(new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.BISHOP));
+                    pawnMoves.add(new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.KNIGHT));
+                    pawnMoves.add(new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), ChessPiece.PieceType.QUEEN));
                 }
                 else
                 {
-                    ChessMove smallMove = new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), null);
-                    pawnMoves.add(smallMove);
+                    pawnMoves.add( new ChessMove(startPosition, new ChessPosition(nextRow, startColumn), null));
                 }
             }
         }
@@ -73,13 +62,11 @@ public class PawnMovesCalculator implements PieceMovesCalculator
                 ChessPiece nextPiece = board.getPiece(nextPosition);
                 if (nextNextPiece == null && nextPiece == null)
                 {
-                    ChessMove smallMove1 = new ChessMove(startPosition, nextNextPosition, null); // for step 2
-                    pawnMoves.add(smallMove1);
+                    pawnMoves.add( new ChessMove(startPosition, nextNextPosition, null));
                 }
                 if (nextPiece == null && nextNextPiece != null)  // if nextPiece is null but nextNext is not . I can go 1 step even if I am in the setup Line
                 {
-                    ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
-                    pawnMoves.add(smallMove);
+                    pawnMoves.add( new ChessMove(startPosition, nextPosition, null));
                 }
             }
             else
@@ -91,13 +78,11 @@ public class PawnMovesCalculator implements PieceMovesCalculator
                 ChessPiece nextPiece = board.getPiece(nextPosition);
                 if (nextNextPiece == null && nextPiece == null)
                 {
-                    ChessMove smallMove1 = new ChessMove(startPosition, nextNextPosition, null);
-                    pawnMoves.add(smallMove1);
+                    pawnMoves.add(new ChessMove(startPosition, nextNextPosition, null));
                 }
                 if (nextPiece == null && nextNextPiece != null)  // if nextPiece is null but nextNext is not . I can go 1 step even if I am in the setup Line
                 {
-                    ChessMove smallMove = new ChessMove(startPosition, nextPosition, null);
-                    pawnMoves.add(smallMove);
+                    pawnMoves.add(new ChessMove(startPosition, nextPosition, null));
                 }
             }
         }
@@ -110,19 +95,14 @@ public class PawnMovesCalculator implements PieceMovesCalculator
             {
                 if (nextPositionRight.getRow() == 1 || nextPositionRight.getRow() == 8) // needs promote
                 {
-                    ChessMove smallMove1 = new ChessMove(startPosition, nextPositionRight, ChessPiece.PieceType.ROOK);
-                    pawnMoves.add(smallMove1);
-                    ChessMove smallMove2 = new ChessMove(startPosition, nextPositionRight, ChessPiece.PieceType.QUEEN);
-                    pawnMoves.add(smallMove2);
-                    ChessMove smallMove3 = new ChessMove(startPosition, nextPositionRight, ChessPiece.PieceType.KNIGHT);
-                    pawnMoves.add(smallMove3);
-                    ChessMove smallMove4 = new ChessMove(startPosition, nextPositionRight, ChessPiece.PieceType.BISHOP);
-                    pawnMoves.add(smallMove4);
+                    pawnMoves.add(new ChessMove(startPosition, nextPositionRight, ChessPiece.PieceType.ROOK));
+                    pawnMoves.add(new ChessMove(startPosition, nextPositionRight, ChessPiece.PieceType.QUEEN));
+                    pawnMoves.add(new ChessMove(startPosition, nextPositionRight, ChessPiece.PieceType.KNIGHT));
+                    pawnMoves.add(new ChessMove(startPosition, nextPositionRight, ChessPiece.PieceType.BISHOP));
                 }
                 else
                 {
-                    ChessMove smallMove = new ChessMove(startPosition, nextPositionRight, null); // else not in 1 or 8 line
-                    pawnMoves.add(smallMove);
+                    pawnMoves.add(new ChessMove(startPosition, nextPositionRight, null));
                 }
             }
         }
@@ -135,19 +115,14 @@ public class PawnMovesCalculator implements PieceMovesCalculator
             {
                 if (nextPosition.getRow() == 1 || nextPosition.getRow() == 8) // needs promote
                 {
-                    ChessMove smallMove1 = new ChessMove(startPosition, nextPosition, ChessPiece.PieceType.ROOK);
-                    pawnMoves.add(smallMove1);
-                    ChessMove smallMove2 = new ChessMove(startPosition, nextPosition, ChessPiece.PieceType.QUEEN);
-                    pawnMoves.add(smallMove2);
-                    ChessMove smallMove3 = new ChessMove(startPosition, nextPosition, ChessPiece.PieceType.KNIGHT);
-                    pawnMoves.add(smallMove3);
-                    ChessMove smallMove4 = new ChessMove(startPosition, nextPosition, ChessPiece.PieceType.BISHOP);
-                    pawnMoves.add(smallMove4);
+                    pawnMoves.add(new ChessMove(startPosition, nextPosition, ChessPiece.PieceType.ROOK));
+                    pawnMoves.add(new ChessMove(startPosition, nextPosition, ChessPiece.PieceType.QUEEN));
+                    pawnMoves.add(new ChessMove(startPosition, nextPosition, ChessPiece.PieceType.KNIGHT));
+                    pawnMoves.add(new ChessMove(startPosition, nextPosition, ChessPiece.PieceType.BISHOP));
                 }
                 else
                 {
-                    ChessMove smallMove = new ChessMove(startPosition, nextPosition, null); // else not in 1 or 8 line
-                    pawnMoves.add(smallMove);
+                    pawnMoves.add(new ChessMove(startPosition, nextPosition, null));
                 }
             }
         }
