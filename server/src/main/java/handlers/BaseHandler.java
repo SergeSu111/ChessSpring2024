@@ -21,24 +21,6 @@ public abstract class BaseHandler {
 
     public abstract Object httpHandlerRequest(Request request, spark.Response response) throws ServerException, DataAccessException;
 
-    protected String validAuthToken(Request request, Response response) throws DataAccessException {
-        // get the token
-        String authToken = request.headers("Authorization"); // get the authToken in the header of the request
-
-        // how can I validate the authToken?
-        if (authToken != null)
-        {
-            MemoryAuthDAO newMemoryAuthDao = new MemoryAuthDAO();
-            var getUsername = newMemoryAuthDao.getAuth(authToken);
-            if (getUsername != null)
-            {
-                return authToken; // which means the authToken is in db.
-            }
-
-        }
-        return "Your authToken is not in db.";
-    }
-
     protected static <T> T getBody (Request request, Class<T> aClass)
     {
         Gson gson = new Gson();

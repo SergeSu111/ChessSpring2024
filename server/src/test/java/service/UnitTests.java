@@ -46,13 +46,6 @@ public class UnitTests
 
     private final RegisterRequest registerRequestTest2 = new RegisterRequest("CC", "cc666", "cc@byu.edu");
 
-//    @BeforeEach
-//    void setUp() throws ServerException, ClientException, DataAccessException {
-//
-//        RegisterResponse registerResponseTest = registerServiceTest.register(registerRequestTest2);
-//
-//    }
-
 
 
     @Test
