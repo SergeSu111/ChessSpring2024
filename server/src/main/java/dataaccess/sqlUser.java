@@ -25,6 +25,10 @@ public class sqlUser implements UserDAO
                     """
             };
 
+    public sqlUser() throws DataAccessException {
+        createUserTable();
+    }
+
     public static void createUserTable() throws DataAccessException {
         try(var conn = DatabaseManager.getConnection())
         {

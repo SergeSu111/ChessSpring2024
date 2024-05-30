@@ -11,6 +11,11 @@ public class sqlAuth implements AuthDAO {
     // where I should call createDB? I think I only need to call 1 time
     // where I should create the authTable? I have to write a method called createAuthTable in it, and call createStatement?
 
+
+    public sqlAuth() throws DataAccessException { // everyTime I create the object of sqlAuth, I will createTheAuthTable
+        createAuthTable();
+    }
+
     public static void createAuthTable() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection())
         {
