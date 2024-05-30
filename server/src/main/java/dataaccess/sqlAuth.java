@@ -14,16 +14,19 @@ public class sqlAuth implements AuthDAO {
     // where I should call createDB? I think I only need to call 1 time
     // where I should create the authTable? I have to write a method called createAuthTable in it, and call createStatement?
     @Override
-    public String createAuth(String username) throws DataAccessException, SQLException {
+    public String createAuth(String username) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var preparedStatement = conn.prepareStatement("INSERT INTO username(userName, authToken) VALUES(?, ?)"))
             {
+
                 String authTokenCreated = UUID.randomUUID().toString(); // get a random authToken
                 preparedStatement.setString(1, username);
                 preparedStatement.setString(2, authTokenCreated);
                 preparedStatement.executeUpdate();
                 return authTokenCreated;
             }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
         }
     }
 
@@ -49,7 +52,7 @@ public class sqlAuth implements AuthDAO {
                    }
                 }
             }
-        } catch (SQLException e) {
+        } catch (DataAccessException | SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
     }
