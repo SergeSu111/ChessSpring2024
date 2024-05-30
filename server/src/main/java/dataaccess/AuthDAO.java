@@ -4,23 +4,11 @@ import java.sql.SQLException;
 
 public interface AuthDAO {
 
-    public default String createAuth(String username) throws DataAccessException, SQLException {
-        return null;
-    }
+    public  String createAuth(String username) throws DataAccessException, SQLException;
 
-    public default String getAuth(String authToken) throws DataAccessException
-    {
-        return null;
-    }
+    public String getAuth(String authToken) throws DataAccessException, SQLException;
 
-    public default void deleteAuth(String authToken) throws DataAccessException
-    {
-        return;
-    }
+    public void deleteAuth(String authToken) throws DataAccessException, SQLException;
 
-    public default void clear() throws DataAccessException
-    {
-        return;
-    }
-
+    public  void clear() throws DataAccessException;
 }

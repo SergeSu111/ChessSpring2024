@@ -1,6 +1,7 @@
 package dataaccess;
 
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.UUID;
 
 public class sqlAuth implements AuthDAO {
@@ -11,18 +12,17 @@ public class sqlAuth implements AuthDAO {
      */
 
     // where I should call createDB? I think I only need to call 1 time
-    // where I should create the authTable?
+    // where I should create the authTable? I have to write a method called createAuthTable in it, and call createStatement?
     @Override
     public String createAuth(String username) throws DataAccessException, SQLException {
         try (var conn = DatabaseManager.getConnection()) {
-            conn.setCatalog("chess"); // to make sure doing with chess db.
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO auth(authToken) VALUES (?)"))
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO username(userName, authToken) VALUES(?, ?)"))
             {
-               String authToken = UUID.randomUUID().toString(); // get a random authToken
-                preparedStatement.setString(1, authToken);
-
+                String authTokenCreated = UUID.randomUUID().toString(); // get a random authToken
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, authTokenCreated);
                 preparedStatement.executeUpdate();
-                return authToken;
+                return authTokenCreated;
             }
         }
     }
@@ -34,7 +34,24 @@ public class sqlAuth implements AuthDAO {
      */
     @Override
     public String getAuth(String authToken) throws DataAccessException {
-        return AuthDAO.super.getAuth(authToken);
+        // return a username or null
+        try(var conn = DatabaseManager.getConnection())
+        {
+            conn.setCatalog("chess");
+            try (var preparedStatement = conn.prepareStatement("SELECT authToken, username FROM Auth WHERE authToken = ?"))
+            {
+                preparedStatement.setString(1, authToken);
+                try (var rs = preparedStatement.executeQuery())
+                {
+                   if (rs.next())
+                   {
+                       return rs.getString("username");
+                   }
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
     }
 
     /**
@@ -42,8 +59,14 @@ public class sqlAuth implements AuthDAO {
      * @throws DataAccessException
      */
     @Override
-    public void deleteAuth(String authToken) throws DataAccessException {
-        AuthDAO.super.deleteAuth(authToken);
+    public void deleteAuth(String authToken) throws DataAccessException, SQLException {
+        try (var conn = DatabaseManager.getConnection())
+        {
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM Auths WHERE authToken = ?"))
+            {
+
+            }
+        }
     }
 
     /**
@@ -62,11 +85,12 @@ public class sqlAuth implements AuthDAO {
                     CREATE TABLE IF NOT EXISTS Auth
                     (
                         `authToken` varchar(255) NOT NULL,
-                        `username` varchar(255) NOT NULL,
-                         primary key ("authToken);
+                        `userName` varchar(255)  NOT NULL,
+                         PRIMARY KEY (authToken);
                     )
                     """
             };
+    `
 }
 
 
