@@ -11,7 +11,7 @@ public class sqlAuth implements AuthDAO {
     // where I should call createDB? I think I only need to call 1 time
     // where I should create the authTable? I have to write a method called createAuthTable in it, and call createStatement?
 
-    public static void createAuthTable(String createStatement) throws DataAccessException {
+    public static void createAuthTable() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection())
         {
             try (var preparedStatement = conn.prepareStatement(Arrays.toString(createStatements)))
@@ -49,7 +49,7 @@ public class sqlAuth implements AuthDAO {
         try(var conn = DatabaseManager.getConnection())
         {
             conn.setCatalog("chess");
-            try (var preparedStatement = conn.prepareStatement("SELECT authTokenCol, userNameCol FROM Auth WHERE authTokenCol = ?"))
+            try (var preparedStatement = conn.prepareStatement("SELECT authTokenCol, userNameCol FROM Auths WHERE authTokenCol = ?"))
             {
                 preparedStatement.setString(1, authToken);
                 try (var rs = preparedStatement.executeQuery())
@@ -89,7 +89,7 @@ public class sqlAuth implements AuthDAO {
     public void clear() throws DataAccessException {
        try (var conn = DatabaseManager.getConnection())
        {
-           try (var preparedStatement = conn.prepareStatement("TRUNCATE TABLE Auth"))
+           try (var preparedStatement = conn.prepareStatement("TRUNCATE TABLE Auths"))
            {
                preparedStatement.executeUpdate();
            }
@@ -105,7 +105,7 @@ public class sqlAuth implements AuthDAO {
             {
                     // the varChar is 255 or 256? They are null or not null.
                     """
-                    CREATE TABLE IF NOT EXISTS Auth
+                    CREATE TABLE IF NOT EXISTS Auths
                     (
                         `authTokenCol` varchar(255) NOT NULL,
                         `userNameCol` varchar(255)  NOT NULL,
