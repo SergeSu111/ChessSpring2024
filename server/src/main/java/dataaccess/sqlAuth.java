@@ -28,7 +28,7 @@ public class sqlAuth implements AuthDAO {
     @Override
     public String createAuth(String username) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO username(userNameCol, authTokenCol) VALUES(?, ?)"))
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO Auths(userNameCol, authTokenCol) VALUES(?, ?)"))
             {
 
                 String authTokenCreated = UUID.randomUUID().toString(); // get a random authToken

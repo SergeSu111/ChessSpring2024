@@ -37,8 +37,12 @@ public class sqlUser implements UserDAO
         }
     }
     @Override
-    public void createUser(UserData u) throws DataAccessException {
-
+    public void createUser(UserData u) throws DataAccessException
+    {
+        try (var conn = DatabaseManager.getConnection())
+        {
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO Users"))
+        }
     }
 
     /**
