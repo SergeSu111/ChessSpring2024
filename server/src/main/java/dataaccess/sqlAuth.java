@@ -60,7 +60,7 @@ public class sqlAuth implements AuthDAO {
                 {
                    if (rs.next())
                    {
-                       username = rs.getString("username");
+                       username = rs.getString("userNameCol");
                    }
                    else
                    {

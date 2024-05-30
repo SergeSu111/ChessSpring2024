@@ -81,6 +81,11 @@ public class sqlUser implements UserDAO
      */
     @Override
     public UserData getUser(String username) throws DataAccessException {
+        UserData getUserData;
+        if (username == null)
+        {
+            return null;
+        }
         try (var conn = DatabaseManager.getConnection())
         {
             try (var preparedStatement = conn.prepareStatement("SELECT passwordCol, usernameCol, emailCol FROM Users WHERE usernameCol = ?"))
@@ -90,12 +95,22 @@ public class sqlUser implements UserDAO
                 {
                     if (rs.next())
                     {
+                        String password = rs.getString("passwordCol");
+                        String email = rs.getString("emailCol");
+                        getUserData = new UserData(username, password, email);
+                    }
+                    else
+                    {
+                        getUserData = null;
 
                     }
                 } catch (SQLException e) {
                     throw new DataAccessException(e.getMessage());
                 }
+                return getUserData;
             }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
         }
     }
 
