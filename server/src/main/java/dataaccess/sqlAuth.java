@@ -16,7 +16,7 @@ public class sqlAuth implements AuthDAO {
     @Override
     public String createAuth(String username) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO username(userName, authToken) VALUES(?, ?)"))
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO username(userNameCol, authTokenCol) VALUES(?, ?)"))
             {
 
                 String authTokenCreated = UUID.randomUUID().toString(); // get a random authToken
@@ -41,7 +41,7 @@ public class sqlAuth implements AuthDAO {
         try(var conn = DatabaseManager.getConnection())
         {
             conn.setCatalog("chess");
-            try (var preparedStatement = conn.prepareStatement("SELECT authToken, username FROM Auth WHERE authToken = ?"))
+            try (var preparedStatement = conn.prepareStatement("SELECT authTokenCol, userNameCol FROM Auth WHERE authTokenCol = ?"))
             {
                 preparedStatement.setString(1, authToken);
                 try (var rs = preparedStatement.executeQuery())
@@ -65,9 +65,9 @@ public class sqlAuth implements AuthDAO {
     public void deleteAuth(String authToken) throws DataAccessException, SQLException {
         try (var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement("DELETE FROM Auths WHERE authToken = ?"))
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM Auths WHERE authTokenCol = ?")) // delete that row that matches the passed in authToken
             {
-
+                preparedStatement.setString(1, authToken);
             }
         }
     }
@@ -87,8 +87,8 @@ public class sqlAuth implements AuthDAO {
                     """
                     CREATE TABLE IF NOT EXISTS Auth
                     (
-                        `authToken` varchar(255) NOT NULL,
-                        `userName` varchar(255)  NOT NULL,
+                        `authTokenCol` varchar(255) NOT NULL,
+                        `userNameCol` varchar(255)  NOT NULL,
                          PRIMARY KEY (authToken);
                     )
                     """
