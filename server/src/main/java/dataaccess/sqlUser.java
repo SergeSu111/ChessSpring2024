@@ -4,6 +4,7 @@ import model.UserData;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class sqlUser implements UserDAO
 {
@@ -43,12 +44,14 @@ public class sqlUser implements UserDAO
     @Override
     public void createUser(UserData u) throws DataAccessException
     {
+        String password = u.password();
+        String hashed = HashedPassword.hashPassword(password);
         try (var conn = DatabaseManager.getConnection())
         {
             try (var preparedStatement = conn.prepareStatement("INSERT INTO Users(usernameCol, passwordCol, emailCol) VALUES (?, ?, ?)"))
             {
                 preparedStatement.setString(1, u.username());
-                preparedStatement.setString(2, u.password());
+                preparedStatement.setString(2, hashed);
                 preparedStatement.setString(3, u.email());
 
                 preparedStatement.executeUpdate();
