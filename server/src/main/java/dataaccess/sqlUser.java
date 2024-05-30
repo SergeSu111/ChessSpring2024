@@ -20,7 +20,7 @@ public class sqlUser implements UserDAO
                         `passwordCol` varchar(255) NOT NULL,
                         `usernameCol` varchar(255)  NOT NULL,
                         `emailCol` varchar(255) NOT NULL,
-                         PRIMARY KEY (authToken);
+                         PRIMARY KEY (usernameCol);
                     )
                     """
             };
@@ -41,7 +41,18 @@ public class sqlUser implements UserDAO
     {
         try (var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO Users"))
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO Users(usernameCol, passwordCol, emailCol) VALUES (?, ?, ?)"))
+            {
+                preparedStatement.setString(1, u.username());
+                preparedStatement.setString(2, u.password());
+                preparedStatement.setString(3, u.email());
+
+                preparedStatement.executeUpdate();
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DataAccessException(e.getMessage());
         }
     }
 
@@ -50,7 +61,17 @@ public class sqlUser implements UserDAO
      */
     @Override
     public void clear() throws DataAccessException {
-        UserDAO.super.clear();
+        try (var conn = DatabaseManager.getConnection())
+        {
+            try (var preparedStatement = conn.prepareStatement("TRUNCATE TABLE Users"))
+            {
+                preparedStatement.executeUpdate();
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DataAccessException(e.getMessage());
+        }
     }
 
     /**
@@ -60,7 +81,22 @@ public class sqlUser implements UserDAO
      */
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        return UserDAO.super.getUser(username);
+        try (var conn = DatabaseManager.getConnection())
+        {
+            try (var preparedStatement = conn.prepareStatement("SELECT passwordCol, usernameCol, emailCol FROM Users WHERE usernameCol = ?"))
+            {
+                preparedStatement.setString(1, username);
+                try (var rs = preparedStatement.executeQuery())
+                {
+                    if (rs.next())
+                    {
+
+                    }
+                } catch (SQLException e) {
+                    throw new DataAccessException(e.getMessage());
+                }
+            }
+        }
     }
 
 }

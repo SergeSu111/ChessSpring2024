@@ -28,6 +28,10 @@ public class sqlAuth implements AuthDAO {
     @Override
     public String createAuth(String username) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
+            if (username == null)
+            {
+                return null;
+            }
             try (var preparedStatement = conn.prepareStatement("INSERT INTO Auths(userNameCol, authTokenCol) VALUES(?, ?)"))
             {
 
