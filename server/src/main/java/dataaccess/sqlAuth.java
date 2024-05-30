@@ -1,18 +1,30 @@
 package dataaccess;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
 public class sqlAuth implements AuthDAO {
-    /**
-     * @param username
-     * @return
-     * @throws DataAccessException
-     */
+
 
     // where I should call createDB? I think I only need to call 1 time
     // where I should create the authTable? I have to write a method called createAuthTable in it, and call createStatement?
+
+    public static void createAuthTable(String createStatement) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection())
+        {
+            try (var preparedStatement = conn.prepareStatement(Arrays.toString(createStatements)))
+            {
+                preparedStatement.executeUpdate();
+
+            }
+        }
+        catch (SQLException E)
+        {
+            throw new DataAccessException(E.getMessage());
+        }
+    }
     @Override
     public String createAuth(String username) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
@@ -30,13 +42,9 @@ public class sqlAuth implements AuthDAO {
         }
     }
 
-    /**
-     * @param authToken
-     * @return
-     * @throws DataAccessException
-     */
     @Override
     public String getAuth(String authToken) throws DataAccessException {
+        String username;
         // return a username or null
         try(var conn = DatabaseManager.getConnection())
         {
@@ -48,40 +56,52 @@ public class sqlAuth implements AuthDAO {
                 {
                    if (rs.next())
                    {
-                       return rs.getString("username");
+                       username = rs.getString("username");
+                   }
+                   else
+                   {
+                       username = null;
                    }
                 }
             }
         } catch (DataAccessException | SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
+        return username;
     }
 
-    /**
-     * @param authToken
-     * @throws DataAccessException
-     */
     @Override
-    public void deleteAuth(String authToken) throws DataAccessException, SQLException {
+    public void deleteAuth(String authToken) throws DataAccessException{
         try (var conn = DatabaseManager.getConnection())
         {
             try (var preparedStatement = conn.prepareStatement("DELETE FROM Auths WHERE authTokenCol = ?")) // delete that row that matches the passed in authToken
             {
                 preparedStatement.setString(1, authToken);
+                preparedStatement.executeUpdate();
             }
         }
+        catch (SQLException e)
+        {
+            throw new DataAccessException(e.getMessage());
+        }
     }
-
-    /**
-     * @throws DataAccessException
-     */
     @Override
     public void clear() throws DataAccessException {
-        AuthDAO.super.clear();
+       try (var conn = DatabaseManager.getConnection())
+       {
+           try (var preparedStatement = conn.prepareStatement("TRUNCATE TABLE Auth"))
+           {
+               preparedStatement.executeUpdate();
+           }
+       }
+       catch (SQLException e)
+       {
+           throw new DataAccessException(e.getMessage());
+       }
     }
 
     // Where I should call the createStatements to make sure the table is created?
-    private final String[] createStatements =
+    private static final String[] createStatements =
             {
                     // the varChar is 255 or 256? They are null or not null.
                     """
@@ -93,7 +113,6 @@ public class sqlAuth implements AuthDAO {
                     )
                     """
             };
-    `
 }
 
 
