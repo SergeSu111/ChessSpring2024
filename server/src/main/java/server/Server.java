@@ -1,10 +1,14 @@
 package server;
 
+import dataaccess.DataAccessException;
+import dataaccess.DatabaseManager;
 import handlers.*;
 import spark.*;
 
+import static dataaccess.DatabaseManager.createDatabase;
+
 public class Server {
-    public int run(int desiredPort) {
+    public int run(int desiredPort) throws DataAccessException {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
@@ -18,6 +22,8 @@ public class Server {
         Spark.put("/game", (req, res) -> new JoinGameHandler(req, res).httpHandlerRequest(req, res));
         Spark.delete("/db", (req, res) -> new ClearHandler(req, res).httpHandlerRequest(req, res));
         Spark.awaitInitialization();
+
+        DatabaseManager.createDatabase();
         return Spark.port();
     }
 
