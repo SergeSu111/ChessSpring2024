@@ -37,6 +37,10 @@ public class sqlUser implements UserDAO
             {
                 preparedStatement.executeUpdate();
             }
+            catch (SQLException e)
+            {
+                throw new DataAccessException(e.getMessage());
+            }
         } catch (SQLException | DataAccessException e) {
             throw new DataAccessException(e.getMessage());
         }
