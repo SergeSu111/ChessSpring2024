@@ -14,7 +14,7 @@ import spark.Response;
 public class RegisterHandler extends BaseHandler
 {
     private final RegisterService registerServiceRefer = new RegisterService();
-    public RegisterHandler(Request request, spark.Response response) {
+    public RegisterHandler(Request request, spark.Response response) throws DataAccessException {
         super(request, response);
     }
 
