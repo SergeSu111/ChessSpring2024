@@ -13,7 +13,7 @@ import spark.Response;
 public class LoginHandler extends BaseHandler
 {
     private final LoginService loginServiceRefer = new LoginService();
-    public LoginHandler(Request request, Response response) {
+    public LoginHandler(Request request, Response response) throws DataAccessException {
         super(request, response);
     }
 

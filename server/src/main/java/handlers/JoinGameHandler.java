@@ -14,7 +14,7 @@ import spark.Response;
 public class JoinGameHandler extends BaseHandler
 {
     JoinGameService joinGameServiceRefer = new JoinGameService();
-    public JoinGameHandler(Request request, Response response) {
+    public JoinGameHandler(Request request, Response response) throws DataAccessException {
         super(request, response);
     }
 

@@ -6,18 +6,21 @@ import dataaccess.*;
 
 public class CreateGameService
 {
-    MemoryGameDAO gameDAO = new MemoryGameDAO();
-    MemoryAuthDAO authDAO = new MemoryAuthDAO();
+    private final sqlGame gameDB = new sqlGame();
+    private final sqlAuth authDB = new sqlAuth();
+
+    public CreateGameService() throws DataAccessException {
+    }
 
     public CreateGameResponse createGame(CreateGameRequest createGameRequest, String authToken) throws DataAccessException, ClientException, ServerException {
-        String username = authDAO.getAuth(authToken);
+        String username = authDB.getAuth(authToken);
         if (username == null)
         {
             throw new DataAccessException("Error: unauthorized");
         }
         else
         {
-            int gameID = gameDAO.createGame(createGameRequest.gameName());
+            int gameID = gameDB.createGame(createGameRequest.gameName());
             return new CreateGameResponse(gameID);
         }
     }

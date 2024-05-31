@@ -1,20 +1,20 @@
 package service;
 
+import dataaccess.*;
 import httprequest.LoginRequest;
 import httpresponse.LoginResponse;
 import model.UserData;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryUserDAO;
-import dataaccess.ServerException;
 
 public class LoginService
 {
-    private final MemoryUserDAO memoryUser = new MemoryUserDAO();
-    private final MemoryAuthDAO memoryAuth = new MemoryAuthDAO();
+    private final sqlUser userDB = new sqlUser();
+    private final sqlAuth  authDB = new sqlAuth();
+
+    public LoginService() throws DataAccessException {
+    }
 
     public LoginResponse login(LoginRequest loginRequest) throws DataAccessException, ServerException {
-        UserData userData = memoryUser.getUser(loginRequest.username());
+        UserData userData = userDB.getUser(loginRequest.username());
         if (userData == null)
         {
             throw new DataAccessException("Error: unauthorized");
@@ -29,7 +29,7 @@ public class LoginService
         }
         else
         {
-            String authToken = memoryAuth.createAuth(userData.username());
+            String authToken = authDB.createAuth(userData.username());
             return new LoginResponse(userData.username(), authToken);
         }
     }

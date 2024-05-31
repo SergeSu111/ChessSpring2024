@@ -13,7 +13,7 @@ public class ListGamesHandler extends BaseHandler
 {
 
     private final ListGamesService listGameServiceRefer = new ListGamesService();
-    public ListGamesHandler(Request request, Response response) {
+    public ListGamesHandler(Request request, Response response) throws DataAccessException {
         super(request, response);
     }
 

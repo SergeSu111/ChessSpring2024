@@ -4,15 +4,18 @@ import dataaccess.*;
 
 public class ClearService
 {
-    MemoryGameDAO gameDAO = new MemoryGameDAO();
-    MemoryAuthDAO authDAO = new MemoryAuthDAO();
+    private final sqlGame gameDB = new sqlGame();
+    private final sqlAuth authDB = new sqlAuth();
 
-    MemoryUserDAO userDAO = new MemoryUserDAO();
+    private final sqlUser userDB =  new sqlUser();
+
+    public ClearService() throws DataAccessException {
+    }
 
 
     public void clear() throws DataAccessException, ServerException {
-        gameDAO.clear();
-        authDAO.clear();
-        userDAO.clear();
+        gameDB.clear();
+        authDB.clear();
+        userDB.clear();
     }
 }

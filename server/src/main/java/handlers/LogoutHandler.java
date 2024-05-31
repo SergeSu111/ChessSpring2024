@@ -12,7 +12,7 @@ public class LogoutHandler extends BaseHandler
 {
     private final LogoutService logoutServiceRefer = new LogoutService();
 
-    public LogoutHandler(Request request, Response response) {
+    public LogoutHandler(Request request, Response response) throws DataAccessException {
         super(request, response);
     }
 

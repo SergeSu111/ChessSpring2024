@@ -1,29 +1,29 @@
 package service;
 
+import dataaccess.*;
 import httpresponse.LIstGameResponse;
 import model.GameData;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.ServerException;
 
 import java.util.ArrayList;
 
 public class ListGamesService
 {
-    private final MemoryAuthDAO memoryAuth = new MemoryAuthDAO();
+    private final sqlAuth authDB = new sqlAuth();
 
-    private final MemoryGameDAO memoryGame = new MemoryGameDAO();
+    private final sqlGame gameDB = new sqlGame();
+
+    public ListGamesService() throws DataAccessException {
+    }
 
     public LIstGameResponse listGame(String authToken) throws DataAccessException, ServerException {
-        String username =  memoryAuth.getAuth(authToken);
+        String username = authDB.getAuth(authToken);
         if (username == null)
         {
             throw new DataAccessException("Error: unauthorized");
         }
         else
         {
-            ArrayList<GameData> listGames =  memoryGame.listGames(authToken);
+            ArrayList<GameData> listGames =  gameDB.listGames(authToken);
             return new LIstGameResponse(listGames);
         }
     }

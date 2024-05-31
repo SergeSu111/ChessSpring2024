@@ -7,12 +7,15 @@ import dataaccess.*;
 
 public class JoinGameService
 {
-    MemoryAuthDAO authDAO = new MemoryAuthDAO();
-    MemoryGameDAO gameDAO = new MemoryGameDAO();
+    sqlAuth authDB = new sqlAuth();
+    sqlGame gameDB = new sqlGame();
+
+    public JoinGameService() throws DataAccessException {
+    }
 
     public void joinGame (JoinGameRequest joinGameRequest, String authToken) throws DataAccessException, ServerException, ClientException, AlreadyTakenException
     {
-        String username = authDAO.getAuth(authToken);
+        String username = authDB.getAuth(authToken);
         if (username == null)
         {
             throw new DataAccessException("Error: unauthorized");
@@ -23,7 +26,7 @@ public class JoinGameService
         }
         else
         {
-            GameData foundGame = gameDAO.getGame(joinGameRequest.playerColor(), joinGameRequest.gameID());
+            GameData foundGame = gameDB.getGame(joinGameRequest.playerColor(), joinGameRequest.gameID());
             if (foundGame != null)
             {
                 if (joinGameRequest.playerColor() == ChessGame.TeamColor.WHITE && foundGame.whiteUsername() != null || joinGameRequest.playerColor() == ChessGame.TeamColor.BLACK && foundGame.blackUsername() != null)
@@ -33,7 +36,7 @@ public class JoinGameService
                 else
                 {
                     // just need to call joinGame Because joinGame will call updateGame in it.
-                    gameDAO.joinGame(joinGameRequest.gameID(), joinGameRequest.playerColor(), username);
+                    gameDB.joinGame(joinGameRequest.gameID(), joinGameRequest.playerColor(), username);
                 }
             }
 

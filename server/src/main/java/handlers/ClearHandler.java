@@ -11,7 +11,7 @@ import spark.Response;
 public class ClearHandler extends BaseHandler
 {
     ClearService clearServiceRefer = new ClearService();
-    public ClearHandler(Request request, Response response) {
+    public ClearHandler(Request request, Response response) throws DataAccessException {
         super(request, response);
     }
 

@@ -14,7 +14,7 @@ import spark.Response;
 public class CreateGameHandler extends BaseHandler {
 
     CreateGameService createGameServiceRefer = new CreateGameService();
-    public CreateGameHandler(Request request, Response response) {
+    public CreateGameHandler(Request request, Response response) throws DataAccessException {
         super(request, response);
     }
 
