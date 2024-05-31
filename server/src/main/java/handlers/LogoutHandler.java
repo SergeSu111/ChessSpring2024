@@ -10,7 +10,7 @@ import spark.Response;
 
 public class LogoutHandler extends BaseHandler
 {
-    private final LogoutService logoutServiceRefer = new LogoutService();
+
 
     public LogoutHandler(Request request, Response response) throws DataAccessException {
         super(request, response);
@@ -25,6 +25,7 @@ public class LogoutHandler extends BaseHandler
         String authToken = request.headers("Authorization");
         try
         {
+            final LogoutService logoutServiceRefer = new LogoutService();
             // call the register service
             logoutServiceRefer.logout(authToken);
             // setStatus

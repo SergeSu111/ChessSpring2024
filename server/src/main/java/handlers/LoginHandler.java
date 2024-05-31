@@ -12,7 +12,6 @@ import spark.Response;
 
 public class LoginHandler extends BaseHandler
 {
-    private final LoginService loginServiceRefer = new LoginService();
     public LoginHandler(Request request, Response response) throws DataAccessException {
         super(request, response);
     }
@@ -25,6 +24,7 @@ public class LoginHandler extends BaseHandler
         String jsonResponse;
         try
         {
+            final LoginService loginServiceRefer = new LoginService();
             // make the json request to be java request objects
             LoginRequest loginBody =  getBody(request, LoginRequest.class);
 

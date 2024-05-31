@@ -11,8 +11,6 @@ import spark.Response;
 
 public class ListGamesHandler extends BaseHandler
 {
-
-    private final ListGamesService listGameServiceRefer = new ListGamesService();
     public ListGamesHandler(Request request, Response response) throws DataAccessException {
         super(request, response);
     }
@@ -24,8 +22,9 @@ public class ListGamesHandler extends BaseHandler
         Gson gson = new Gson();
         try
         {
-           LIstGameResponse lIstGameResponse = listGameServiceRefer.listGame(authToken);
-           response.status(200);
+            final ListGamesService listGameServiceRefer = new ListGamesService();
+            LIstGameResponse lIstGameResponse = listGameServiceRefer.listGame(authToken);
+            response.status(200);
             jsonResponse = gson.toJson(lIstGameResponse);
 
         } catch (ServerException e) {

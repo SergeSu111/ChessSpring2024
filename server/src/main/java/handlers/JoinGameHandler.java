@@ -13,8 +13,8 @@ import spark.Response;
 
 public class JoinGameHandler extends BaseHandler
 {
-    JoinGameService joinGameServiceRefer = new JoinGameService();
-    public JoinGameHandler(Request request, Response response) throws DataAccessException {
+
+    public JoinGameHandler(Request request, Response response){
         super(request, response);
     }
 
@@ -28,6 +28,7 @@ public class JoinGameHandler extends BaseHandler
         Gson gson = new Gson();
         String jsonResponse;
         try {
+            JoinGameService joinGameServiceRefer = new JoinGameService();
             String authToken = request.headers("Authorization");
             JoinGameRequest joinGameRequest = getBody(request, JoinGameRequest.class);
             joinGameServiceRefer.joinGame(joinGameRequest, authToken);

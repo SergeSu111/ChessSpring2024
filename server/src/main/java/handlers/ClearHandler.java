@@ -10,7 +10,7 @@ import spark.Response;
 
 public class ClearHandler extends BaseHandler
 {
-    ClearService clearServiceRefer = new ClearService();
+
     public ClearHandler(Request request, Response response) throws DataAccessException {
         super(request, response);
     }
@@ -26,6 +26,7 @@ public class ClearHandler extends BaseHandler
         String body;
         try
         {
+            ClearService clearServiceRefer = new ClearService();
             clearServiceRefer.clear();
             body = new Gson().toJson(new MessageResponse("")); //no message
             response.status(200);

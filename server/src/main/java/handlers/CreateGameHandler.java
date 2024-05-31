@@ -13,7 +13,7 @@ import spark.Response;
 
 public class CreateGameHandler extends BaseHandler {
 
-    CreateGameService createGameServiceRefer = new CreateGameService();
+
     public CreateGameHandler(Request request, Response response) throws DataAccessException {
         super(request, response);
     }
@@ -30,6 +30,7 @@ public class CreateGameHandler extends BaseHandler {
         String createdGameJsonReturn;
         try
         {
+            CreateGameService createGameServiceRefer = new CreateGameService();
             // convert to createGameRequest class
             CreateGameRequest createGameRequest = getBody(request, CreateGameRequest.class);
 

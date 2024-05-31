@@ -12,19 +12,17 @@ public class sqlUser implements UserDAO
      * @param u
      * @throws DataAccessException
      */
-    private static final String[] createStatements =
-            {
+    private static final String createStatements =
                     // email is varchar or text?
                     """
-                    CREATE TABLE IF NOT EXISTS Users
-                    (
+                    CREATE TABLE IF NOT EXISTS Users (
                         `passwordCol` varchar(255) NOT NULL,
                         `usernameCol` varchar(255)  NOT NULL,
                         `emailCol` varchar(255) NOT NULL,
-                         PRIMARY KEY (usernameCol);
-                    )
+                        PRIMARY KEY (`usernameCol`)
+                    );
                     """
-            };
+            ;
 
     public sqlUser() throws DataAccessException {
         createUserTable();
@@ -33,7 +31,7 @@ public class sqlUser implements UserDAO
     public static void createUserTable() throws DataAccessException {
         try(var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement(Arrays.toString(createStatements)))
+            try (var preparedStatement = conn.prepareStatement(createStatements))
             {
                 preparedStatement.executeUpdate();
             }

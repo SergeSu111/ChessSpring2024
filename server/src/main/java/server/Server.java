@@ -8,7 +8,7 @@ import spark.*;
 import static dataaccess.DatabaseManager.createDatabase;
 
 public class Server {
-    public int run(int desiredPort) throws DataAccessException {
+    public int run(int desiredPort){
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
@@ -23,7 +23,13 @@ public class Server {
         Spark.delete("/db", (req, res) -> new ClearHandler(req, res).httpHandlerRequest(req, res));
         Spark.awaitInitialization();
 
-        DatabaseManager.createDatabase();
+        try
+        {
+            DatabaseManager.createDatabase();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
         return Spark.port();
     }
 

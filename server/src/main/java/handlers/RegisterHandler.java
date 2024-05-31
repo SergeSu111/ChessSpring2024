@@ -13,7 +13,7 @@ import spark.Response;
 
 public class RegisterHandler extends BaseHandler
 {
-    private final RegisterService registerServiceRefer = new RegisterService();
+
     public RegisterHandler(Request request, spark.Response response) throws DataAccessException {
         super(request, response);
     }
@@ -25,6 +25,7 @@ public class RegisterHandler extends BaseHandler
         String jsonResponse;
         try
         {
+            final RegisterService registerServiceRefer = new RegisterService();
             // make the json request to be java request objects
             RegisterRequest body = getBody(request, RegisterRequest.class); // change the request to java object
             // body.password();

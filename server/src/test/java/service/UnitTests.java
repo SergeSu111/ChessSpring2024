@@ -46,6 +46,8 @@ public class UnitTests
 
     private final RegisterRequest registerRequestTest2 = new RegisterRequest("CC", "cc666", "cc@byu.edu");
 
+    public UnitTests() throws DataAccessException {
+    }
 
 
     @Test
