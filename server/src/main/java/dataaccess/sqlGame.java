@@ -163,7 +163,36 @@ public class sqlGame implements GameDAO
      */
     @Override
     public void updateGame(String username, ChessGame.TeamColor playerColor, GameData targetGame) throws DataAccessException {
-        GameDAO.super.updateGame(username, playerColor, targetGame);
+        int gameID = targetGame.gameID();
+        try (var conn = DatabaseManager.getConnection())
+        {
+            if (playerColor == ChessGame.TeamColor.WHITE)
+            {
+                try (var preparedStatement = conn.prepareStatement("UPDATE Games SET whiteUserNameCol = username WHERE gameIdCol = ?"))
+                {
+                    preparedStatement.setInt(1, gameID);
+                    preparedStatement.executeUpdate();
+
+                } catch (SQLException e) {
+                    throw new DataAccessException(e.getMessage());
+                }
+            }
+            else
+            {
+                try (var preparedStatement = conn.prepareStatement("UPDATE Games SET blackUserNameCol = username WHERE gameIdCol = ?"))
+                {
+                    preparedStatement.setInt(1, gameID);
+                    preparedStatement.executeUpdate();
+
+                } catch (SQLException e) {
+                    throw new DataAccessException(e.getMessage());
+                }
+            }
+        }
+        catch (SQLException E)
+        {
+            throw new DataAccessException(E.getMessage());
+        }
     }
 
     /**
@@ -173,8 +202,10 @@ public class sqlGame implements GameDAO
      * @throws DataAccessException
      */
     @Override
-    public void joinGame(int gameID, ChessGame.TeamColor playerColor, String username) throws DataAccessException {
-        GameDAO.super.joinGame(gameID, playerColor, username);
+    public void joinGame(int gameID, ChessGame.TeamColor playerColor, String username) throws DataAccessException
+    {
+        GameData game = getGame(playerColor, gameID);
+        updateGame(username, playerColor, game);
     }
 
     /**
@@ -182,7 +213,18 @@ public class sqlGame implements GameDAO
      */
 
     @Override
-    public void clear() throws DataAccessException {
-        GameDAO.super.clear();
+    public void clear() throws DataAccessException
+    {
+        try (var conn = DatabaseManager.getConnection())
+        {
+            try (var preparedStatement = conn.prepareStatement("TRUNCATE TABLE Games"))
+            {
+                preparedStatement.executeUpdate();
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DataAccessException(e.getMessage());
+        }
     }
 }
