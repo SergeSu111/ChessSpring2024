@@ -117,14 +117,42 @@ public class sqlGame implements GameDAO
        }
     }
 
-    /**
-     * @param authToken
-     * @return
-     * @throws DataAccessException
-     */
     @Override
-    public ArrayList<GameData> listGames(String authToken) throws DataAccessException {
-        return GameDAO.super.listGames(authToken);
+    public ArrayList<GameData> listGames(String authToken) throws DataAccessException
+    {
+        String whiteUserName, blackUserName, gameName, ChessGame;
+        int gameID;
+        Gson gson = new Gson();
+        ArrayList<GameData> returnedGames =new ArrayList<>();
+        try (var conn = DatabaseManager.getConnection())
+        {
+            try (var preparedStatement = conn.prepareStatement("SELECT * FROM Games")) {
+                try (var rs = preparedStatement.executeQuery())
+                {
+                    while (rs.next()) // I think not if, because we need all gameData in db.
+                    {
+                        gameID = rs.getInt("gameIdCol");
+                        whiteUserName = rs.getString("whiteUserNameCol");
+                        blackUserName = rs.getString("blackUserNameCol");
+                        gameName = rs.getString("gameNameCol");
+                        ChessGame = rs.getString("ChessGameCol");
+                        ChessGame getGame = gson.fromJson(ChessGame, chess.ChessGame.class);
+                        returnedGames.add(new GameData(gameID, whiteUserName, blackUserName, gameName, getGame));
+                    }
+                } catch (SQLException e) {
+                    throw new DataAccessException(e.getMessage());
+                }
+            }
+            catch (SQLException e)
+            {
+                throw new DataAccessException(e.getMessage());
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DataAccessException(e.getMessage());
+        }
+        return returnedGames;
     }
 
     /**
