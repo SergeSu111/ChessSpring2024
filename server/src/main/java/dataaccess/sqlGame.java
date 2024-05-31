@@ -80,15 +80,41 @@ public class sqlGame implements GameDAO
         }
     }
 
-    /**
-     * @param playerColor
-     * @param gameID
-     * @return
-     * @throws DataAccessException
-     */
     @Override
     public GameData getGame(ChessGame.TeamColor playerColor, int gameID) throws DataAccessException {
-        return GameDAO.super.getGame(playerColor, gameID);
+        String whiteUserName, blackUserName, gameName, ChessGame;
+        Gson gson = new Gson();
+        GameData getGameData;
+       try (var conn = DatabaseManager.getConnection())
+       {
+           try (var preparedStatement = conn.prepareStatement("SELECT gameIDCol, whiteUserNameCol, blackUserNameCol, gameNameCol, ChessGameCol FROM Games WHERE gameIDCol = ?"))
+           {
+               preparedStatement.setInt(1, gameID);
+               try (var rs = preparedStatement.executeQuery())
+               {
+                   if (rs.next())
+                   {
+                       whiteUserName = rs.getString("whiteUserNameCol");
+                       blackUserName = rs.getString("blackUserNameCol");
+                       gameName = rs.getString("gameNameCol");
+                       ChessGame = rs.getString("ChessGameCol");
+                       ChessGame getGame = gson.fromJson(ChessGame, chess.ChessGame.class);
+                       getGameData = new GameData(gameID, whiteUserName, blackUserName, gameName, getGame);
+                       return getGameData;
+                   }
+                   else
+                   {
+                       return null;
+                   }
+               } catch (SQLException e) {
+                   throw new DataAccessException(e.getMessage());
+               }
+           }
+       }
+       catch (SQLException e)
+       {
+           throw new DataAccessException(e.getMessage());
+       }
     }
 
     /**
