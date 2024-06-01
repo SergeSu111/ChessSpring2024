@@ -11,8 +11,8 @@ import java.util.Random;
 
 public class sqlGame implements GameDAO
 {
-    private static final String[] createStatements =
-            {
+    private static final String createStatements =
+
                     //the primary key is gameID I guess?
                     """
                     CREATE TABLE IF NOT EXISTS Games
@@ -22,10 +22,10 @@ public class sqlGame implements GameDAO
                         `blackUserNameCol` varchar(255),
                         `gameNameCol` varchar(255) NOT NULL,
                         `ChessGameCol` varchar(255) NOT NULL,
-                         PRIMARY KEY (gameIDCol);
+                         PRIMARY KEY (`gameIDCol`)
                     )
                     """
-            };
+            ;
     public sqlGame() throws DataAccessException {
         createGamesTable();
     }
@@ -33,7 +33,7 @@ public class sqlGame implements GameDAO
     public static void createGamesTable() throws DataAccessException {
         try(var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement(Arrays.toString(createStatements)))
+            try (var preparedStatement = conn.prepareStatement(createStatements))
             {
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {

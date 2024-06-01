@@ -19,7 +19,7 @@ public class sqlAuth implements AuthDAO {
     public static void createAuthTable() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement(Arrays.toString(createStatements)))
+            try (var preparedStatement = conn.prepareStatement(createStatements))
             {
                 preparedStatement.executeUpdate();
 
@@ -53,7 +53,7 @@ public class sqlAuth implements AuthDAO {
 
     @Override
     public String getAuth(String authToken) throws DataAccessException {
-        String username;
+        String username = null;
         // return a username or null
         try(var conn = DatabaseManager.getConnection())
         {
@@ -63,14 +63,11 @@ public class sqlAuth implements AuthDAO {
                 preparedStatement.setString(1, authToken);
                 try (var rs = preparedStatement.executeQuery())
                 {
-                   if (rs.next())
+                   while (rs.next())
                    {
                        username = rs.getString("userNameCol");
                    }
-                   else
-                   {
-                       username = null;
-                   }
+
                 }
             }
         } catch (DataAccessException | SQLException e) {
@@ -110,18 +107,18 @@ public class sqlAuth implements AuthDAO {
     }
 
     // Where I should call the createStatements to make sure the table is created?
-    private static final String[] createStatements =
-            {
+    private static final String createStatements =
+
                     // the varChar is 255 or 256? They are null or not null.
                     """
                     CREATE TABLE IF NOT EXISTS Auths
                     (
                         `authTokenCol` varchar(255) NOT NULL,
                         `userNameCol` varchar(255)  NOT NULL,
-                         PRIMARY KEY (authToken);
+                         PRIMARY KEY (`authToken`)
                     )
                     """
-            };
+            ;
 }
 
 

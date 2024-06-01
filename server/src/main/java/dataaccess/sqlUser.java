@@ -20,7 +20,7 @@ public class sqlUser implements UserDAO
                         `usernameCol` varchar(255)  NOT NULL,
                         `emailCol` varchar(255) NOT NULL,
                         PRIMARY KEY (`usernameCol`)
-                    );
+                    )
                     """
             ;
 
@@ -90,7 +90,7 @@ public class sqlUser implements UserDAO
      */
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        UserData getUserData;
+        UserData getUserData = null;
         if (username == null)
         {
             return null;
@@ -102,17 +102,14 @@ public class sqlUser implements UserDAO
                 preparedStatement.setString(1, username);
                 try (var rs = preparedStatement.executeQuery())
                 {
-                    if (rs.next())
+                    while (rs.next())
                     {
                         String password = rs.getString("passwordCol");
                         String email = rs.getString("emailCol");
                         getUserData = new UserData(username, password, email);
+                        break;
                     }
-                    else
-                    {
-                        getUserData = null;
 
-                    }
                 } catch (SQLException e) {
                     throw new DataAccessException(e.getMessage());
                 }
