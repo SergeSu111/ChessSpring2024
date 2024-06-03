@@ -90,7 +90,7 @@ public class sqlUser implements UserDAO
      * @throws DataAccessException
      */
     @Override
-    public UserData getUser(String username) throws DataAccessException {
+    public  UserData getUser(String username) throws DataAccessException {
         UserData getUserData = null;
         if (username == null)
         {

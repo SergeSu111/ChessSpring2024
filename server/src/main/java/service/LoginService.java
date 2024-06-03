@@ -25,7 +25,7 @@ public class LoginService
         {
             throw new DataAccessException("Error: unauthorized");
         }
-        if (!HashedPassword.checkPassWord(userData.password()))
+        if (!HashedPassword.checkPassWord(loginRequest.password(), userData.username()))
         {
             throw new DataAccessException("Error: unauthorized");
         }

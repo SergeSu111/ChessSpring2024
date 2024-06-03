@@ -9,10 +9,12 @@ public class HashedPassword
         return BCrypt.hashpw(normalPassword, BCrypt.gensalt());
     }
 
-    public static boolean checkPassWord(String normalPassword)
-    {
-        String hashedPassword = hashPassword(normalPassword);
-        return BCrypt.checkpw(normalPassword, hashedPassword);
+    public static boolean checkPassWord(String normalPassword, String usernameInDB) throws DataAccessException {
+        sqlUser sqlUserRefer = new sqlUser();
+        String hashedPasswordInDB = sqlUserRefer.getUser(usernameInDB).password();
+        return BCrypt.checkpw(normalPassword,hashedPasswordInDB);
+
+
     }
 
 }
