@@ -21,7 +21,7 @@ public class sqlGame implements GameDAO
                         `whiteUserNameCol` varchar(255),
                         `blackUserNameCol` varchar(255),
                         `gameNameCol` varchar(255) NOT NULL,
-                        `ChessGameCol` varchar(255) NOT NULL,
+                        `ChessGameCol` TEXT NOT NULL,
                          PRIMARY KEY (`gameIDCol`)
                     )
                     """
@@ -131,7 +131,7 @@ public class sqlGame implements GameDAO
                 {
                     while (rs.next()) // I think not if, because we need all gameData in db.
                     {
-                        gameID = rs.getInt("gameIdCol");
+                        gameID = rs.getInt("gameIDCol");
                         whiteUserName = rs.getString("whiteUserNameCol");
                         blackUserName = rs.getString("blackUserNameCol");
                         gameName = rs.getString("gameNameCol");
@@ -168,7 +168,7 @@ public class sqlGame implements GameDAO
         {
             if (playerColor == ChessGame.TeamColor.WHITE)
             {
-                try (var preparedStatement = conn.prepareStatement("UPDATE Games SET whiteUserNameCol = username WHERE gameIdCol = ?"))
+                try (var preparedStatement = conn.prepareStatement("UPDATE Games SET whiteUserNameCol = username WHERE gameIDCol = ?"))
                 {
                     preparedStatement.setInt(1, gameID);
                     preparedStatement.executeUpdate();
@@ -179,7 +179,7 @@ public class sqlGame implements GameDAO
             }
             else
             {
-                try (var preparedStatement = conn.prepareStatement("UPDATE Games SET blackUserNameCol = username WHERE gameIdCol = ?"))
+                try (var preparedStatement = conn.prepareStatement("UPDATE Games SET blackUserNameCol = username WHERE gameIDCol = ?"))
                 {
                     preparedStatement.setInt(1, gameID);
                     preparedStatement.executeUpdate();
