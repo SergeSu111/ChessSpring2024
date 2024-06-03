@@ -180,9 +180,10 @@ public class sqlGame implements GameDAO
             }
             else
             {
-                try (var preparedStatement = conn.prepareStatement("UPDATE Games SET blackUserNameCol = username WHERE gameIDCol = ?"))
+                try (var preparedStatement = conn.prepareStatement("UPDATE Games SET blackUserNameCol = ? WHERE gameIDCol = ?"))
                 {
-                    preparedStatement.setInt(1, gameID);
+                    preparedStatement.setString(1, username);
+                    preparedStatement.setInt(2, gameID);
                     preparedStatement.executeUpdate();
 
                 } catch (SQLException e) {
