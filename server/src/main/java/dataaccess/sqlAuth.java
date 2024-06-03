@@ -115,7 +115,7 @@ public class sqlAuth implements AuthDAO {
                     (
                         `authTokenCol` varchar(255) NOT NULL,
                         `userNameCol` varchar(255)  NOT NULL,
-                         PRIMARY KEY (`authToken`)
+                         PRIMARY KEY (`authTokenCol`)
                     )
                     """
             ;

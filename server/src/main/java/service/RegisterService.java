@@ -14,6 +14,8 @@ public class RegisterService
     }
 
     public  RegisterResponse register(RegisterRequest registerRequest) throws DataAccessException, ClientException, ServerException{
+        sqlUser.createUserTable();
+        sqlAuth.createAuthTable();
         UserData userData = userDB.getUser(registerRequest.username());
         if (userData != null)
         {

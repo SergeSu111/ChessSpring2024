@@ -14,6 +14,8 @@ public class LoginService
     }
 
     public LoginResponse login(LoginRequest loginRequest) throws DataAccessException, ServerException {
+        // create the table first
+
         UserData userData = userDB.getUser(loginRequest.username());
         if (userData == null)
         {
@@ -23,7 +25,7 @@ public class LoginService
         {
             throw new DataAccessException("Error: unauthorized");
         }
-        if (!loginRequest.password().equals(userData.password()))
+        if (!HashedPassword.checkPassWord(userData.password()))
         {
             throw new DataAccessException("Error: unauthorized");
         }

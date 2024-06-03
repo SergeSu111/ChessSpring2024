@@ -43,6 +43,7 @@ public class sqlUser implements UserDAO
             throw new DataAccessException(e.getMessage());
         }
     }
+
     @Override
     public void createUser(UserData u) throws DataAccessException
     {
