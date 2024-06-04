@@ -51,7 +51,7 @@ public class sqlGame implements GameDAO
     {
         if (gameName == null)
         {
-            return 0;
+            throw new DataAccessException("Game name is null");
         }
         Gson gson = new Gson();
         try (var conn = DatabaseManager.getConnection())

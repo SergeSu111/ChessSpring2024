@@ -71,4 +71,21 @@ public class UnitTests {
         UserData returnedUserData = sqlUserRefer.getUser(userData.username());
         assertNotEquals(returnedUserData, userDataFailed);
     }
+
+    @Test
+    @Order(5)
+    public void createGameSuccess() throws DataAccessException {
+        sqlUserRefer.createUser(userData);
+        assertDoesNotThrow(() -> sqlGameRefer.createGame("game1"));
+    }
+
+    @Test
+    @Order(6)
+    public void createGameFailed() throws DataAccessException {
+        sqlUserRefer.createUser(userData);
+        assertThrows(DataAccessException.class, () -> sqlGameRefer.createGame(null));
+
+
+    }
+
 }
