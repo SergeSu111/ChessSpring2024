@@ -84,6 +84,10 @@ public class SQLGame implements GameDAO
         String whiteUserName, blackUserName, gameName, chessGame;
         Gson gson = new Gson();
         GameData getGameData;
+        if (playerColor == null)
+        {
+            throw new DataAccessException("The color is null");
+        }
        try (var conn = DatabaseManager.getConnection())
        {
            try (var preparedStatement = conn.prepareStatement("SELECT gameIDCol, whiteUserNameCol, blackUserNameCol, gameNameCol, ChessGameCol FROM Games WHERE gameIDCol = ?;"))

@@ -179,4 +179,20 @@ public class UnitTests {
     {
         assertThrows(DataAccessException.class, () ->sqlAuthRefer.createAuth(null));
     }
+
+    @Test
+    @Order(17)
+    public void getGameSuccess() throws DataAccessException {
+        sqlUserRefer.createUser(userData);
+        int gameID = sqlGameRefer.createGame("game1");
+        assertDoesNotThrow(() -> sqlGameRefer.getGame(ChessGame.TeamColor.WHITE, gameID));
+    }
+
+    @Test
+    @Order(18)
+    public void getGameFailed()
+    {
+        assertThrows(DataAccessException.class, () -> sqlGameRefer.getGame(null, 123));
+    }
+
 }
