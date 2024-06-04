@@ -5,7 +5,6 @@ import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import dataaccess.DatabaseManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,9 +12,9 @@ public class UnitTests {
 
     // before each test we can clean up all tables to not affect other tests
 
-    private final sqlUser sqlUserRefer = new sqlUser();
-    private final sqlAuth sqlAuthRefer = new sqlAuth();
-    private final sqlGame sqlGameRefer = new sqlGame();
+    private final SQLUser sqlUserRefer = new SQLUser();
+    private final SQLAuth sqlAuthRefer = new SQLAuth();
+    private final SQLGame sqlGameRefer = new SQLGame();
 
     private final UserData userData = new UserData("Serge", "Serge111", "sjh66@byu.edu");
     private final UserData userDataFailed = new UserData("", "Serge", "sjh66@byu.edu");
@@ -26,9 +25,9 @@ public class UnitTests {
     @BeforeEach
     public void createDB() throws DataAccessException {
         DatabaseManager.createDatabase();
-        sqlUser.createUserTable();
-        sqlAuth.createAuthTable();
-        sqlGame.createGamesTable();
+        SQLUser.createUserTable();
+        SQLAuth.createAuthTable();
+        SQLGame.createGamesTable();
 
 
     }

@@ -10,7 +10,7 @@ public class HashedPassword
     }
 
     public static boolean checkPassWord(String normalPassword, String usernameInDB) throws DataAccessException {
-        sqlUser sqlUserRefer = new sqlUser();
+        SQLUser sqlUserRefer = new SQLUser();
         String hashedPasswordInDB = sqlUserRefer.getUser(usernameInDB).password();
         return BCrypt.checkpw(normalPassword,hashedPasswordInDB);
 

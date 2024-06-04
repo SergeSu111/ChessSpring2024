@@ -7,8 +7,8 @@ import dataaccess.*;
 
 public class JoinGameService
 {
-    sqlAuth authDB = new sqlAuth();
-    sqlGame gameDB = new sqlGame();
+    SQLAuth authDB = new SQLAuth();
+    SQLGame gameDB = new SQLGame();
 
     public JoinGameService() throws DataAccessException {
     }

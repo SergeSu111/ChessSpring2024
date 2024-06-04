@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class ListGamesService
 {
-    private final sqlAuth authDB = new sqlAuth();
+    private final SQLAuth authDB = new SQLAuth();
 
-    private final sqlGame gameDB = new sqlGame();
+    private final SQLGame gameDB = new SQLGame();
 
     public ListGamesService() throws DataAccessException {
     }

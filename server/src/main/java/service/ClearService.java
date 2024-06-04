@@ -4,10 +4,10 @@ import dataaccess.*;
 
 public class ClearService
 {
-    private final sqlGame gameDB = new sqlGame();
-    private final sqlAuth authDB = new sqlAuth();
+    private final SQLGame gameDB = new SQLGame();
+    private final SQLAuth authDB = new SQLAuth();
 
-    private final sqlUser userDB =  new sqlUser();
+    private final SQLUser userDB =  new SQLUser();
 
     public ClearService() throws DataAccessException {
     }

@@ -3,11 +3,11 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.ServerException;
-import dataaccess.sqlAuth;
+import dataaccess.SQLAuth;
 
 public class LogoutService
 {
-    sqlAuth authDB = new sqlAuth();
+    SQLAuth authDB = new SQLAuth();
 
     public LogoutService() throws DataAccessException {
     }

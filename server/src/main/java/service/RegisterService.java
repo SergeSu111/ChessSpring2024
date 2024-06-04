@@ -7,15 +7,15 @@ import dataaccess.*;
 
 public class RegisterService
 {
-    private final sqlUser userDB = new sqlUser();
-    private final sqlAuth authDB = new sqlAuth();
+    private final SQLUser userDB = new SQLUser();
+    private final SQLAuth authDB = new SQLAuth();
 
     public RegisterService() throws DataAccessException {
     }
 
     public  RegisterResponse register(RegisterRequest registerRequest) throws DataAccessException, ClientException, ServerException{
-        sqlUser.createUserTable();
-        sqlAuth.createAuthTable();
+        SQLUser.createUserTable();
+        SQLAuth.createAuthTable();
         UserData userData = userDB.getUser(registerRequest.username());
         if (userData != null)
         {

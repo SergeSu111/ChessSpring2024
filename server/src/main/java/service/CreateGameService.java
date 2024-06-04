@@ -6,8 +6,8 @@ import dataaccess.*;
 
 public class CreateGameService
 {
-    private final sqlGame gameDB = new sqlGame();
-    private final sqlAuth authDB = new sqlAuth();
+    private final SQLGame gameDB = new SQLGame();
+    private final SQLAuth authDB = new SQLAuth();
 
     public CreateGameService() throws DataAccessException {
     }

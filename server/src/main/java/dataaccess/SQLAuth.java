@@ -1,25 +1,23 @@
 package dataaccess;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.UUID;
 
-public class sqlAuth implements AuthDAO {
+public class SQLAuth implements AuthDAO {
 
 
     // where I should call createDB? I think I only need to call 1 time
     // where I should create the authTable? I have to write a method called createAuthTable in it, and call createStatement?
 
 
-    public sqlAuth() throws DataAccessException { // everyTime I create the object of sqlAuth, I will createTheAuthTable
+    public SQLAuth() throws DataAccessException { // everyTime I create the object of sqlAuth, I will createTheAuthTable
         createAuthTable();
     }
 
     public static void createAuthTable() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement(createStatements))
+            try (var preparedStatement = conn.prepareStatement(CreateStatements))
             {
                 preparedStatement.executeUpdate();
 
@@ -111,7 +109,7 @@ public class sqlAuth implements AuthDAO {
     }
 
     // Where I should call the createStatements to make sure the table is created?
-    private static final String createStatements =
+    private static final String CreateStatements =
 
                     // the varChar is 255 or 256? They are null or not null.
                     """

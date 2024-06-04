@@ -7,8 +7,8 @@ import model.UserData;
 
 public class LoginService
 {
-    private final sqlUser userDB = new sqlUser();
-    private final sqlAuth  authDB = new sqlAuth();
+    private final SQLUser userDB = new SQLUser();
+    private final SQLAuth  authDB = new SQLAuth();
 
     public LoginService() throws DataAccessException {
     }

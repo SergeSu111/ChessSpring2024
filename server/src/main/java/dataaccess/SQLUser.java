@@ -3,16 +3,14 @@ package dataaccess;
 import model.UserData;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
 
-public class sqlUser implements UserDAO
+public class SQLUser implements UserDAO
 {
     /**
      * @param u
      * @throws DataAccessException
      */
-    private static final String createStatements =
+    private static final String CreateStatement =
                     // email is varchar or text?
                     """
                     CREATE TABLE IF NOT EXISTS Users (
@@ -24,14 +22,14 @@ public class sqlUser implements UserDAO
                     """
             ;
 
-    public sqlUser() throws DataAccessException {
+    public SQLUser() throws DataAccessException {
         createUserTable();
     }
 
     public static void createUserTable() throws DataAccessException {
         try(var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement(createStatements))
+            try (var preparedStatement = conn.prepareStatement(CreateStatement))
             {
                 preparedStatement.executeUpdate();
             }
