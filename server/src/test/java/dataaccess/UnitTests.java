@@ -164,4 +164,19 @@ public class UnitTests {
         assertEquals(dataAccessException.getMessage(), "Username is null");
 
     }
+
+    @Test
+    @Order(15)
+    public void createAuthSuccess() throws DataAccessException {
+        sqlUserRefer.createUser(userData);
+        UserData returnedUserData = sqlUserRefer.getUser(userData.username());
+        assertDoesNotThrow(() ->sqlAuthRefer.createAuth(returnedUserData.username()));
+    }
+
+    @Test
+    @Order(16)
+    public void createAuthFailed()
+    {
+        assertThrows(DataAccessException.class, () ->sqlAuthRefer.createAuth(null));
+    }
 }

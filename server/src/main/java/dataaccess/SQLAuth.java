@@ -33,7 +33,7 @@ public class SQLAuth implements AuthDAO {
         try (var conn = DatabaseManager.getConnection()) {
             if (username == null)
             {
-                return null;
+                throw new DataAccessException("Username is null");
             }
             try (var preparedStatement = conn.prepareStatement("INSERT INTO Auths(userNameCol, authTokenCol) VALUES(?, ?);"))
             {
