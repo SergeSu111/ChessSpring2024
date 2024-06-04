@@ -57,7 +57,6 @@ public class sqlAuth implements AuthDAO {
         // return a username or null
         try(var conn = DatabaseManager.getConnection())
         {
-            conn.setCatalog("chess");
             try (var preparedStatement = conn.prepareStatement("SELECT authTokenCol, userNameCol FROM Auths WHERE authTokenCol = ?;"))
             {
                 preparedStatement.setString(1, authToken);
