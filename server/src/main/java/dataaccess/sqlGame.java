@@ -120,6 +120,10 @@ public class sqlGame implements GameDAO
     @Override
     public ArrayList<GameData> listGames(String authToken) throws DataAccessException
     {
+        if (authToken == null)
+        {
+            throw new DataAccessException("AuthToken is null");
+        }
         String whiteUserName, blackUserName, gameName, ChessGame;
         int gameID;
         Gson gson = new Gson();

@@ -84,8 +84,22 @@ public class UnitTests {
     public void createGameFailed() throws DataAccessException {
         sqlUserRefer.createUser(userData);
         assertThrows(DataAccessException.class, () -> sqlGameRefer.createGame(null));
-
-
     }
 
+    @Test
+    @Order(7)
+    public void listGameSuccess() throws DataAccessException {
+        sqlUserRefer.createUser(userData);
+        UserData returnedUserData = sqlUserRefer.getUser(userData.username());
+        String authToken = sqlAuthRefer.createAuth(returnedUserData.username());
+        assertDoesNotThrow(() -> sqlGameRefer.listGames(authToken));
+    }
+
+    @Test
+    @Order(8)
+    public void listGameFailed() throws DataAccessException
+    {
+        DataAccessException dataAccessException =  assertThrows(DataAccessException.class, () -> sqlGameRefer.listGames(null));
+        assertEquals("AuthToken is null", dataAccessException.getMessage());
+    }
 }
