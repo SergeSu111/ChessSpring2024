@@ -1,10 +1,13 @@
 package dataaccess;
 
 import chess.ChessGame;
+import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+
+import javax.xml.crypto.Data;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -138,5 +141,27 @@ public class UnitTests {
     {
         DataAccessException dataAccessException = assertThrows(DataAccessException.class, () -> sqlAuthRefer.deleteAuth(null));
         assertEquals("AuthToken is null", dataAccessException.getMessage());
+    }
+
+    @Test
+    @Order(13)
+    public void updateGameSuccess() throws DataAccessException {
+        sqlUserRefer.createUser(userData);
+        UserData returnedUserData = sqlUserRefer.getUser(userData.username());
+        int gameID =  sqlGameRefer.createGame("game2");
+        GameData returnedGame = sqlGameRefer.getGame(ChessGame.TeamColor.WHITE, gameID);
+        assertDoesNotThrow(() ->  sqlGameRefer.updateGame(returnedUserData.username(), ChessGame.TeamColor.WHITE, returnedGame));
+    }
+
+    @Test
+    @Order(14)
+    public void updateGameFailed() throws DataAccessException {
+        sqlUserRefer.createUser(userData);
+        UserData returnedUserData = sqlUserRefer.getUser(userData.username());
+        int gameID =  sqlGameRefer.createGame("game2");
+        GameData returnedGame = sqlGameRefer.getGame(ChessGame.TeamColor.WHITE, gameID);
+        DataAccessException dataAccessException = assertThrows(DataAccessException.class, () -> sqlGameRefer.updateGame(null, ChessGame.TeamColor.WHITE, returnedGame));
+        assertEquals(dataAccessException.getMessage(), "Username is null");
+
     }
 }

@@ -21,7 +21,6 @@ public interface GameDAO {
 
     public default void updateGame(String username, ChessGame.TeamColor playerColor, GameData targetGame) throws DataAccessException
     {
-        return;
     }
 
     public default void clear() throws DataAccessException
