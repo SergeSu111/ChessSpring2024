@@ -17,7 +17,7 @@ public class SQLAuth implements AuthDAO {
     public static void createAuthTable() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement(CreateStatements))
+            try (var preparedStatement = conn.prepareStatement(CREATE_STATEMENT))
             {
                 preparedStatement.executeUpdate();
 
@@ -109,7 +109,7 @@ public class SQLAuth implements AuthDAO {
     }
 
     // Where I should call the createStatements to make sure the table is created?
-    private static final String CreateStatements =
+    private static final String CREATE_STATEMENT =
 
                     // the varChar is 255 or 256? They are null or not null.
                     """

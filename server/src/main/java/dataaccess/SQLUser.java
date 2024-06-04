@@ -10,7 +10,7 @@ public class SQLUser implements UserDAO
      * @param u
      * @throws DataAccessException
      */
-    private static final String CreateStatement =
+    private static final String CREATE_STATEMENT =
                     // email is varchar or text?
                     """
                     CREATE TABLE IF NOT EXISTS Users (
@@ -29,7 +29,7 @@ public class SQLUser implements UserDAO
     public static void createUserTable() throws DataAccessException {
         try(var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement(CreateStatement))
+            try (var preparedStatement = conn.prepareStatement(CREATE_STATEMENT))
             {
                 preparedStatement.executeUpdate();
             }

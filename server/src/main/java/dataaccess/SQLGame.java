@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class SQLGame implements GameDAO
 {
-    private static final String CreateStatements =
+    private static final String CREATE_STATEMENT =
 
                     //the primary key is gameID I guess?
                     """
@@ -32,7 +32,7 @@ public class SQLGame implements GameDAO
     public static void createGamesTable() throws DataAccessException {
         try(var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement(CreateStatements))
+            try (var preparedStatement = conn.prepareStatement(CREATE_STATEMENT))
             {
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
