@@ -37,7 +37,7 @@ public class sqlAuth implements AuthDAO {
             {
                 return null;
             }
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO Auths(userNameCol, authTokenCol) VALUES(?, ?)"))
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO Auths(userNameCol, authTokenCol) VALUES(?, ?);"))
             {
 
                 String authTokenCreated = UUID.randomUUID().toString(); // get a random authToken
@@ -58,7 +58,7 @@ public class sqlAuth implements AuthDAO {
         try(var conn = DatabaseManager.getConnection())
         {
             conn.setCatalog("chess");
-            try (var preparedStatement = conn.prepareStatement("SELECT authTokenCol, userNameCol FROM Auths WHERE authTokenCol = ?"))
+            try (var preparedStatement = conn.prepareStatement("SELECT authTokenCol, userNameCol FROM Auths WHERE authTokenCol = ?;"))
             {
                 preparedStatement.setString(1, authToken);
                 try (var rs = preparedStatement.executeQuery())
@@ -85,7 +85,7 @@ public class sqlAuth implements AuthDAO {
         }
         try (var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement("DELETE FROM Auths WHERE authTokenCol = ?")) // delete that row that matches the passed in authToken
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM Auths WHERE authTokenCol = ?;")) // delete that row that matches the passed in authToken
             {
                 preparedStatement.setString(1, authToken);
                 preparedStatement.executeUpdate();
@@ -100,7 +100,7 @@ public class sqlAuth implements AuthDAO {
     public void clear() throws DataAccessException {
        try (var conn = DatabaseManager.getConnection())
        {
-           try (var preparedStatement = conn.prepareStatement("TRUNCATE TABLE Auths"))
+           try (var preparedStatement = conn.prepareStatement("TRUNCATE TABLE Auths;"))
            {
                preparedStatement.executeUpdate();
            }
@@ -118,9 +118,9 @@ public class sqlAuth implements AuthDAO {
                     """
                     CREATE TABLE IF NOT EXISTS Auths
                     (
-                        `authTokenCol` varchar(255) NOT NULL,
-                        `userNameCol` varchar(255)  NOT NULL,
-                         PRIMARY KEY (`authTokenCol`)
+                        authTokenCol varchar(255) NOT NULL,
+                        userNameCol varchar(255)  NOT NULL,
+                         PRIMARY KEY (authTokenCol)
                     )
                     """
             ;

@@ -16,10 +16,10 @@ public class sqlUser implements UserDAO
                     // email is varchar or text?
                     """
                     CREATE TABLE IF NOT EXISTS Users (
-                        `passwordCol` varchar(255) NOT NULL,
-                        `usernameCol` varchar(255)  NOT NULL,
-                        `emailCol` varchar(255) NOT NULL,
-                        PRIMARY KEY (`usernameCol`)
+                        passwordCol varchar(255) NOT NULL,
+                        usernameCol varchar(255)  NOT NULL,
+                        emailCol varchar(255) NOT NULL,
+                        PRIMARY KEY (usernameCol)
                     )
                     """
             ;
@@ -51,7 +51,7 @@ public class sqlUser implements UserDAO
         String hashed = HashedPassword.hashPassword(password);
         try (var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO Users(usernameCol, passwordCol, emailCol) VALUES (?, ?, ?)"))
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO Users(usernameCol, passwordCol, emailCol) VALUES (?, ?, ?);"))
             {
                 preparedStatement.setString(1, u.username());
                 preparedStatement.setString(2, hashed);
@@ -73,7 +73,7 @@ public class sqlUser implements UserDAO
     public void clear() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement("TRUNCATE TABLE Users"))
+            try (var preparedStatement = conn.prepareStatement("TRUNCATE TABLE Users;"))
             {
                 preparedStatement.executeUpdate();
             }
@@ -98,7 +98,7 @@ public class sqlUser implements UserDAO
         }
         try (var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement("SELECT passwordCol, usernameCol, emailCol FROM Users WHERE usernameCol = ?"))
+            try (var preparedStatement = conn.prepareStatement("SELECT passwordCol, usernameCol, emailCol FROM Users WHERE usernameCol = ?;"))
             {
                 preparedStatement.setString(1, username);
                 try (var rs = preparedStatement.executeQuery())

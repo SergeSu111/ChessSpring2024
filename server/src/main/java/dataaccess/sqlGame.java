@@ -17,12 +17,12 @@ public class sqlGame implements GameDAO
                     """
                     CREATE TABLE IF NOT EXISTS Games
                     (
-                        `gameIDCol` INT NOT NULL,
-                        `whiteUserNameCol` varchar(255),
-                        `blackUserNameCol` varchar(255),
-                        `gameNameCol` varchar(255) NOT NULL,
-                        `ChessGameCol` TEXT NOT NULL,
-                         PRIMARY KEY (`gameIDCol`)
+                        gameIDCol INT NOT NULL,
+                        whiteUserNameCol varchar(255),
+                        blackUserNameCol varchar(255),
+                        gameNameCol varchar(255) NOT NULL,
+                        ChessGameCol TEXT NOT NULL,
+                         PRIMARY KEY (gameIDCol)
                     )
                     """
             ;
@@ -56,7 +56,7 @@ public class sqlGame implements GameDAO
         Gson gson = new Gson();
         try (var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO Games(gameIDCol, whiteUserNameCol, blackUserNameCol, gameNameCol, ChessGameCol) VALUES (?,?,?,?,?)"))
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO Games(gameIDCol, whiteUserNameCol, blackUserNameCol, gameNameCol, ChessGameCol) VALUES (?,?,?,?,?);"))
             {
                 ChessGame newGame = new ChessGame();
                 String jsonGame = gson.toJson(newGame);
@@ -87,7 +87,7 @@ public class sqlGame implements GameDAO
         GameData getGameData;
        try (var conn = DatabaseManager.getConnection())
        {
-           try (var preparedStatement = conn.prepareStatement("SELECT gameIDCol, whiteUserNameCol, blackUserNameCol, gameNameCol, ChessGameCol FROM Games WHERE gameIDCol = ?"))
+           try (var preparedStatement = conn.prepareStatement("SELECT gameIDCol, whiteUserNameCol, blackUserNameCol, gameNameCol, ChessGameCol FROM Games WHERE gameIDCol = ?;"))
            {
                preparedStatement.setInt(1, gameID);
                try (var rs = preparedStatement.executeQuery())
@@ -130,7 +130,7 @@ public class sqlGame implements GameDAO
         ArrayList<GameData> returnedGames =new ArrayList<>();
         try (var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement("SELECT * FROM Games")) {
+            try (var preparedStatement = conn.prepareStatement("SELECT * FROM Games;")) {
                 try (var rs = preparedStatement.executeQuery())
                 {
                     while (rs.next()) // I think not if, because we need all gameData in db.
@@ -172,7 +172,7 @@ public class sqlGame implements GameDAO
         {
             if (playerColor == ChessGame.TeamColor.WHITE)
             {
-                try (var preparedStatement = conn.prepareStatement("UPDATE Games SET whiteUserNameCol = ? WHERE gameIDCol = ?"))
+                try (var preparedStatement = conn.prepareStatement("UPDATE Games SET whiteUserNameCol = ? WHERE gameIDCol = ?;"))
                 {
                     preparedStatement.setString(1, username);
                     preparedStatement.setInt(2, gameID);
@@ -184,7 +184,7 @@ public class sqlGame implements GameDAO
             }
             else
             {
-                try (var preparedStatement = conn.prepareStatement("UPDATE Games SET blackUserNameCol = ? WHERE gameIDCol = ?"))
+                try (var preparedStatement = conn.prepareStatement("UPDATE Games SET blackUserNameCol = ? WHERE gameIDCol = ?;"))
                 {
                     preparedStatement.setString(1, username);
                     preparedStatement.setInt(2, gameID);
@@ -227,7 +227,7 @@ public class sqlGame implements GameDAO
     {
         try (var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement("TRUNCATE TABLE Games"))
+            try (var preparedStatement = conn.prepareStatement("TRUNCATE TABLE Games;"))
             {
                 preparedStatement.executeUpdate();
             }
