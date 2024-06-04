@@ -77,7 +77,12 @@ public class sqlAuth implements AuthDAO {
     }
 
     @Override
-    public void deleteAuth(String authToken) throws DataAccessException{
+    public void deleteAuth(String authToken) throws DataAccessException
+    {
+        if (authToken == null)
+        {
+            throw new DataAccessException("AuthToken is null");
+        }
         try (var conn = DatabaseManager.getConnection())
         {
             try (var preparedStatement = conn.prepareStatement("DELETE FROM Auths WHERE authTokenCol = ?")) // delete that row that matches the passed in authToken

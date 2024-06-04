@@ -1,5 +1,6 @@
 package dataaccess;
 
+import chess.ChessGame;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -100,6 +101,43 @@ public class UnitTests {
     public void listGameFailed() throws DataAccessException
     {
         DataAccessException dataAccessException =  assertThrows(DataAccessException.class, () -> sqlGameRefer.listGames(null));
+        assertEquals("AuthToken is null", dataAccessException.getMessage());
+    }
+
+    @Test
+    @Order(9)
+    public void joinGameSuccess() throws DataAccessException {
+        sqlUserRefer.createUser(userData);
+        UserData returnedUserData = sqlUserRefer.getUser(userData.username());
+        int gameID = sqlGameRefer.createGame("game1");
+        assertDoesNotThrow(() -> sqlGameRefer.joinGame(gameID, ChessGame.TeamColor.WHITE, returnedUserData.username()));
+    }
+
+    @Test
+    @Order(10)
+    public void joinGameFailed() throws DataAccessException {
+        sqlUserRefer.createUser(userData);
+        UserData returnedUserData = sqlUserRefer.getUser(userData.username());
+        int gameID = sqlGameRefer.createGame("game1");
+        DataAccessException dataAccessException =  assertThrows(DataAccessException.class, () -> sqlGameRefer.joinGame(gameID, ChessGame.TeamColor.WHITE, null));
+        assertEquals("Your username is null", dataAccessException.getMessage());
+    }
+
+    @Test
+    @Order(11)
+    public void logoutSuccess() throws DataAccessException
+    {
+        sqlUserRefer.createUser(userData);
+        UserData returnedUserData = sqlUserRefer.getUser(userData.username());
+        String authToken = sqlAuthRefer.createAuth(returnedUserData.username());
+        assertDoesNotThrow(() -> sqlAuthRefer.deleteAuth(authToken));
+    }
+
+    @Test
+    @Order(12)
+    public void logoutFailed()
+    {
+        DataAccessException dataAccessException = assertThrows(DataAccessException.class, () -> sqlAuthRefer.deleteAuth(null));
         assertEquals("AuthToken is null", dataAccessException.getMessage());
     }
 }

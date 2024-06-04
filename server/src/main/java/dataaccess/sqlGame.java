@@ -210,6 +210,10 @@ public class sqlGame implements GameDAO
     @Override
     public void joinGame(int gameID, ChessGame.TeamColor playerColor, String username) throws DataAccessException
     {
+        if (username == null)
+        {
+            throw new DataAccessException("Your username is null");
+        }
         GameData game = getGame(playerColor, gameID);
         updateGame(username, playerColor, game);
     }
