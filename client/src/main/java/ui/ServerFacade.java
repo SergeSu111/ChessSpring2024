@@ -18,17 +18,17 @@ import java.net.URL;
 import java.util.Map;
 
 public class ServerFacade{
-    private static String baseURL = "http://localhost:";
+    private static String httpURL;
 
-    ServerFacade(String port)
+    ServerFacade(String httpURL)
     {
-        baseURL += port;
+        ServerFacade.httpURL = httpURL;
     }
     public static Object register(String username, String password, String email) throws IOException {
         // get the registerRequest, put in request body later
         RegisterRequest registerRequest = new RegisterRequest(username, password, email);
         String path = "/user";
-        URL uri = new URL(baseURL + path);
+        URL uri = new URL(httpURL + path);
         String method = "POST";
         HttpURLConnection http = sendRequest(uri, registerRequest, method);
         // how about return a error message? still registerResponse?
@@ -42,7 +42,7 @@ public class ServerFacade{
     public static Object login(String username, String password) throws IOException {
         LoginRequest loginRequest = new LoginRequest(username, password);
         String path = "/session";
-        URL uri = new URL(baseURL + path);
+        URL uri = new URL(httpURL + path);
         String method = "POST";
         HttpURLConnection http = sendRequest(uri, loginRequest, method);
         if (getResponseFromHandlers(http).getClass() == MessageResponse.class)
@@ -54,7 +54,7 @@ public class ServerFacade{
 
     public static MessageResponse logout() throws IOException {  // Because logout is always returned Message response "" or some error message
         String path = "/session";
-        URL uri = new URL(baseURL + path);
+        URL uri = new URL(httpURL + path);
         String method = "DELETE";
         HttpURLConnection http = sendRequest(uri, null, method);
         return (MessageResponse) getResponseFromHandlers(http);
@@ -63,7 +63,7 @@ public class ServerFacade{
     public static MessageResponse clear() throws IOException
     {
         String path = "/db";
-        URL uri = new URL(baseURL + path);
+        URL uri = new URL(httpURL + path);
         String method = "DELETE";
         HttpURLConnection http = sendRequest(uri, null, method);
         return (MessageResponse) getResponseFromHandlers(http);
@@ -72,7 +72,7 @@ public class ServerFacade{
     public static Object createGame(String gameName) throws IOException {
         CreateGameRequest createGameRequest = new CreateGameRequest(gameName);
         String path = "/game";
-        URL uri = new URL(baseURL + path);
+        URL uri = new URL(httpURL + path);
         String method = "POST";
         HttpURLConnection http = sendRequest(uri, createGameRequest, method);
         if (getResponseFromHandlers(http).getClass() == MessageResponse.class)
@@ -84,7 +84,7 @@ public class ServerFacade{
 
     public static Object listGame() throws IOException {
         String path = "/game";
-        URL uri = new URL(baseURL + path);
+        URL uri = new URL(httpURL + path);
         String method = "GET";
         HttpURLConnection http = sendRequest(uri, null, method);
         if (getResponseFromHandlers(http).getClass() == MessageResponse.class)
@@ -96,7 +96,7 @@ public class ServerFacade{
 
     public static Object joinGame(ChessGame.TeamColor playerColor, int gameID) throws IOException {
         String path = "/game";
-        URL uri = new URL(baseURL + path);
+        URL uri = new URL(httpURL + path);
         String method = "PUT";
         JoinGameRequest joinGameRequest = new JoinGameRequest(playerColor, gameID);
         HttpURLConnection http = sendRequest(uri, joinGameRequest, method);
