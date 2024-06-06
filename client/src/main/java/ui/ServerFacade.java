@@ -100,12 +100,15 @@ public class ServerFacade{
         Gson gson = new Gson();
         HttpURLConnection http = (HttpURLConnection) uri.openConnection();
         http.setRequestMethod(method);
-        String jsonRequestBody = gson.toJson(RequestBody); // make it as json before putting into body
         if (authToken != null)
         {
             http.addRequestProperty("authorization", authToken);
         }
-        writeRequestBody(jsonRequestBody, http);
+        if (RequestBody != null)
+        {
+            String jsonRequestBody = gson.toJson(RequestBody); // make it as json before putting into body
+            writeRequestBody(jsonRequestBody, http);
+        }
         http.connect();
         return http; // return the http that already had the request
     }
@@ -115,6 +118,7 @@ public class ServerFacade{
         // I think I also need to set the authToken into Body right? But authToken should be set in header.
         if (!jsonRequestBody.isEmpty())
         {
+//            http.addRequestProperty("content");
             http.setDoOutput(true); // I can write request into body
             try (var outputStream = http.getOutputStream())
             {

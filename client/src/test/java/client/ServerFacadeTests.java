@@ -1,5 +1,7 @@
 package client;
 
+import chess.ChessGame;
+import httpresponse.CreateGameResponse;
 import httpresponse.LoginResponse;
 import httpresponse.MessageResponse;
 import httpresponse.RegisterResponse;
@@ -70,7 +72,7 @@ public class ServerFacadeTests {
     public void createGameSuccess() throws IOException {
         RegisterResponse registerResponse = (RegisterResponse) ServerFacade.register("Serge", "sergePassword", "sjh666@byu.edu");
         LoginResponse loginResponse = (LoginResponse) ServerFacade.login("Serge", "sergePassword");
-        assertDoesNotThrow(() ->ServerFacade.createGame("game1", loginResponse.authToken()));
+        assertDoesNotThrow(() -> ServerFacade.createGame("game1", loginResponse.authToken()));
     }
 
     @Test
@@ -80,5 +82,34 @@ public class ServerFacadeTests {
         assertEquals("Error: unauthorized", messageResponse.message());
     }
 
+    @Test
+    @Order(7)
+    public void joinGameSuccess() throws IOException {
+        RegisterResponse registerResponse = (RegisterResponse) ServerFacade.register("Serge", "sergePassword", "sjh666@byu.edu");
+        LoginResponse loginResponse = (LoginResponse) ServerFacade.login("Serge", "sergePassword");
+        CreateGameResponse createGameResponse = (CreateGameResponse) ServerFacade.createGame("game1", loginResponse.authToken());
+        assertDoesNotThrow(() -> ServerFacade.joinGame(ChessGame.TeamColor.WHITE, createGameResponse.gameID(), loginResponse.authToken()));
+    }
+
+    @Test
+    @Order(8)
+    public void joinGameFailed() throws IOException
+    {
+        RegisterResponse registerResponse = (RegisterResponse) ServerFacade.register("Serge", "sergePassword", "sjh666@byu.edu");
+        LoginResponse loginResponse = (LoginResponse) ServerFacade.login("Serge", "sergePassword");
+        CreateGameResponse createGameResponse = (CreateGameResponse) ServerFacade.createGame("game1", loginResponse.authToken());
+        MessageResponse messageResponse = (MessageResponse) ServerFacade.joinGame(ChessGame.TeamColor.WHITE, createGameResponse.gameID(), null);
+        assertEquals("Error: unauthorized", messageResponse.message());
+    }
+
+    @Test
+    @Order(9)
+    public void listGameSuccess() throws IOException
+    {
+        RegisterResponse registerResponse = (RegisterResponse) ServerFacade.register("Serge", "sergePassword", "sjh666@byu.edu");
+        LoginResponse loginResponse = (LoginResponse) ServerFacade.login("Serge", "sergePassword");
+        CreateGameResponse createGameResponse = (CreateGameResponse) ServerFacade.createGame("game1", loginResponse.authToken());
+        assertDoesNotThrow(() -> ServerFacade.listGame(loginResponse.authToken()));
+    }
 
 }
