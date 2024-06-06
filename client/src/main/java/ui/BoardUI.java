@@ -44,7 +44,12 @@ public class BoardUI
 
     private static void printHeaderText(PrintStream out, String letter)
     {
+        //out.print(SET_BG_COLOR_LIGHT_GREY);
+        out.print(SET_TEXT_COLOR_BLACK);
 
+        out.print(letter);
+
+        setGray(out);
     }
 
     private static void drawBoard(PrintStream out)
