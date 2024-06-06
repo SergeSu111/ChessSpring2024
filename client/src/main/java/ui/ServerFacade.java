@@ -19,8 +19,9 @@ import java.util.Map;
 
 public class ServerFacade{
     private static String httpURL;
+    public static String authToken = null; // make it public because the client can get it
 
-    ServerFacade(String httpURL)
+    public ServerFacade(String httpURL)
     {
         ServerFacade.httpURL = httpURL;
     }
@@ -36,7 +37,9 @@ public class ServerFacade{
         {
             return (MessageResponse) getResponseFromHandlers(http);
         }
-        return (RegisterResponse) getResponseFromHandlers(http);
+        RegisterResponse registerResponse = (RegisterResponse) getResponseFromHandlers(http);
+        authToken = registerResponse.authToken();
+        return registerResponse;
     }
 
     public static Object login(String username, String password) throws IOException {
@@ -49,7 +52,9 @@ public class ServerFacade{
         {
             return (MessageResponse) getResponseFromHandlers(http);
         }
-        return (LoginResponse) getResponseFromHandlers(http);
+        LoginResponse loginResponse = (LoginResponse) getResponseFromHandlers(http);
+        authToken = loginResponse.authToken();
+        return loginResponse;
     }
 
     public static MessageResponse logout() throws IOException {  // Because logout is always returned Message response "" or some error message
@@ -110,6 +115,10 @@ public class ServerFacade{
         HttpURLConnection http = (HttpURLConnection) uri.openConnection();
         http.setRequestMethod(method);
         String jsonRequestBody = gson.toJson(RequestBody); // make it as json before putting into body
+        if (authToken != null)
+        {
+            http.addRequestProperty("authorization", authToken);
+        }
         writeRequestBody(jsonRequestBody, http);
         http.connect();
         return http; // return the http that already had the request
