@@ -1,12 +1,12 @@
 package ui;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
+import httprequest.CreateGameRequest;
+import httprequest.JoinGameRequest;
 import httprequest.LoginRequest;
 import httprequest.RegisterRequest;
-import httpresponse.CreateGameResponse;
-import httpresponse.LoginResponse;
-import httpresponse.MessageResponse;
-import httpresponse.RegisterResponse;
+import httpresponse.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,6 +65,40 @@ public class ServerFacade{
         return (MessageResponse) getResponseFromHandlers(http);
     }
 
+    public static Object createGame(String gameName) throws IOException {
+        CreateGameRequest createGameRequest = new CreateGameRequest(gameName);
+        String path = "/game";
+        URL uri = new URL(baseURL + path);
+        String method = "POST";
+        HttpURLConnection http = sendRequest(uri, createGameRequest, method);
+        if (getResponseFromHandlers(http).getClass() == MessageResponse.class)
+        {
+            return (MessageResponse)getResponseFromHandlers(http);
+        }
+        return (CreateGameResponse)getResponseFromHandlers(http);
+    }
+
+    public static Object listGame() throws IOException {
+        String path = "/game";
+        URL uri = new URL(baseURL + path);
+        String method = "GET";
+        HttpURLConnection http = sendRequest(uri, null, method);
+        if (getResponseFromHandlers(http).getClass() == MessageResponse.class)
+        {
+            return (MessageResponse)getResponseFromHandlers(http);
+        }
+        return (LIstGameResponse)getResponseFromHandlers(http);
+    }
+
+    public static Object joinGame(ChessGame.TeamColor playerColor, int gameID) throws IOException {
+        String path = "/game";
+        URL uri = new URL(baseURL + path);
+        String method = "PUT";
+        JoinGameRequest joinGameRequest = new JoinGameRequest(playerColor, gameID);
+        HttpURLConnection http = sendRequest(uri, joinGameRequest, method);
+        return (MessageResponse) getResponseFromHandlers(http);
+    }
+
 
     // make request
     private static HttpURLConnection sendRequest(URL uri, Object RequestBody, String method) throws IOException {
@@ -73,6 +107,7 @@ public class ServerFacade{
         http.setRequestMethod(method);
         String jsonRequestBody = gson.toJson(RequestBody); // make it as json before putting into body
         writeRequestBody(jsonRequestBody, http);
+        http.connect();
         return http; // return the http that already had the request
     }
 
