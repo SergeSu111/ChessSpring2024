@@ -21,11 +21,25 @@ public class BoardUI
     private static void drawHeaders(PrintStream out)
     {
         setGray(out);
+        String[] lettersInHeader = {"h", "e", "f", "g", "d", "c", "b", "a"};
+        for(int column = 0; column < COLUMNS; column++)
+        {
+            drawHeader(out, lettersInHeader[column]);
+        }
     }
 
     private static void drawHeader(PrintStream out, String headerText)
     {
-
+        // How do I know how much the length it is?
+        // prefixLength is the space in front of the letter in header.
+        int prefixLength = COLUMNS / 7;
+        // suffixLength IS the space after the letter and before the next prefixLength
+        // print the length
+        out.print(EMPTY.repeat(prefixLength));
+        // print the letter
+        printHeaderText(out, headerText);
+        // print the suffixLength
+        out.print(EMPTY.repeat(prefixLength)); // because suffix is the same length with prefix
     }
 
     private static void printHeaderText(PrintStream out, String letter)
