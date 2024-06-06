@@ -112,4 +112,26 @@ public class ServerFacadeTests {
         assertDoesNotThrow(() -> ServerFacade.listGame(loginResponse.authToken()));
     }
 
+    @Test
+    @Order(10)
+    public void listGameFailed() throws IOException
+    {
+        MessageResponse messageResponse = (MessageResponse) ServerFacade.listGame(null);
+        assertEquals("Error: unauthorized", messageResponse.message());
+    }
+
+    @Test
+    @Order(11)
+    public void logoutSuccess() throws IOException
+    {
+        RegisterResponse registerResponse = (RegisterResponse) ServerFacade.register("Serge", "sergePassword", "sjh666@byu.edu");
+        assertDoesNotThrow(() -> ServerFacade.logout(registerResponse.authToken()));
+    }
+
+    @Test
+    @Order(12)
+    public void logoutFailed() throws IOException {
+        MessageResponse messageResponse = (MessageResponse) ServerFacade.logout(null);
+        assertEquals("Error: unauthorized", messageResponse.message());
+    }
 }
