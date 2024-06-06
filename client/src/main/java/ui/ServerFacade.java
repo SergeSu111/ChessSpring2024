@@ -24,8 +24,7 @@ public class ServerFacade{
         // get the registerRequest, put in request body later
         RegisterRequest registerRequest = new RegisterRequest(username, password, email);
         String path = "/user";
-        String RegisterURL = baseURL + path;
-        URL uri = new URL(RegisterURL);
+        URL uri = new URL(baseURL + path);
         String method = "POST";
         HttpURLConnection http = sendRequest(uri, registerRequest, method);
         // how about return a error message? still registerResponse?
@@ -36,23 +35,35 @@ public class ServerFacade{
         return (RegisterResponse) getResponseFromHandlers(http);
     }
 
-    public static LoginResponse login(String username, String password) throws IOException {
+    public static Object login(String username, String password) throws IOException {
         LoginRequest loginRequest = new LoginRequest(username, password);
         String path = "/session";
-        String LoginURL = baseURL + path;
-        URL uri = new URL(LoginURL);
+        URL uri = new URL(baseURL + path);
         String method = "POST";
         HttpURLConnection http = sendRequest(uri, loginRequest, method);
-        LoginResponse loginResponse = (LoginResponse) getResponseFromHandlers(http);
-
-        return loginResponse;
+        if (getResponseFromHandlers(http).getClass() == MessageResponse.class)
+        {
+            return (MessageResponse) getResponseFromHandlers(http);
+        }
+        return (LoginResponse) getResponseFromHandlers(http);
     }
 
+    public static MessageResponse logout() throws IOException {  // Because logout is always returned Message response "" or some error message
+        String path = "/session";
+        URL uri = new URL(baseURL + path);
+        String method = "DELETE";
+        HttpURLConnection http = sendRequest(uri, null, method);
+        return (MessageResponse) getResponseFromHandlers(http);
+    }
 
-
-    public static CreateGameResponse
-
-
+    public static MessageResponse clear() throws IOException
+    {
+        String path = "/db";
+        URL uri = new URL(baseURL + path);
+        String method = "DELETE";
+        HttpURLConnection http = sendRequest(uri, null, method);
+        return (MessageResponse) getResponseFromHandlers(http);
+    }
 
 
     // make request
