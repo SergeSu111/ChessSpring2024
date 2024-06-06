@@ -1,5 +1,6 @@
 package client;
 
+import httpresponse.MessageResponse;
 import httpresponse.RegisterResponse;
 import org.junit.jupiter.api.*;
 import server.Server;
@@ -13,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ServerFacadeTests {
 
     private static Server server;
-    private static ServerFacade serverFacade;
 
     @BeforeAll
     public static void init() throws IOException {
@@ -21,6 +21,11 @@ public class ServerFacadeTests {
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
         serverFacade = new ServerFacade("http://localhost:" + port);
+        ServerFacade.clear();
+    }
+
+    @BeforeEach
+    public void clear() throws IOException {
         ServerFacade.clear();
     }
 
@@ -33,17 +38,26 @@ public class ServerFacadeTests {
     @Test
     @Order(1)
     public void registerSuccess() throws IOException {
-        RegisterResponse registerResponse = (RegisterResponse) serverFacade.register("Serge", "sergePassword", "sjh666@byu.edu");
+        RegisterResponse registerResponse = (RegisterResponse) ServerFacade.register("Serge", "sergePassword", "sjh666@byu.edu");
         assertNotEquals(null, registerResponse.authToken());
     }
 
     @Test
     @Order(2)
     public void registerFailed() throws IOException {
-        var registerResponse = serverFacade.register(null, "sergePassword", "sjh666@byu.edu");
+        MessageResponse messageResponse = (MessageResponse) ServerFacade.register("Serge", null, "sjh666@byu.edu");
+        assertEquals("Error: bad request", messageResponse.message());
+    }
 
+    @Test
+    @Order(3)
+    public void loginSuccess() throws IOException {
+        RegisterResponse registerResponse = (RegisterResponse) ServerFacade.register("Serge", "sergePassword", "sjh666@byu.edu");
+        ServerFacade.
 
     }
+
+
 
 
 

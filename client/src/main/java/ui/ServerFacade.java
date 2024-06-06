@@ -49,59 +49,49 @@ public class ServerFacade{
     }
 
     public static MessageResponse logout(String authToken) throws IOException {  // Because logout is always returned Message response "" or some error message
-//        String path = "/session";
-//        URL uri = new URL(httpURL + path);
-//        String method = "DELETE";
-//        HttpURLConnection http = sendRequest(uri, null, method, authToken);
-//        return (MessageResponse) getResponseFromHandlers(http);
-        return null;
+        String path = "/session";
+        URL uri = new URL(httpURL + path);
+        String method = "DELETE";
+        HttpURLConnection http = sendRequest(uri, null, method, authToken);
+        return (MessageResponse) getResponseFromHandlers(http, MessageResponse.class);
     }
 
     public static MessageResponse clear() throws IOException
     {
-//        String path = "/db";
-//        URL uri = new URL(httpURL + path);
-//        String method = "DELETE";
-//        HttpURLConnection http = sendRequest(uri, null, method, null);
-//        return (MessageResponse) getResponseFromHandlers(http);
-        return null;
+        String path = "/db";
+        URL uri = new URL(httpURL + path);
+        String method = "DELETE";
+        HttpURLConnection http = sendRequest(uri, null, method, null);
+        return (MessageResponse) getResponseFromHandlers(http,MessageResponse.class);
     }
 
     public static Object createGame(String gameName, String authToken) throws IOException {
-//        CreateGameRequest createGameRequest = new CreateGameRequest(gameName);
-//        String path = "/game";
-//        URL uri = new URL(httpURL + path);
-//        String method = "POST";
-//        HttpURLConnection http = sendRequest(uri, createGameRequest, method, authToken);
-//        if (getResponseFromHandlers(http).getClass() == MessageResponse.class)
-//        {
-//            return (MessageResponse)getResponseFromHandlers(http);
-//        }
-//        return (CreateGameResponse)getResponseFromHandlers(http);
-        return null;
+        CreateGameRequest createGameRequest = new CreateGameRequest(gameName);
+        String path = "/game";
+        URL uri = new URL(httpURL + path);
+        String method = "POST";
+        HttpURLConnection http = sendRequest(uri, createGameRequest, method, authToken);
+
+        return getResponseFromHandlers(http, CreateGameResponse.class);
+
     }
 
     public static Object listGame(String authToken) throws IOException {
-//        String path = "/game";
-//        URL uri = new URL(httpURL + path);
-//        String method = "GET";
-//        HttpURLConnection http = sendRequest(uri, null, method, authToken);
-//        if (getResponseFromHandlers(http).getClass() == MessageResponse.class)
-//        {
-//            return (MessageResponse)getResponseFromHandlers(http);
-//        }
-//        return (LIstGameResponse)getResponseFromHandlers(http);
-        return null;
+        String path = "/game";
+        URL uri = new URL(httpURL + path);
+        String method = "GET";
+        HttpURLConnection http = sendRequest(uri, null, method, authToken);
+        return getResponseFromHandlers(http, LIstGameResponse.class);
     }
 
-    public static Object joinGame(ChessGame.TeamColor playerColor, int gameID, String authToken) throws IOException {
-//        String path = "/game";
-//        URL uri = new URL(httpURL + path);
-//        String method = "PUT";
-//        JoinGameRequest joinGameRequest = new JoinGameRequest(playerColor, gameID);
-//        HttpURLConnection http = sendRequest(uri, joinGameRequest, method, authToken);
-//        return (MessageResponse) getResponseFromHandlers(http);
-        return null;
+    public static MessageResponse joinGame(ChessGame.TeamColor playerColor, int gameID, String authToken) throws IOException {
+        String path = "/game";
+        URL uri = new URL(httpURL + path);
+        String method = "PUT";
+        JoinGameRequest joinGameRequest = new JoinGameRequest(playerColor, gameID);
+        HttpURLConnection http = sendRequest(uri, joinGameRequest, method, authToken);
+        return (MessageResponse) getResponseFromHandlers(http, MessageResponse.class);
+
     }
 
 
@@ -147,7 +137,7 @@ public class ServerFacade{
         }
         else
         {
-            try(InputStream respBody = http.getInputStream())
+            try(InputStream respBody = http.getErrorStream())
             {
                 InputStreamReader inputStreamReader = new InputStreamReader(respBody);
                  responseBody = gson.fromJson(inputStreamReader, MessageResponse.class);
