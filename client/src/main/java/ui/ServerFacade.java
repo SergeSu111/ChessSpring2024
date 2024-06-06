@@ -38,18 +38,14 @@ public class ServerFacade{
     }
 
     public static Object login(String username, String password) throws IOException {
-//        LoginRequest loginRequest = new LoginRequest(username, password);
-//        String path = "/session";
-//        URL uri = new URL(httpURL + path);
-//        String method = "POST";
-//        HttpURLConnection http = sendRequest(uri, loginRequest, method, null);
-////        if (getResponseFromHandlers(http).getClass() == MessageResponse.class)
-//        {
-//            return (MessageResponse) getResponseFromHandlers(http);
-//        }
-//        LoginResponse loginResponse = (LoginResponse) getResponseFromHandlers(http);
-//        return loginResponse;
-        return null;
+        LoginRequest loginRequest = new LoginRequest(username, password);
+        String path = "/session";
+        URL uri = new URL(httpURL + path);
+        String method = "POST";
+        HttpURLConnection http = sendRequest(uri, loginRequest, method, null);
+
+        return getResponseFromHandlers(http, LoginResponse.class);
+
     }
 
     public static MessageResponse logout(String authToken) throws IOException {  // Because logout is always returned Message response "" or some error message
