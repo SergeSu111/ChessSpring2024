@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ServerFacadeTests {
 
     private static Server server;
-
+    private static ServerFacade serverFacade;
     @BeforeAll
     public static void init() throws IOException {
         server = new Server();
@@ -53,13 +53,15 @@ public class ServerFacadeTests {
     @Order(3)
     public void loginSuccess() throws IOException {
         RegisterResponse registerResponse = (RegisterResponse) ServerFacade.register("Serge", "sergePassword", "sjh666@byu.edu");
-        ServerFacade.
-
+        assertDoesNotThrow(() -> ServerFacade.login("Serge", "sergePassword"));
     }
 
-
-
-
-
+    @Test
+    @Order(4)
+    public void loginFailed() throws IOException {
+        RegisterResponse registerResponse = (RegisterResponse) ServerFacade.register("Serge", "sergePassword", "sjh666@byu.edu");
+        MessageResponse messageResponse = (MessageResponse) ServerFacade.login("Serge", null);
+        assertEquals("Error: unauthorized", messageResponse.message());
+    }
 
 }
