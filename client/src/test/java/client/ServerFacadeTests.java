@@ -1,5 +1,6 @@
 package client;
 
+import httpresponse.LoginResponse;
 import httpresponse.MessageResponse;
 import httpresponse.RegisterResponse;
 import org.junit.jupiter.api.*;
@@ -63,5 +64,21 @@ public class ServerFacadeTests {
         MessageResponse messageResponse = (MessageResponse) ServerFacade.login("Serge", null);
         assertEquals("Error: unauthorized", messageResponse.message());
     }
+
+    @Test
+    @Order(5)
+    public void createGameSuccess() throws IOException {
+        RegisterResponse registerResponse = (RegisterResponse) ServerFacade.register("Serge", "sergePassword", "sjh666@byu.edu");
+        LoginResponse loginResponse = (LoginResponse) ServerFacade.login("Serge", "sergePassword");
+        assertDoesNotThrow(() ->ServerFacade.createGame("game1", loginResponse.authToken()));
+    }
+
+    @Test
+    @Order(6)
+    public void createGameFailed() throws IOException {
+        MessageResponse messageResponse = (MessageResponse) ServerFacade.createGame("game1", null);
+        assertEquals("Error: unauthorized", messageResponse.message());
+    }
+
 
 }
