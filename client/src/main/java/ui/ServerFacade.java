@@ -18,8 +18,12 @@ import java.net.URL;
 import java.util.Map;
 
 public class ServerFacade{
-    private static final String baseURL = "http://localhost:8080";
+    private static String baseURL = "http://localhost:";
 
+    ServerFacade(String port)
+    {
+        baseURL += port;
+    }
     public static Object register(String username, String password, String email) throws IOException {
         // get the registerRequest, put in request body later
         RegisterRequest registerRequest = new RegisterRequest(username, password, email);
