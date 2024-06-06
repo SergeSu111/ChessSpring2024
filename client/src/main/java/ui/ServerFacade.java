@@ -1,7 +1,11 @@
 package ui;
 
 import com.google.gson.Gson;
+import httprequest.LoginRequest;
 import httprequest.RegisterRequest;
+import httpresponse.CreateGameResponse;
+import httpresponse.LoginResponse;
+import httpresponse.MessageResponse;
 import httpresponse.RegisterResponse;
 
 import java.io.IOException;
@@ -15,13 +19,8 @@ import java.util.Map;
 
 public class ServerFacade{
     private static final String baseURL = "http://localhost:8080";
-    private HttpURLConnection httpURLConnection;
 
-    public ServerFacade() throws MalformedURLException
-    {
-    }
-
-    public static RegisterResponse register(String username, String password, String email) throws IOException {
+    public static Object register(String username, String password, String email) throws IOException {
         // get the registerRequest, put in request body later
         RegisterRequest registerRequest = new RegisterRequest(username, password, email);
         String path = "/user";
@@ -29,12 +28,31 @@ public class ServerFacade{
         URL uri = new URL(RegisterURL);
         String method = "POST";
         HttpURLConnection http = sendRequest(uri, registerRequest, method);
-        // how about return a error message? still registerResponse
-        RegisterResponse registerResponse = (RegisterResponse) getResponseFromHandlers(http);
-        
-
-
+        // how about return a error message? still registerResponse?
+        if (getResponseFromHandlers(http).getClass() == MessageResponse.class)
+        {
+            return (MessageResponse) getResponseFromHandlers(http);
+        }
+        return (RegisterResponse) getResponseFromHandlers(http);
     }
+
+    public static LoginResponse login(String username, String password) throws IOException {
+        LoginRequest loginRequest = new LoginRequest(username, password);
+        String path = "/session";
+        String LoginURL = baseURL + path;
+        URL uri = new URL(LoginURL);
+        String method = "POST";
+        HttpURLConnection http = sendRequest(uri, loginRequest, method);
+        LoginResponse loginResponse = (LoginResponse) getResponseFromHandlers(http);
+
+        return loginResponse;
+    }
+
+
+
+    public static CreateGameResponse
+
+
 
 
     // make request
@@ -49,6 +67,7 @@ public class ServerFacade{
 
     // write body
     private static void writeRequestBody(String jsonRequestBody, HttpURLConnection http) throws IOException {
+        // I think I also need to set the authToken into Body right? But authToken should be set in header.
         if (!jsonRequestBody.isEmpty())
         {
             http.setDoOutput(true); // I can write request into body
@@ -73,7 +92,12 @@ public class ServerFacade{
         }
         else
         {
-            responseBody = http.getErrorStream();
+            try(InputStream respBody = http.getInputStream())
+            {
+                InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                 responseBody = gson.fromJson(inputStreamReader, MessageResponse.class);
+            }
+
         }
         return responseBody;
     }
