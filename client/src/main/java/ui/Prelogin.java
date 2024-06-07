@@ -63,6 +63,7 @@ public class Prelogin
             Object registerReturn = ServerFacade.register(username, password, email);
             if (registerReturn instanceof RegisterResponse) {
                 out.println("You successfully register the account.");
+                out.println();
             } else {
                 MessageResponse messageResponseRegister = (MessageResponse) registerReturn;
                 out.println(messageResponseRegister.message());

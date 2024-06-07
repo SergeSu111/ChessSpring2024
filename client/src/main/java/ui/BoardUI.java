@@ -23,7 +23,10 @@ public class BoardUI
     {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
+    }
 
+    public static void callBoard(PrintStream out)
+    {
         drawHeaders(out);
         drawBoard(out);
     }

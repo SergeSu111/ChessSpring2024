@@ -36,6 +36,7 @@ public class PostLogin
 
     public void run()
     {
+        out.println();
         out.println(STR."\{BLACK_KING}Welcome to your chess game account. Please make your choice\{BLACK_KING}");
         out.println();
         out.println(help());
@@ -143,29 +144,30 @@ public class PostLogin
         int gameID = Integer.parseInt(gameIdStr);
         out.println("Please tell me what color you would like to join");
         String playerColor = scanner.nextLine();
-        if (!Objects.equals(playerColor, "WHITE") || !playerColor.equals("BLACK"))
+        if (!Objects.equals(playerColor, "WHITE") && !playerColor.equals("BLACK"))
         {
            out.println("BAD Request. Color should be all capital.");
         }
-        ChessGame.TeamColor playerColorChanged = gson.fromJson(playerColor, ChessGame.TeamColor.class);
-        try
+        else
         {
-            MessageResponse messageResponseJoinGame = ServerFacade.joinGame(playerColorChanged, gameID, authToken);
-            if (!Objects.equals(messageResponseJoinGame.message(), ""))
+            ChessGame.TeamColor playerColorChanged = gson.fromJson(playerColor, ChessGame.TeamColor.class);
+            try
             {
-                out.println(messageResponseJoinGame.message());
+                MessageResponse messageResponseJoinGame = ServerFacade.joinGame(playerColorChanged, gameID, authToken);
+                if (!Objects.equals(messageResponseJoinGame.message(), ""))
+                {
+                    out.println(messageResponseJoinGame.message());
+                }
+                else
+                {
+                    out.println("You successfully join the game");
+                    BoardUI.callBoard(out);
+                }
             }
-            else
+            catch (IOException e)
             {
-                out.println("You successfully join the game");
-                //BoardUI.main();
+                out.println(e.getMessage());
             }
-
-
-        }
-        catch (IOException e)
-        {
-            out.println(e.getMessage());
         }
     }
 
@@ -173,6 +175,7 @@ public class PostLogin
     {
         // for observe. I do not have endpoint for that.
         // directly call the board?
+        BoardUI.callBoard(out);
     }
 
     public void logOut()
