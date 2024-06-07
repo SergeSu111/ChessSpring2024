@@ -1,5 +1,9 @@
 package ui;
 
+import httpresponse.MessageResponse;
+import httpresponse.RegisterResponse;
+
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -21,10 +25,45 @@ public class Prelogin
     {
         out.println(STR."\{BLACK_KING}Welcome to the Chess Game. Type Here to get started.\{BLACK_KING}");
         out.println();
-        out.print(this.help());
+        out.println(this.help());
+        out.println("Make your choice.");
+        String input = scanner.nextLine();
+        this.eval(input);
+
 
     }
 
+
+    public void eval(String input)
+    {
+
+            switch (input)
+            {
+                case "Register" -> register();
+            }
+
+    }
+
+    public void register() {
+        out.println("Please set your username: ");
+        String username = scanner.nextLine();
+        out.println("Please set your password: ");
+        String password = scanner.nextLine();
+        out.println("Please set your email");
+        String email = scanner.nextLine();
+
+        try {
+            Object registerReturn = ServerFacade.register(username, password, email);
+            if (registerReturn instanceof RegisterResponse) {
+                out.println("You successfully register the account.");
+            } else {
+                MessageResponse messageResponseRegister = (MessageResponse) registerReturn;
+                out.println(messageResponseRegister.message());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
     public String help()
     {
         return """
@@ -34,5 +73,8 @@ public class Prelogin
                 Quit -- Exits the program.
                 """;
     }
+
+
+
 
 }
