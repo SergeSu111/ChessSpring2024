@@ -35,10 +35,6 @@ public class Prelogin
             this.eval(input);
             input = scanner.nextLine();
         }
-
-
-
-
     }
 
 
@@ -49,7 +45,7 @@ public class Prelogin
                 case "Register" -> register();
                 case "Login" -> login();
                 case "Help" -> out.println(help());
-                case "QUIT" -> quit();
+                case "Quit" -> quit();
                 default -> out.println(help());
             }
 
@@ -91,6 +87,8 @@ public class Prelogin
             {
                 out.println("You successfully login the account.");
                 // turn to postLogin. do this later
+                PostLogin postLogin = new PostLogin("http://localhost:8080");
+
             }
             else
             {
@@ -111,15 +109,14 @@ public class Prelogin
                 Register <USERNAME> <PASSWORD> <EMAIL> -- To create an account
                 Login <USERNAME> <PASSWORD> -- To play chess game.
                 Help -- with possible commands.
-                Quit -- Exits the program.
+                Quit -- Exits your chess game.
                 """;
     }
 
     public void quit()
     {
-        out.println("Your game is exit.");
+        out.println("Your game is exit."); // the print is not showing up in console.
         System.exit(0);
-
     }
 
 
