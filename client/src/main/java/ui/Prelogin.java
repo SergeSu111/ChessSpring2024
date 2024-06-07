@@ -7,6 +7,7 @@ import httpresponse.RegisterResponse;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.BLACK_KING;
@@ -29,7 +30,13 @@ public class Prelogin
         out.println(help());
         out.println("Make your choice.");
         String input = scanner.nextLine();
-        this.eval(input);
+        while (!Objects.equals(input, "QUIT"))
+        {
+            this.eval(input);
+            input = scanner.nextLine();
+        }
+
+
 
 
     }
@@ -37,13 +44,13 @@ public class Prelogin
 
     public void eval(String input)
     {
-
             switch (input)
             {
                 case "Register" -> register();
                 case "Login" -> login();
                 case "Help" -> out.println(help());
                 case "QUIT" -> quit();
+                default -> out.println(help());
             }
 
     }
@@ -63,8 +70,8 @@ public class Prelogin
             } else {
                 MessageResponse messageResponseRegister = (MessageResponse) registerReturn;
                 out.println(messageResponseRegister.message());
-                out.println(help());
             }
+            out.println(help());
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -89,8 +96,8 @@ public class Prelogin
             {
                 MessageResponse messageResponse = (MessageResponse) loginReturn;
                 out.println(messageResponse.message());
-                out.println(help());
             }
+            out.println(help());
         }
         catch (IOException E)
         {
@@ -110,7 +117,9 @@ public class Prelogin
 
     public void quit()
     {
+        out.println("Your game is exit.");
         System.exit(0);
+
     }
 
 
