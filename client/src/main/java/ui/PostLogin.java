@@ -161,6 +161,7 @@ public class PostLogin
                 else
                 {
                     out.println("You successfully join the game");
+                    BoardUI.numberRow = 1;
                     BoardUI.callBoard(out);
                 }
             }
@@ -175,6 +176,8 @@ public class PostLogin
     {
         // for observe. I do not have endpoint for that.
         // directly call the board?
+        // Everytime before I call the callBoard, I should make it to be 1.
+        BoardUI.numberRow = 1;
         BoardUI.callBoard(out);
     }
 
