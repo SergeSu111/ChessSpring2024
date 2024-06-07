@@ -16,6 +16,7 @@ public class BoardUI
         out.print(ERASE_SCREEN);
 
         drawHeaders(out);
+        drawBoard(out);
     }
 
     private static void drawHeaders(PrintStream out)
@@ -26,6 +27,7 @@ public class BoardUI
         {
             drawHeader(out, lettersInHeader[column]);
         }
+        out.println();
     }
 
     private static void drawHeader(PrintStream out, String headerText)
@@ -54,13 +56,36 @@ public class BoardUI
 
     private static void drawBoard(PrintStream out)
     {
+        for (int boardRow = 0; boardRow < ROWS; boardRow++)
+        {
+            drawEachRow(out);
+        }
+    }
 
+    private static void drawEachRow(PrintStream out)
+    {
+        int numberRow = 1;
+        for (int squareRow = 0; squareRow < ROWS; squareRow++)
+        {
+            for (int boardCol = 0; boardCol < COLUMNS; boardCol++)
+            {
+                out.print(SET_TEXT_COLOR_BLACK);
+                numberRow++;
+                setWhite(out);
+            }
+        }
     }
 
     private static void setGray(PrintStream out)
     {
         out.print(SET_BG_COLOR_LIGHT_GREY);
         out.print(SET_TEXT_COLOR_LIGHT_GREY);
+    }
+
+    private static void setWhite(PrintStream out)
+    {
+        out.print(SET_BG_COLOR_WHITE);
+        out.print(SET_TEXT_COLOR_WHITE);
     }
 
 
