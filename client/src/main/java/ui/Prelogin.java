@@ -85,9 +85,11 @@ public class Prelogin
             Object loginReturn = ServerFacade.login(username, password);
             if (loginReturn instanceof LoginResponse)
             {
+                LoginResponse loginResponseReturn = (LoginResponse)loginReturn;
+                String authToken = loginResponseReturn.authToken();
                 out.println("You successfully login the account.");
                 // turn to postLogin. do this later
-                PostLogin postLogin = new PostLogin("http://localhost:8080");
+                PostLogin postLogin = new PostLogin("http://localhost:8080", authToken);
 
             }
             else

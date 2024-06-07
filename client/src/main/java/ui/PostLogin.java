@@ -13,10 +13,11 @@ public class PostLogin
 
     private static final Scanner scanner = new Scanner(System.in);
 
-
-    public PostLogin(String serverUrl)
+    private final String authToken;
+    public PostLogin(String serverUrl, String authToken)
     {
        ServerFacade serverfacade = new ServerFacade(serverUrl);
+       this.authToken = authToken;
     }
 
     public void run()
@@ -73,7 +74,8 @@ public class PostLogin
         String gameName = scanner.nextLine();
         try
         {
-            Object createGameReturn = ServerFacade.createGame()
+            Object createGameReturn = ServerFacade.createGame(gameName, authToken);
+            if (createGameReturn)
         }
     }
 
