@@ -69,7 +69,7 @@ public class Prelogin
             }
             out.println(help());
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+           out.println(e.getMessage());
         }
     }
 
@@ -101,7 +101,7 @@ public class Prelogin
         }
         catch (IOException E)
         {
-            throw new RuntimeException(E.getMessage());
+            out.println(E.getMessage());
         }
     }
 

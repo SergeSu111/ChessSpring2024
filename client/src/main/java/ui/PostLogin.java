@@ -8,6 +8,7 @@ import httpresponse.CreateGameResponse;
 import httpresponse.LIstGameResponse;
 import httpresponse.MessageResponse;
 import model.GameData;
+import org.junit.platform.commons.function.Try;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -23,6 +24,8 @@ public class PostLogin
     private static final PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
     private static final Scanner scanner = new Scanner(System.in);
+
+    private Prelogin prelogin;
 
     private final String authToken;
     public PostLogin(String serverUrl, String authToken)
@@ -100,7 +103,7 @@ public class PostLogin
         }
         catch (IOException E)
         {
-            throw new RuntimeException(E.getMessage());
+           out.println(E.getMessage());
         }
     }
 
@@ -128,7 +131,7 @@ public class PostLogin
         }
         catch (IOException E)
         {
-            throw new RuntimeException(E.getMessage());
+            out.println(E.getMessage());
         }
     }
 
@@ -162,7 +165,7 @@ public class PostLogin
         }
         catch (IOException e)
         {
-            throw new RuntimeException(e.getMessage());
+            out.println(e.getMessage());
         }
     }
 
@@ -174,7 +177,23 @@ public class PostLogin
 
     public void logOut()
     {
-
+        try
+        {
+           MessageResponse messageResponseLogOut = ServerFacade.logout(authToken);
+           if (!Objects.equals(messageResponseLogOut.message(), "")) // error
+           {
+               out.println(messageResponseLogOut.message());
+           }
+           else
+           {
+               out.println("You successfully logout the game.");
+               prelogin.run();
+           }
+        }
+        catch (IOException e)
+        {
+            out.println(e.getMessage());
+        }
     }
 
 
