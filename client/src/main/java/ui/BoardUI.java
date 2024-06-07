@@ -64,16 +64,21 @@ public class BoardUI
 
     private static void drawEachRow(PrintStream out)
     {
+        out.print(SET_TEXT_COLOR_BLACK);
         int numberRow = 1;
-        for (int squareRow = 0; squareRow < ROWS; squareRow++)
-        {
-            for (int boardCol = 0; boardCol < COLUMNS; boardCol++)
-            {
-                out.print(SET_TEXT_COLOR_BLACK);
-                numberRow++;
-                setWhite(out);
-            }
-        }
+        int prefixLength = COLUMNS / 14;
+        out.print(EMPTY.repeat(prefixLength));
+        out.print(String.valueOf(numberRow));
+        out.print(EMPTY.repeat(prefixLength));
+//        for (int squareRow = 0; squareRow < ROWS; squareRow++)
+//        {
+//            for (int boardCol = 0; boardCol < COLUMNS; boardCol++)
+//            {
+//
+//                numberRow++;
+//                setWhite(out);
+//            }
+//        }
     }
 
     private static void setGray(PrintStream out)
