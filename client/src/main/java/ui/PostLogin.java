@@ -3,6 +3,7 @@ package ui;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.ClientException;
+import dataaccess.DataAccessException;
 import httpresponse.CreateGameResponse;
 import httpresponse.LIstGameResponse;
 import httpresponse.MessageResponse;
@@ -141,14 +142,23 @@ public class PostLogin
         String playerColor = scanner.nextLine();
         if (!Objects.equals(playerColor, "WHITE") || !playerColor.equals("BLACK"))
         {
-           throw new RuntimeException("BAD REQUEST, COLOR SHOULD BE ALL BIG LETTERS");
+           out.println("BAD Request. Color should be all capital.");
         }
         ChessGame.TeamColor playerColorChanged = gson.fromJson(playerColor, ChessGame.TeamColor.class);
         try
         {
             MessageResponse messageResponseJoinGame = ServerFacade.joinGame(playerColorChanged, gameID, authToken);
-            out.println("You successfully join the game");
-            BoardUI.main();
+            if (!Objects.equals(messageResponseJoinGame.message(), ""))
+            {
+                out.println(messageResponseJoinGame.message());
+            }
+            else
+            {
+                out.println("You successfully join the game");
+                //BoardUI.main();
+            }
+
+
         }
         catch (IOException e)
         {
