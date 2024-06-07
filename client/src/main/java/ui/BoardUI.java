@@ -16,6 +16,8 @@ public class BoardUI
     private static final int ROWS = 8;
     private static ChessBoard board = new ChessBoard();
 
+    static int numberRow = 1;
+
     public static void main(String[] args)
     {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
@@ -154,54 +156,55 @@ public class BoardUI
         ChessPiece targetPiece;
         int prefixLength = (COLUMNS / 7) / 2;
         out.print(SET_TEXT_COLOR_BLACK);
-        int numberRow = 1;
 
         out.print(EMPTY.repeat(prefixLength));
         out.print(String.valueOf(numberRow));
         out.print(EMPTY.repeat(prefixLength));
 
-            if (boardRow % 2 == 0) // means start from white spot
+        // means start from white spot
+        if (boardRow % 2 == 0)
+        {
+            for (int boardCol = 0; boardCol < COLUMNS; boardCol++)
             {
-                for (int boardCol = 0; boardCol < COLUMNS; boardCol++)
+                if (boardCol % 2 == 0)
                 {
-                    if (boardCol % 2 == 0) // white spot
-                    {
-                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
-                    }
-                    else // black spot
-                    {
-                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out);
-                    }
+                    putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
+                }
+                else
+                {
+                    putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out);
                 }
             }
-            else
+        }
+        else
+        {
+            for (int boardCol = 0; boardCol < COLUMNS; boardCol++)
             {
-                for (int boardCol = 0; boardCol < COLUMNS; boardCol++)
+                // white spot
+                if (boardCol % 2 == 0)
                 {
-                    if (boardCol % 2 == 0) // white spot
-                    {
-                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
-                    }
-                    else // black spot
-                    {
-                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out);
-                    }
+                    putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
                 }
+                else // black spot
+                {
+                    putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out);
+                }
+            }
                 // the last row must be in the 7 so should write in here
-            }
-            setGray(out);
+        }
+
+        setGray(out);
         out.print(EMPTY.repeat(prefixLength));
         out.print(SET_TEXT_COLOR_BLACK);
-        out.print(String.valueOf(numberRow));
+        out.print(numberRow);
         out.print(EMPTY.repeat(prefixLength));
-
+        numberRow = numberRow +1;
         out.println();
 
         if (boardRow == 7)
         {
             setGray(out); // make the next line gray
             drawHeaders(out);
-
         }
 
     }
