@@ -90,7 +90,7 @@ public class Prelogin
                 out.println("You successfully login the account.");
                 // turn to postLogin. do this later
                 PostLogin postLogin = new PostLogin("http://localhost:8080", authToken);
-
+                postLogin.run();
             }
             else
             {

@@ -113,6 +113,8 @@ public class PostLogin
                 for (GameData listGame : listGames)
                 {
                     out.println(listGame);
+                    out.println();
+                    out.println();
                 }
             }
             else
