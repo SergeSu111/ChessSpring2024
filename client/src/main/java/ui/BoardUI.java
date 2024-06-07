@@ -1,7 +1,13 @@
 package ui;
 
+import chess.ChessBoard;
+import chess.ChessGame;
+import chess.ChessPiece;
+import chess.ChessPosition;
+
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 import static ui.EscapeSequences.*;
 
@@ -48,9 +54,7 @@ public class BoardUI
     {
         //out.print(SET_BG_COLOR_LIGHT_GREY);
         out.print(SET_TEXT_COLOR_BLACK);
-
         out.print(letter);
-
         setGray(out);
     }
 
@@ -64,21 +68,73 @@ public class BoardUI
 
     private static void drawEachRow(PrintStream out)
     {
-        out.print(SET_TEXT_COLOR_BLACK);
-        int numberRow = 1;
         int prefixLength = COLUMNS / 14;
+        String pieceOnUIBoard = null;
+        out.print(SET_TEXT_COLOR_BLACK);
+        out.print(EMPTY.repeat(prefixLength));
+        int numberRow = 1;
+        out.print(EMPTY.repeat(prefixLength));
+
         out.print(EMPTY.repeat(prefixLength));
         out.print(String.valueOf(numberRow));
         out.print(EMPTY.repeat(prefixLength));
-//        for (int squareRow = 0; squareRow < ROWS; squareRow++)
-//        {
-//            for (int boardCol = 0; boardCol < COLUMNS; boardCol++)
-//            {
-//
-//                numberRow++;
-//                setWhite(out);
-//            }
-//        }
+
+        for (int squareRow = 0; squareRow < ROWS; squareRow++)
+        {
+            for (int boardCol = 0; boardCol < COLUMNS; boardCol++)
+            {
+                if (boardCol % 2 == 0)
+                {
+                    setWhite(out);
+                    out.print(SET_TEXT_COLOR_RED);
+                    out.print(EMPTY.repeat(prefixLength)); // make the small piece into spot have the same prefix
+                    ChessBoard board = new ChessBoard();
+                    board.resetBoard(); // reset so I can get the reset pieces.
+                    ChessPiece targetPiece = board.getPiece(new ChessPosition(squareRow + 1, boardCol + 1));
+                    // how can I turned the piece I got onto the board?
+                    if (targetPiece != null)
+                    {
+                        if (targetPiece.getTeamColor() == ChessGame.TeamColor.BLACK)
+                        {
+                            switch (targetPiece.getPieceType())
+                            {
+                                case PAWN -> pieceOnUIBoard = BLACK_PAWN;
+                                case KNIGHT -> pieceOnUIBoard = BLACK_KNIGHT;
+                                case ROOK -> pieceOnUIBoard = BLACK_ROOK;
+                                case QUEEN -> pieceOnUIBoard = BLACK_QUEEN;
+                                case KING -> pieceOnUIBoard = BLACK_KING;
+                                case BISHOP -> pieceOnUIBoard = BLACK_BISHOP;
+                            }
+                        }
+                        else
+                        {
+                            switch (targetPiece.getPieceType())
+                            {
+                                case PAWN -> pieceOnUIBoard = WHITE_PAWN;
+                                case KNIGHT -> pieceOnUIBoard = WHITE_KNIGHT;
+                                case ROOK -> pieceOnUIBoard = WHITE_ROOK;
+                                case QUEEN -> pieceOnUIBoard = WHITE_QUEEN;
+                                case KING -> pieceOnUIBoard = WHITE_KING;
+                                case BISHOP -> pieceOnUIBoard = WHITE_BISHOP;
+                            }
+                        }
+                        out.print(pieceOnUIBoard);
+                        out.print(EMPTY.repeat(prefixLength));
+
+                    }
+                    else
+                    {
+                        out.print(EMPTY);
+                    }
+
+                }
+                else // black spot
+                {
+                    setBlack(out);
+                    out.print(SET_TEXT_COLOR_RED);
+                }
+            }
+        }
     }
 
     private static void setGray(PrintStream out)
@@ -91,6 +147,12 @@ public class BoardUI
     {
         out.print(SET_BG_COLOR_WHITE);
         out.print(SET_TEXT_COLOR_WHITE);
+    }
+
+    private static void setBlack(PrintStream out)
+    {
+        out.print(SET_BG_COLOR_BLACK);
+        out.print(SET_TEXT_COLOR_BLACK);
     }
 
 
