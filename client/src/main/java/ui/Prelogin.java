@@ -1,5 +1,6 @@
 package ui;
 
+import httpresponse.LoginResponse;
 import httpresponse.MessageResponse;
 import httpresponse.RegisterResponse;
 
@@ -14,7 +15,7 @@ public class Prelogin
 {
     private static final PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
-    private final Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
 
     public Prelogin(String serverUrl)
     {
@@ -40,11 +41,12 @@ public class Prelogin
             switch (input)
             {
                 case "Register" -> register();
+                case "Login" -> login();
             }
 
     }
 
-    public void register() {
+    public static void register() {
         out.println("Please set your username: ");
         String username = scanner.nextLine();
         out.println("Please set your password: ");
@@ -59,12 +61,42 @@ public class Prelogin
             } else {
                 MessageResponse messageResponseRegister = (MessageResponse) registerReturn;
                 out.println(messageResponseRegister.message());
+                out.println(help());
             }
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
-    public String help()
+
+    public static void login()
+    {
+        out.println("Please type your username.");
+        String username = scanner.nextLine();
+        out.println("Please type your password");
+        String password = scanner.nextLine();
+
+        try
+        {
+            Object loginReturn = ServerFacade.login(username, password);
+            if (loginReturn instanceof LoginResponse)
+            {
+                out.println("You successfully login the account.");
+                // turn to postLogin. do this later
+            }
+            else
+            {
+                MessageResponse messageResponse = (MessageResponse) loginReturn;
+                out.println(messageResponse.message());
+                out.println(help());
+            }
+        }
+        catch (IOException E)
+        {
+            throw new RuntimeException(E.getMessage());
+        }
+    }
+
+    public static String help()
     {
         return """
                 Register <USERNAME> <PASSWORD> <EMAIL> -- To create an account
