@@ -1,7 +1,16 @@
 package ui;
 
+import chess.ChessGame;
+import com.google.gson.Gson;
+import httpresponse.CreateGameResponse;
+import httpresponse.LIstGameResponse;
+import httpresponse.MessageResponse;
+import model.GameData;
+
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -39,7 +48,7 @@ public class PostLogin
         switch (input)
         {
             case "Create Game" -> createGame();
-            case "List Games" -> login();
+            case "List Games" -> listGame();
             case "Join Game" -> joinGame();
             case "Observe" -> observeGame();
             case "Log out" ->logOut();
@@ -75,8 +84,78 @@ public class PostLogin
         try
         {
             Object createGameReturn = ServerFacade.createGame(gameName, authToken);
-            if (createGameReturn)
+            if (createGameReturn instanceof CreateGameResponse)
+            {
+                CreateGameResponse createGameResponseReturn = (CreateGameResponse)createGameReturn;
+                int gameID = createGameResponseReturn.gameID();
+                out.println(STR."You successfully created a chess game. the game id is: \{gameID}");
+            }
+            else
+            {
+                MessageResponse messageResponse = (MessageResponse) createGameReturn;
+                out.println(messageResponse.message());
+            }
         }
+        catch (IOException E)
+        {
+            throw new RuntimeException(E.getMessage());
+        }
+    }
+
+    public void listGame()
+    {
+        try
+        {
+            Object listGameReturn = ServerFacade.listGame(authToken);
+            if (listGameReturn instanceof LIstGameResponse lIstGameResponseReturn)
+            {
+                ArrayList<GameData> listGames = lIstGameResponseReturn.games();
+                for (GameData listGame : listGames)
+                {
+                    out.println(listGame);
+                }
+            }
+            else
+            {
+                MessageResponse messageResponse = (MessageResponse) listGameReturn;
+                out.println(messageResponse.message());
+            }
+            out.println(help());
+        }
+        catch (IOException E)
+        {
+            throw new RuntimeException(E.getMessage());
+        }
+    }
+
+    public void joinGame()
+    {
+        Gson gson = new Gson();
+        out.println("Please tell me which game you would like to join.");
+        int gameID = scanner.nextInt();
+        out.println("Please tell me what color you would like to join");
+        String playerColor = scanner.nextLine();
+        ChessGame.TeamColor playerColorChanged = gson.fromJson(playerColor, ChessGame.TeamColor.class);
+        try
+        {
+            MessageResponse messageResponseJoinGame = ServerFacade.joinGame(playerColorChanged, gameID, authToken);
+            out.println("You successfully join the game");
+            // should call the boardUI
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public void observeGame()
+    {
+
+    }
+
+    public void logOut()
+    {
+
     }
 
 
