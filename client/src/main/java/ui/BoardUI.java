@@ -5,6 +5,7 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
+import java.io.PipedReader;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
@@ -42,14 +43,16 @@ public class BoardUI
     {
         // How do I know how much the length it is?
         // prefixLength is the space in front of the letter in header.
-        int prefixLength = COLUMNS / 7;
+//        int prefixLength = (COLUMNS / 8);
         // suffixLength IS the space after the letter and before the next prefixLength
         // print the length
-        out.print(EMPTY.repeat(prefixLength));
+//        int halfLength =  EMPTY.length() / 2;
+        //String subEmpty = EMPTY.substring(0,halfLength);
+        out.print("\u2003 ");
         // print the letter
         printHeaderText(out, headerText);
         // print the suffixLength
-        out.print(EMPTY.repeat(prefixLength)); // because suffix is the same length with prefix
+        //out.print(EMPTY.repeat(realLength));
     }
 
     private static void printHeaderText(PrintStream out, String letter)
@@ -153,8 +156,7 @@ public class BoardUI
     }
     private static void drawEachRow(PrintStream out, int boardRow)
     {
-        ChessPiece targetPiece;
-        int prefixLength = (COLUMNS / 7) / 2;
+        int prefixLength = (COLUMNS /16);
         out.print(SET_TEXT_COLOR_BLACK);
 
         out.print(EMPTY.repeat(prefixLength));
