@@ -7,7 +7,6 @@ import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 import static ui.EscapeSequences.*;
 
@@ -15,6 +14,7 @@ public class BoardUI
 {
     private static final int COLUMNS = 8;
     private static final int ROWS = 8;
+    private static ChessBoard board = new ChessBoard();
 
     public static void main(String[] args)
     {
@@ -28,7 +28,7 @@ public class BoardUI
     private static void drawHeaders(PrintStream out)
     {
         setGray(out);
-        String[] lettersInHeader = {"h", "e", "f", "g", "d", "c", "b", "a"};
+        String[] lettersInHeader = {"h", "g", "f", "e", "d", "c", "b", "a"};
         for(int column = 0; column < COLUMNS; column++)
         {
             drawHeader(out, lettersInHeader[column]);
@@ -62,79 +62,148 @@ public class BoardUI
     {
         for (int boardRow = 0; boardRow < ROWS; boardRow++)
         {
-            drawEachRow(out);
+            drawEachRow(out, boardRow);
         }
     }
 
-    private static void drawEachRow(PrintStream out)
+    private static void putPieceOnWhiteSpot(int squareRow, int boardCol, int prefixLength, PrintStream out)
     {
-        int prefixLength = COLUMNS / 14;
-        String pieceOnUIBoard = null;
+        setWhite(out);
+        out.print(SET_TEXT_COLOR_RED);
+        out.print(EMPTY.repeat(prefixLength)); // make the small piece into spot have the same prefix;
+        board.resetBoard(); // reset so I can get the reset pieces.
+        ChessPiece targetPiece = board.getPiece(new ChessPosition(squareRow + 1, boardCol + 1));
+        // how can I turned the piece I got onto the board?
+        if (targetPiece != null)
+        {
+            String returnedPiece = pickPiece(targetPiece, null, out);
+            out.print(returnedPiece);
+            out.print(EMPTY.repeat(prefixLength));
+        }
+        else
+        {
+            out.print(EMPTY);
+            out.print(EMPTY.repeat(prefixLength));
+        }
+    }
+
+    private static void putPieceOnBlackSpot(int squareRow, int boardCol, int prefixLength, PrintStream out)
+    {
+        setBlack(out);
+        out.print(EMPTY.repeat(prefixLength));
+        board.resetBoard();
+        ChessPiece targetPiece = board.getPiece(new ChessPosition(squareRow + 1, boardCol + 1));
+        if (targetPiece != null)
+        {
+            String returnedPiece = pickPiece(targetPiece, null, out);
+            out.print(returnedPiece);
+            out.print(EMPTY.repeat(prefixLength));
+        }
+        else
+        {
+            out.print(EMPTY);
+            out.print(EMPTY.repeat(prefixLength));
+        }
+
+
+    }
+
+    private static String switchTypeToGetPieceBLACK(ChessPiece targetPiece, String pieceOnUIBoard, PrintStream out)
+    {
+        switch (targetPiece.getPieceType())
+        {
+            case PAWN -> pieceOnUIBoard = BLACK_PAWN;
+            case KNIGHT -> pieceOnUIBoard = BLACK_KNIGHT;
+            case ROOK -> pieceOnUIBoard = BLACK_ROOK;
+            case QUEEN -> pieceOnUIBoard = BLACK_QUEEN;
+            case KING -> pieceOnUIBoard = BLACK_KING;
+            case BISHOP -> pieceOnUIBoard = BLACK_BISHOP;
+        }
+        out.print(SET_TEXT_COLOR_RED);
+        return pieceOnUIBoard;
+    }
+
+    private static String switchTypeToGetPieceWHITE(ChessPiece targetPiece, String pieceOnUIBoard, PrintStream out)
+    {
+
+        switch (targetPiece.getPieceType())
+        {
+            case PAWN -> pieceOnUIBoard = WHITE_PAWN;
+            case KNIGHT -> pieceOnUIBoard = WHITE_KNIGHT;
+            case ROOK -> pieceOnUIBoard = WHITE_ROOK;
+            case QUEEN -> pieceOnUIBoard = WHITE_QUEEN;
+            case KING -> pieceOnUIBoard = WHITE_KING;
+            case BISHOP -> pieceOnUIBoard = WHITE_BISHOP;
+        }
+        out.print(SET_TEXT_COLOR_BLUE);
+        return pieceOnUIBoard;
+    }
+    private static String pickPiece(ChessPiece targetPiece, String pieceOnUIBoard, PrintStream out)
+    {
+        if (targetPiece.getTeamColor() == ChessGame.TeamColor.BLACK)
+        {
+            return  switchTypeToGetPieceBLACK(targetPiece, pieceOnUIBoard, out);
+        }
+        else
+        {
+            return switchTypeToGetPieceWHITE(targetPiece, pieceOnUIBoard, out);
+        }
+    }
+    private static void drawEachRow(PrintStream out, int boardRow)
+    {
+        ChessPiece targetPiece;
+        int prefixLength = (COLUMNS / 7) / 2;
         out.print(SET_TEXT_COLOR_BLACK);
-        out.print(EMPTY.repeat(prefixLength));
         int numberRow = 1;
-        out.print(EMPTY.repeat(prefixLength));
 
         out.print(EMPTY.repeat(prefixLength));
         out.print(String.valueOf(numberRow));
         out.print(EMPTY.repeat(prefixLength));
 
-        for (int squareRow = 0; squareRow < ROWS; squareRow++)
-        {
-            for (int boardCol = 0; boardCol < COLUMNS; boardCol++)
+            if (boardRow % 2 == 0) // means start from white spot
             {
-                if (boardCol % 2 == 0)
+                for (int boardCol = 0; boardCol < COLUMNS; boardCol++)
                 {
-                    setWhite(out);
-                    out.print(SET_TEXT_COLOR_RED);
-                    out.print(EMPTY.repeat(prefixLength)); // make the small piece into spot have the same prefix
-                    ChessBoard board = new ChessBoard();
-                    board.resetBoard(); // reset so I can get the reset pieces.
-                    ChessPiece targetPiece = board.getPiece(new ChessPosition(squareRow + 1, boardCol + 1));
-                    // how can I turned the piece I got onto the board?
-                    if (targetPiece != null)
+                    if (boardCol % 2 == 0) // white spot
                     {
-                        if (targetPiece.getTeamColor() == ChessGame.TeamColor.BLACK)
-                        {
-                            switch (targetPiece.getPieceType())
-                            {
-                                case PAWN -> pieceOnUIBoard = BLACK_PAWN;
-                                case KNIGHT -> pieceOnUIBoard = BLACK_KNIGHT;
-                                case ROOK -> pieceOnUIBoard = BLACK_ROOK;
-                                case QUEEN -> pieceOnUIBoard = BLACK_QUEEN;
-                                case KING -> pieceOnUIBoard = BLACK_KING;
-                                case BISHOP -> pieceOnUIBoard = BLACK_BISHOP;
-                            }
-                        }
-                        else
-                        {
-                            switch (targetPiece.getPieceType())
-                            {
-                                case PAWN -> pieceOnUIBoard = WHITE_PAWN;
-                                case KNIGHT -> pieceOnUIBoard = WHITE_KNIGHT;
-                                case ROOK -> pieceOnUIBoard = WHITE_ROOK;
-                                case QUEEN -> pieceOnUIBoard = WHITE_QUEEN;
-                                case KING -> pieceOnUIBoard = WHITE_KING;
-                                case BISHOP -> pieceOnUIBoard = WHITE_BISHOP;
-                            }
-                        }
-                        out.print(pieceOnUIBoard);
-                        out.print(EMPTY.repeat(prefixLength));
-
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
                     }
-                    else
+                    else // black spot
                     {
-                        out.print(EMPTY);
+                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out);
                     }
-
-                }
-                else // black spot
-                {
-                    setBlack(out);
-                    out.print(SET_TEXT_COLOR_RED);
                 }
             }
+            else
+            {
+                for (int boardCol = 0; boardCol < COLUMNS; boardCol++)
+                {
+                    if (boardCol % 2 == 0) // white spot
+                    {
+                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
+                    }
+                    else // black spot
+                    {
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out);
+                    }
+                }
+                // the last row must be in the 7 so should write in here
+            }
+            setGray(out);
+        out.print(EMPTY.repeat(prefixLength));
+        out.print(SET_TEXT_COLOR_BLACK);
+        out.print(String.valueOf(numberRow));
+        out.print(EMPTY.repeat(prefixLength));
+
+        out.println();
+
+        if (boardRow == 7)
+        {
+            setGray(out); // make the next line gray
+            drawHeaders(out);
+
         }
+
     }
 
     private static void setGray(PrintStream out)
