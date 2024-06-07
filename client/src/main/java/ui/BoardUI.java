@@ -72,6 +72,9 @@ public class BoardUI
         {
             drawEachRow(out, boardRow);
         }
+        out.println( RESET_BG_COLOR);
+        out.println(RESET_TEXT_COLOR);
+        numberRow = 8;
     }
 
     private static void putPieceOnWhiteSpot(int squareRow, int boardCol, int prefixLength, PrintStream out)
@@ -211,7 +214,6 @@ public class BoardUI
             setGray(out); // make the next line gray
             drawHeaders(out);
         }
-
     }
 
     private static void setGray(PrintStream out)
