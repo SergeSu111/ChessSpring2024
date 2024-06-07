@@ -26,7 +26,7 @@ public class Prelogin
     {
         out.println(STR."\{BLACK_KING}Welcome to the Chess Game. Type Here to get started.\{BLACK_KING}");
         out.println();
-        out.println(this.help());
+        out.println(help());
         out.println("Make your choice.");
         String input = scanner.nextLine();
         this.eval(input);
@@ -42,6 +42,8 @@ public class Prelogin
             {
                 case "Register" -> register();
                 case "Login" -> login();
+                case "Help" -> out.println(help());
+                case "QUIT" -> quit();
             }
 
     }
@@ -106,6 +108,10 @@ public class Prelogin
                 """;
     }
 
+    public void quit()
+    {
+        System.exit(0);
+    }
 
 
 
