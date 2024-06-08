@@ -187,21 +187,25 @@ public class BoardUI
     }
     private static void drawEachRow(PrintStream out, int boardRow, int StartRowNumber)
     {
-        if (color == WHITE)
-        {
-            copyRowNumber = 1;
-        }
-        else
-        {
-            copyRowNumber = 8;
-        }
-        copyRowNumber = StartRowNumber;
+
         int prefixLength = (COLUMNS /16);
         out.print(SET_TEXT_COLOR_BLACK);
 
         out.print(EMPTY.repeat(prefixLength));
-        out.print(String.valueOf(copyRowNumber));
-        out.print(EMPTY.repeat(prefixLength));
+        if (color == WHITE)
+        {
+            int copyWhite = boardRow;
+            copyWhite++;
+            out.print(String.valueOf(copyWhite));
+            out.print(EMPTY.repeat(prefixLength));
+        }
+        else
+        {
+            int copyRowBlack = boardRow;
+            copyRowBlack++;
+            out.print(String.valueOf(copyRowBlack));
+        }
+
 
         if (color == WHITE)
         {
@@ -280,17 +284,19 @@ public class BoardUI
         setGray(out);
         out.print(EMPTY.repeat(prefixLength));
         out.print(SET_TEXT_COLOR_BLACK);
-        out.print(copyRowNumber);
-        out.print(EMPTY.repeat(prefixLength));
         if (color == WHITE)
         {
-            copyRowNumber = copyRowNumber + 1;
+            int copyRowWhite = boardRow + 1;
+            out.print(String.valueOf(copyRowWhite));
+            out.print(EMPTY.repeat(prefixLength));
         }
         else
         {
-            copyRowNumber = copyRowNumber - 1;
+            int copyRowBlack = boardRow;
+            copyRowBlack++;
+            out.print(String.valueOf(copyRowBlack));
         }
-
+        out.print(EMPTY.repeat(prefixLength));
         out.println();
 
         if (boardRow == 7 && color == WHITE) {
