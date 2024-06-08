@@ -9,6 +9,7 @@ import java.io.PipedReader;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
+import static chess.ChessGame.TeamColor.WHITE;
 import static ui.EscapeSequences.*;
 
 public class BoardUI
@@ -16,25 +17,26 @@ public class BoardUI
     private static final int COLUMNS = 8;
     private static final int ROWS = 8;
     private static ChessBoard board = new ChessBoard();
-
-    static int numberRow = 1;
-
+    public static ChessGame.TeamColor color;
     public static void main(String[] args)
     {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
     }
 
-    public static void callBoard(PrintStream out)
+
+    public static void callWhiteBoard(PrintStream out)
     {
-        drawHeaders(out);
-        drawBoard(out);
+        color = WHITE;
+        int startRowNumberWhite = 1;
+        String[] lettersInHeaderWhite = {"h", "g", "f", "e", "d", "c", "b", "a"};
+        drawHeaders(out, lettersInHeaderWhite);
+        drawBoard(out, startRowNumberWhite);
     }
 
-    private static void drawHeaders(PrintStream out)
+    private static void drawHeaders(PrintStream out, String[] lettersInHeader)
     {
         setGray(out);
-        String[] lettersInHeader = {"h", "g", "f", "e", "d", "c", "b", "a"};
         for(int column = 0; column < COLUMNS; column++)
         {
             drawHeader(out, lettersInHeader[column]);
@@ -66,15 +68,14 @@ public class BoardUI
         setGray(out);
     }
 
-    private static void drawBoard(PrintStream out)
+    private static void drawBoard(PrintStream out, int startRowNumber)
     {
         for (int boardRow = 0; boardRow < ROWS; boardRow++)
         {
-            drawEachRow(out, boardRow);
+            drawEachRow(out, boardRow, startRowNumber);
         }
         out.println( RESET_BG_COLOR);
         out.println(RESET_TEXT_COLOR);
-        numberRow = 8;
     }
 
     private static void putPieceOnWhiteSpot(int squareRow, int boardCol, int prefixLength, PrintStream out)
@@ -160,13 +161,13 @@ public class BoardUI
             return switchTypeToGetPieceWHITE(targetPiece, pieceOnUIBoard, out);
         }
     }
-    private static void drawEachRow(PrintStream out, int boardRow)
+    private static void drawEachRow(PrintStream out, int boardRow, int StartRowNumber)
     {
         int prefixLength = (COLUMNS /16);
         out.print(SET_TEXT_COLOR_BLACK);
 
         out.print(EMPTY.repeat(prefixLength));
-        out.print(String.valueOf(numberRow));
+        out.print(String.valueOf(StartRowNumber));
         out.print(EMPTY.repeat(prefixLength));
 
         // means start from white spot
@@ -204,15 +205,33 @@ public class BoardUI
         setGray(out);
         out.print(EMPTY.repeat(prefixLength));
         out.print(SET_TEXT_COLOR_BLACK);
-        out.print(numberRow);
+        out.print(StartRowNumber);
         out.print(EMPTY.repeat(prefixLength));
-        numberRow = numberRow +1;
+        if (color == WHITE)
+        {
+            StartRowNumber = StartRowNumber + 1;
+        }
+        else
+        {
+            StartRowNumber = StartRowNumber - 1;
+        }
+
         out.println();
 
         if (boardRow == 7)
         {
             setGray(out); // make the next line gray
-            drawHeaders(out);
+            if (color == WHITE)
+            {
+                String[] lettersInHeaderWhite = {"h", "g", "f", "e", "d", "c", "b", "a"};
+                drawHeaders(out,lettersInHeaderWhite);
+            }
+            else
+            {
+                String[] lettersInHeaderBlack = {"a", "b", "c", "d", "e", "f", "g", "h"};
+                drawHeaders(out, lettersInHeaderBlack);
+            }
+
         }
     }
 
