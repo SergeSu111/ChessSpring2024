@@ -83,8 +83,8 @@ public class BoardUI
         {
             drawEachRow(out, boardRow, startRowNumber);
         }
-        out.println( RESET_BG_COLOR);
-        out.println(RESET_TEXT_COLOR);
+//        out.println( RESET_BG_COLOR);
+//        out.println(RESET_TEXT_COLOR);
     }
 
     private static void putPieceOnWhiteSpot(int squareRow, int boardCol, int prefixLength, PrintStream out)

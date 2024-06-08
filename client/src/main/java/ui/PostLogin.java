@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
-import static ui.EscapeSequences.BLACK_KING;
+import static ui.EscapeSequences.*;
 
 public class PostLogin
 {
@@ -161,8 +161,26 @@ public class PostLogin
                 else
                 {
                     out.println("You successfully join the game");
-                    BoardUI.numberRow = 1;
-                    BoardUI.callBoard(out);
+                    if (playerColorChanged == ChessGame.TeamColor.BLACK)
+                    {
+                        BoardUI.callWhiteBoard(out);
+                        out.println(SET_BG_COLOR_BLACK);
+                        out.println(SET_TEXT_COLOR_BLACK);
+                        out.println(EMPTY);
+                        out.println(EMPTY);
+                        BoardUI.callBlackBoard(out);
+                    }
+                    else
+                    {
+                        BoardUI.callBlackBoard(out);
+                        out.println(SET_BG_COLOR_BLACK);
+                        out.println(SET_TEXT_COLOR_BLACK);
+                        out.println(EMPTY);
+                        out.println(EMPTY);
+                        BoardUI.callWhiteBoard(out);
+                    }
+
+
                 }
             }
             catch (IOException e)
@@ -177,8 +195,13 @@ public class PostLogin
         // for observe. I do not have endpoint for that.
         // directly call the board?
         // Everytime before I call the callBoard, I should make it to be 1.
-        BoardUI.numberRow = 1;
-        BoardUI.callBoard(out);
+        out.println("You successfully observe the game");
+        BoardUI.callBlackBoard(out);
+        out.println(SET_BG_COLOR_BLACK);
+        out.println(SET_TEXT_COLOR_BLACK);
+        out.println(EMPTY);
+        out.println(EMPTY);
+        BoardUI.callWhiteBoard(out);
     }
 
     public void logOut()
