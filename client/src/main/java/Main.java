@@ -1,5 +1,4 @@
 import chess.*;
-import server.Server;
 import ui.Prelogin;
 
 public class Main {

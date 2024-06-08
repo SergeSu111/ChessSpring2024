@@ -2,8 +2,6 @@ package ui;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
-import dataaccess.ClientException;
-import dataaccess.DataAccessException;
 import httpresponse.CreateGameResponse;
 import httpresponse.LIstGameResponse;
 import httpresponse.MessageResponse;
