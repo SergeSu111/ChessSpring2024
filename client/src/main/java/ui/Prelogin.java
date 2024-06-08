@@ -63,12 +63,16 @@ public class Prelogin
             Object registerReturn = ServerFacade.register(username, password, email);
             if (registerReturn instanceof RegisterResponse) {
                 out.println("You successfully register the account.");
+                RegisterResponse registerResponseReturned = (RegisterResponse) registerReturn;
+                String authToken = registerResponseReturned.authToken();
                 out.println();
+                PostLogin postlogin = new PostLogin("http://localhost:8080", authToken);
+                postlogin.run();
             } else {
                 MessageResponse messageResponseRegister = (MessageResponse) registerReturn;
                 out.println(messageResponseRegister.message());
+                out.println(help());
             }
-            out.println(help());
         } catch (IOException e) {
            out.println(e.getMessage());
         }
