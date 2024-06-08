@@ -25,7 +25,7 @@ public class Prelogin
 
     public void run()
     {
-        out.println(STR."\{BLACK_KING}Welcome to the Chess Game. Type Here to get started.\{BLACK_KING}");
+        out.println("Welcome to the Chess Game. Type Here to get started.");
         out.println();
         out.println(help());
         out.println("Make your choice.");

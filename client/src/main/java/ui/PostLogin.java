@@ -35,7 +35,8 @@ public class PostLogin
     public void run()
     {
         out.println();
-        out.println(STR."\{BLACK_KING}Welcome to your chess game account. Please make your choice\{BLACK_KING}");
+        out.println("Welcome to your chess game account. Please make your choice");
+
         out.println();
         out.println(help());
         String input = scanner.nextLine();
