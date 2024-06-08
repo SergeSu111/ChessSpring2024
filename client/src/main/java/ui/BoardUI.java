@@ -17,6 +17,8 @@ public class BoardUI
 {
     private static final int COLUMNS = 8;
     private static final int ROWS = 8;
+
+    private static int copyRowNumber;
     private static ChessBoard board = new ChessBoard();
     public static ChessGame.TeamColor color;
     public static void main(String[] args)
@@ -185,7 +187,15 @@ public class BoardUI
     }
     private static void drawEachRow(PrintStream out, int boardRow, int StartRowNumber)
     {
-        int copyRowNumber = StartRowNumber;
+        if (color == WHITE)
+        {
+            copyRowNumber = 1;
+        }
+        else
+        {
+            copyRowNumber = 8;
+        }
+        copyRowNumber = StartRowNumber;
         int prefixLength = (COLUMNS /16);
         out.print(SET_TEXT_COLOR_BLACK);
 
@@ -270,12 +280,11 @@ public class BoardUI
         setGray(out);
         out.print(EMPTY.repeat(prefixLength));
         out.print(SET_TEXT_COLOR_BLACK);
-        out.print(StartRowNumber);
+        out.print(copyRowNumber);
         out.print(EMPTY.repeat(prefixLength));
         if (color == WHITE)
         {
             copyRowNumber = copyRowNumber + 1;
-
         }
         else
         {
