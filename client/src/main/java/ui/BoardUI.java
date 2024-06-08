@@ -30,7 +30,7 @@ public class BoardUI
     {
         color = WHITE;
         int startRowNumberWhite = 1;
-        String[] lettersInHeaderWhite = {"h", "g", "f", "e", "d", "c", "b", "a"};
+        String[] lettersInHeaderWhite = {"a", "b", "c", "d", "e", "f", "g", "h"};
         drawHeaders(out, lettersInHeaderWhite);
         drawBoard(out, startRowNumberWhite);
     }
@@ -39,7 +39,7 @@ public class BoardUI
     {
         color = BLACK;
         int startRowNumberBlack = 8;
-        String[] lettersInHeaderBlack = {"a", "b", "c", "d", "e", "f", "g", "h"};
+        String[] lettersInHeaderBlack = {"h", "g", "f", "e", "d", "c", "b", "a"};
         drawHeaders(out, lettersInHeaderBlack);
         drawBoard(out, startRowNumberBlack);
     }
@@ -185,11 +185,12 @@ public class BoardUI
     }
     private static void drawEachRow(PrintStream out, int boardRow, int StartRowNumber)
     {
+        int copyRowNumber = StartRowNumber;
         int prefixLength = (COLUMNS /16);
         out.print(SET_TEXT_COLOR_BLACK);
 
         out.print(EMPTY.repeat(prefixLength));
-        out.print(String.valueOf(StartRowNumber));
+        out.print(String.valueOf(copyRowNumber));
         out.print(EMPTY.repeat(prefixLength));
 
         if (color == WHITE)
@@ -266,7 +267,6 @@ public class BoardUI
             }
         }
 
-
         setGray(out);
         out.print(EMPTY.repeat(prefixLength));
         out.print(SET_TEXT_COLOR_BLACK);
@@ -274,28 +274,25 @@ public class BoardUI
         out.print(EMPTY.repeat(prefixLength));
         if (color == WHITE)
         {
-            StartRowNumber = StartRowNumber + 1;
+            copyRowNumber = copyRowNumber + 1;
+
         }
         else
         {
-            StartRowNumber = StartRowNumber - 1;
+            copyRowNumber = copyRowNumber - 1;
         }
 
         out.println();
 
-        if (boardRow == 7)
-        {
+        if (boardRow == 7 && color == WHITE) {
             setGray(out); // make the next line gray
-            if (color == WHITE)
-            {
-                String[] lettersInHeaderWhite = {"h", "g", "f", "e", "d", "c", "b", "a"};
-                drawHeaders(out,lettersInHeaderWhite);
-            }
-            else
-            {
-                String[] lettersInHeaderBlack = {"a", "b", "c", "d", "e", "f", "g", "h"};
-                drawHeaders(out, lettersInHeaderBlack);
-            }
+            String[] lettersInHeaderWhite = {"h", "g", "f", "e", "d", "c", "b", "a"};
+            drawHeaders(out, lettersInHeaderWhite);
+        }
+        else if (boardRow == 0 && color == BLACK)
+        {
+            String[] lettersInHeaderBlack = {"a", "b", "c", "d", "e", "f", "g", "h"};
+            drawHeaders(out, lettersInHeaderBlack);
 
         }
     }
