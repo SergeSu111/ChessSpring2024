@@ -228,8 +228,10 @@ public class BoardUI
         }
         else
         {
+            int copyRow = boardRow;
+            copyRow++;
             // means start from white spot
-            if (boardRow % 2 == 0)
+            if (copyRow % 2 == 0)
             {
                 for (int boardCol = 8; boardCol > 0; boardCol--)
                 {
@@ -245,10 +247,13 @@ public class BoardUI
             }
             else
             {
+
                 for (int boardCol = 1; boardCol <= COLUMNS; boardCol++)
                 {
+                    int copyCol = boardCol;
+                    copyCol--;
                     // white spot
-                    if (boardCol % 2 == 0)
+                    if (copyCol % 2 == 0)
                     {
                         putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
                     }
