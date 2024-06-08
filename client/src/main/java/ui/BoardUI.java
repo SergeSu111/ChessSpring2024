@@ -9,6 +9,7 @@ import java.io.PipedReader;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
+import static chess.ChessGame.TeamColor.BLACK;
 import static chess.ChessGame.TeamColor.WHITE;
 import static ui.EscapeSequences.*;
 
@@ -34,6 +35,14 @@ public class BoardUI
         drawBoard(out, startRowNumberWhite);
     }
 
+    public static void callBlackBoard(PrintStream out)
+    {
+        color = BLACK;
+        int startRowNumberBlack = 8;
+        String[] lettersInHeaderBlack = {"a", "b", "c", "d", "e", "f", "g", "h"};
+        drawHeaders(out, lettersInHeaderBlack);
+        drawBoard(out, startRowNumberBlack);
+    }
     private static void drawHeaders(PrintStream out, String[] lettersInHeader)
     {
         setGray(out);
@@ -152,7 +161,7 @@ public class BoardUI
     }
     private static String pickPiece(ChessPiece targetPiece, String pieceOnUIBoard, PrintStream out)
     {
-        if (targetPiece.getTeamColor() == ChessGame.TeamColor.BLACK)
+        if (targetPiece.getTeamColor() == BLACK)
         {
             return  switchTypeToGetPieceBLACK(targetPiece, pieceOnUIBoard, out);
         }
