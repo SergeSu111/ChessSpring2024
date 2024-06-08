@@ -96,7 +96,7 @@ public class PostLogin
                 LIstGameResponse lIstGameResponse = (LIstGameResponse) listGameReturn;
                 ArrayList<GameData> listGames = lIstGameResponse.games();
                 int gameID = listGames.size();
-                out.println(STR."You successfully created a chess game. the game id is: \{gameID}");
+                out.println("You successfully created a chess game. the game id is: "+ gameID);
             }
             else
             {
