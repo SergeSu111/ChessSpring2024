@@ -91,7 +91,10 @@ public class PostLogin
             if (createGameReturn instanceof CreateGameResponse)
             {
                 CreateGameResponse createGameResponseReturn = (CreateGameResponse)createGameReturn;
-                int gameID = createGameResponseReturn.gameID();
+                Object listGameReturn = ServerFacade.listGame(authToken);
+                LIstGameResponse lIstGameResponse = (LIstGameResponse) listGameReturn;
+                ArrayList<GameData> listGames = lIstGameResponse.games();
+                int gameID = listGames.size();
                 out.println(STR."You successfully created a chess game. the game id is: \{gameID}");
             }
             else
