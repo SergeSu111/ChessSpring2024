@@ -79,16 +79,28 @@ public class BoardUI
 
     private static void drawBoard(PrintStream out, int startRowNumber)
     {
-        for (int boardRow = 0; boardRow < ROWS; boardRow++)
+        if (color == WHITE)
         {
-            drawEachRow(out, boardRow, startRowNumber);
+            for (int boardRow = 0; boardRow < ROWS; boardRow++)
+            {
+                drawEachRow(out, boardRow, startRowNumber);
+            }
         }
+        else
+        {
+            for (int boardRow = 7; boardRow > -1; boardRow--)
+            {
+                drawEachRow(out, boardRow, startRowNumber);
+            }
+        }
+
 //        out.println( RESET_BG_COLOR);
 //        out.println(RESET_TEXT_COLOR);
     }
 
     private static void putPieceOnWhiteSpot(int squareRow, int boardCol, int prefixLength, PrintStream out)
     {
+        boardCol--;
         setWhite(out);
         out.print(SET_TEXT_COLOR_RED);
         out.print(EMPTY.repeat(prefixLength)); // make the small piece into spot have the same prefix;
@@ -110,6 +122,7 @@ public class BoardUI
 
     private static void putPieceOnBlackSpot(int squareRow, int boardCol, int prefixLength, PrintStream out)
     {
+        boardCol--;
         setBlack(out);
         out.print(EMPTY.repeat(prefixLength));
         board.resetBoard();
@@ -179,37 +192,75 @@ public class BoardUI
         out.print(String.valueOf(StartRowNumber));
         out.print(EMPTY.repeat(prefixLength));
 
-        // means start from white spot
-        if (boardRow % 2 == 0)
+        if (color == WHITE)
         {
-            for (int boardCol = 0; boardCol < COLUMNS; boardCol++)
+            // means start from white spot
+            if (boardRow % 2 == 0)
             {
-                if (boardCol % 2 == 0)
+                for (int boardCol = 1; boardCol <= COLUMNS; boardCol++)
                 {
-                    putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
+                    if (boardCol % 2 == 0)
+                    {
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
+                    }
+                    else
+                    {
+                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out);
+                    }
                 }
-                else
+            }
+            else
+            {
+                for (int boardCol = 1; boardCol <= COLUMNS; boardCol++)
                 {
-                    putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out);
+                    // white spot
+                    if (boardCol % 2 == 0)
+                    {
+                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
+                    }
+                    else // black spot
+                    {
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out);
+                    }
                 }
+                // the last row must be in the 7 so should write in here
             }
         }
         else
         {
-            for (int boardCol = 0; boardCol < COLUMNS; boardCol++)
+            // means start from white spot
+            if (boardRow % 2 == 0)
             {
-                // white spot
-                if (boardCol % 2 == 0)
+                for (int boardCol = 8; boardCol > 0; boardCol--)
                 {
-                    putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
-                }
-                else // black spot
-                {
-                    putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out);
+                    if (boardCol % 2 == 0)
+                    {
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
+                    }
+                    else
+                    {
+                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out);
+                    }
                 }
             }
+            else
+            {
+                for (int boardCol = 1; boardCol <= COLUMNS; boardCol++)
+                {
+                    // white spot
+                    if (boardCol % 2 == 0)
+                    {
+                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
+                    }
+                    else // black spot
+                    {
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out);
+                    }
+                }
                 // the last row must be in the 7 so should write in here
+            }
         }
+
 
         setGray(out);
         out.print(EMPTY.repeat(prefixLength));
