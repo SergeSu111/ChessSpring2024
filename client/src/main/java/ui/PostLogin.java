@@ -218,12 +218,15 @@ public class PostLogin
            else
            {
                out.println("You successfully logout the game.");
-               prelogin.run();
+               Prelogin prelogin1 = new Prelogin("http://localhost:8080");
+               prelogin1.run();
            }
         }
         catch (IOException e)
         {
             out.println(e.getMessage());
+            Prelogin prelogin1 = new Prelogin("http://localhost:8080");
+            prelogin1.run();
         }
     }
 
