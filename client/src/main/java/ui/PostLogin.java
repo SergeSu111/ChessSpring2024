@@ -112,6 +112,7 @@ public class PostLogin
 
     public void listGame()
     {
+        int length = 1;
         try
         {
             Object listGameReturn = ServerFacade.listGame(authToken);
@@ -120,9 +121,13 @@ public class PostLogin
                 ArrayList<GameData> listGames = lIstGameResponseReturn.games();
                 for (GameData listGame : listGames)
                 {
-                    out.println(listGame);
+
+                    String listGameStr = "Game Name: " + listGame.gameName() + ". Game id: " + length + ". White user: " + listGame.whiteUsername() + ". Black user: " + listGame.blackUsername();
+                    out.println(listGameStr);
+                    length++;
                     out.println();
                     out.println();
+
                 }
             }
             else
