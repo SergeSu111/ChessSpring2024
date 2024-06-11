@@ -10,10 +10,9 @@ import org.junit.platform.commons.function.Try;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 import static ui.EscapeSequences.*;
 
@@ -22,7 +21,7 @@ public class PostLogin
     private static final PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
     private static final Scanner scanner = new Scanner(System.in);
-
+    ArrayList<Integer> GamesNumber = new ArrayList<>();
     private Prelogin prelogin;
 
     private final String authToken;
@@ -82,21 +81,30 @@ public class PostLogin
         System.exit(0);
     }
 
-    public void createGame()
-    {
+    public void createGame() {
         out.println("Please type the game name you want to create.");
         String gameName = scanner.nextLine();
-        try
-        {
+        int number = 1;
+        try {
             Object createGameReturn = ServerFacade.createGame(gameName, authToken);
+            Object listGameObj = ServerFacade.listGame(authToken);
+            LIstGameResponse lIstGameResponse = (LIstGameResponse) listGameObj;
+            ArrayList<GameData> listGames = lIstGameResponse.games();
+            for (GameData listGame : listGames)
+            {
+                if (!GamesNumber.contains(listGame.gameID())) {
+                    GamesNumber.add(listGame.gameID());
+                }
+            }
             if (createGameReturn instanceof CreateGameResponse)
             {
-                CreateGameResponse createGameResponseReturn = (CreateGameResponse)createGameReturn;
+                CreateGameResponse createGameResponseReturn = (CreateGameResponse) createGameReturn;
+                GamesNumber.add(createGameResponseReturn.gameID());
                 Object listGameReturn = ServerFacade.listGame(authToken);
-                LIstGameResponse lIstGameResponse = (LIstGameResponse) listGameReturn;
-                ArrayList<GameData> listGames = lIstGameResponse.games();
-                int gameID = listGames.size();
-                out.println("You successfully created a chess game. the game id is: "+ gameID);
+                LIstGameResponse lIstGameRes = (LIstGameResponse) listGameReturn;
+                ArrayList<GameData> Games = lIstGameRes.games();
+                out.println("You successfully created a chess game. the game id is: " + listGames.size());
+
             }
             else
             {
@@ -104,10 +112,11 @@ public class PostLogin
                 out.println(messageResponse.message());
             }
         }
-        catch (IOException E)
-        {
-           out.println(E.getMessage());
-        }
+        catch(IOException E)
+            {
+                out.println(E.getMessage());
+            }
+
     }
 
     public void listGame()
@@ -119,16 +128,25 @@ public class PostLogin
             if (listGameReturn instanceof LIstGameResponse lIstGameResponseReturn)
             {
                 ArrayList<GameData> listGames = lIstGameResponseReturn.games();
-                for (GameData listGame : listGames)
+                if (listGames.isEmpty())
                 {
-
-                    String listGameStr = "Game Name: " + listGame.gameName() + ". Game id: " + length + ". White user: " + listGame.whiteUsername() + ". Black user: " + listGame.blackUsername();
-                    out.println(listGameStr);
-                    length++;
-                    out.println();
-                    out.println();
-
+                    out.println("No games in server");
                 }
+                else
+                {
+                    for (GameData listG : listGames) {
+                        if (!GamesNumber.contains(listG.gameID())) {
+                            GamesNumber.add(listG.gameID());
+                        }
+                        String listGameStr = "Game Name: " + listG.gameName() + ". Game number: " + length + ". White user: " + listG.whiteUsername() + ". Black user: " + listG.blackUsername();
+                        out.println(listGameStr);
+                        length++;
+                        out.println();
+                        out.println();
+                    }
+                }
+
+
             }
             else
             {
@@ -160,7 +178,7 @@ public class PostLogin
             ChessGame.TeamColor playerColorChanged = gson.fromJson(playerColor, ChessGame.TeamColor.class);
             try
             {
-                MessageResponse messageResponseJoinGame = ServerFacade.joinGame(playerColorChanged, gameID, authToken);
+                MessageResponse messageResponseJoinGame = ServerFacade.joinGame(playerColorChanged,  GamesNumber.get(gameID-1), authToken);
                 if (!Objects.equals(messageResponseJoinGame.message(), ""))
                 {
                     out.println(messageResponseJoinGame.message());
@@ -186,6 +204,8 @@ public class PostLogin
                         out.println(EMPTY);
                         BoardUI.callWhiteBoard(out);
                     }
+                    out.println(RESET_BG_COLOR);
+                    out.println(RESET_TEXT_COLOR);
 
 
                 }
@@ -202,13 +222,32 @@ public class PostLogin
         // for observe. I do not have endpoint for that.
         // directly call the board?
         // Everytime before I call the callBoard, I should make it to be 1.
-        out.println("You successfully observe the game");
-        BoardUI.callBlackBoard(out);
-        out.println(SET_BG_COLOR_BLACK);
-        out.println(SET_TEXT_COLOR_BLACK);
-        out.println(EMPTY);
-        out.println(EMPTY);
-        BoardUI.callWhiteBoard(out);
+        try
+        {
+            Object listGameObj = ServerFacade.listGame(authToken);
+            LIstGameResponse lIstGameResponse = (LIstGameResponse) listGameObj;
+            ArrayList<GameData> listGames = lIstGameResponse.games();
+            if (listGames.isEmpty())
+            {
+                out.println("No games in server.");
+            }
+            else
+            {
+                System.err.println();
+                out.println("You successfully observe the game");
+                BoardUI.callBlackBoard(out);
+                out.println(SET_BG_COLOR_BLACK);
+                out.println(SET_TEXT_COLOR_BLACK);
+                out.println(EMPTY);
+                out.println(EMPTY);
+                BoardUI.callWhiteBoard(out);
+            }
+        }
+        catch(IOException e)
+        {
+            out.println(e.getMessage());
+        }
+
     }
 
     public void logOut()

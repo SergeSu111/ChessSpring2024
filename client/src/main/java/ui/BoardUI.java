@@ -104,7 +104,7 @@ public class BoardUI
     {
         boardCol--;
         setWhite(out);
-        out.print(SET_TEXT_COLOR_RED);
+        //out.print(SET_TEXT_COLOR_);
         out.print(EMPTY.repeat(prefixLength)); // make the small piece into spot have the same prefix;
         board.resetBoard(); // reset so I can get the reset pieces.
         ChessPiece targetPiece = board.getPiece(new ChessPosition(squareRow + 1, boardCol + 1));
@@ -204,6 +204,7 @@ public class BoardUI
             int copyRowBlack = boardRow;
             copyRowBlack++;
             out.print(String.valueOf(copyRowBlack));
+            out.print(EMPTY.repeat(prefixLength));
         }
 
 
@@ -214,7 +215,7 @@ public class BoardUI
             {
                 for (int boardCol = 1; boardCol <= COLUMNS; boardCol++)
                 {
-                    if (boardCol % 2 == 0)
+                    if (boardCol % 2 != 0)
                     {
                         putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
                     }
@@ -229,7 +230,7 @@ public class BoardUI
                 for (int boardCol = 1; boardCol <= COLUMNS; boardCol++)
                 {
                     // white spot
-                    if (boardCol % 2 == 0)
+                    if (boardCol % 2 != 0)
                     {
                         putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
                     }
@@ -263,12 +264,12 @@ public class BoardUI
             else
             {
 
-                for (int boardCol = 1; boardCol <= COLUMNS; boardCol++)
+                for (int boardCol = 8; boardCol > 0; boardCol--)
                 {
                     int copyCol = boardCol;
                     copyCol--;
                     // white spot
-                    if (copyCol % 2 == 0)
+                    if (copyCol % 2 != 0)
                     {
                         putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
                     }
@@ -301,12 +302,12 @@ public class BoardUI
 
         if (boardRow == 7 && color == WHITE) {
             setGray(out); // make the next line gray
-            String[] lettersInHeaderWhite = {"h", "g", "f", "e", "d", "c", "b", "a"};
+            String[] lettersInHeaderWhite = {"a", "b", "c", "d", "e", "f", "g", "h"};
             drawHeaders(out, lettersInHeaderWhite);
         }
         else if (boardRow == 0 && color == BLACK)
         {
-            String[] lettersInHeaderBlack = {"a", "b", "c", "d", "e", "f", "g", "h"};
+            String[] lettersInHeaderBlack = {"h", "g", "f", "e", "d", "c", "b", "a"};
             drawHeaders(out, lettersInHeaderBlack);
 
         }
