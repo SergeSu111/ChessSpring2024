@@ -14,9 +14,9 @@ import static ui.EscapeSequences.BLACK_KING;
 
 public class Prelogin
 {
-    private static final PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+    private static final PrintStream OUT = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
-    private static final Scanner scanner = new Scanner(System.in);
+    private static final Scanner SCANNER = new Scanner(System.in);
 
     public Prelogin(String serverUrl)
     {
@@ -25,15 +25,15 @@ public class Prelogin
 
     public void run()
     {
-        out.println("Welcome to the Chess Game. Type Here to get started.");
-        out.println();
-        out.println(help());
-        out.println("Make your choice.");
-        String input = scanner.nextLine();
+        OUT.println("Welcome to the Chess Game. Type Here to get started.");
+        OUT.println();
+        OUT.println(help());
+        OUT.println("Make your choice.");
+        String input = SCANNER.nextLine();
         while (!Objects.equals(input, "QUIT"))
         {
             this.eval(input);
-            input = scanner.nextLine();
+            input = SCANNER.nextLine();
         }
     }
 
@@ -44,46 +44,46 @@ public class Prelogin
             {
                 case "Register" -> register();
                 case "Login" -> login();
-                case "Help" -> out.println(help());
+                case "Help" -> OUT.println(help());
                 case "Quit" -> quit();
-                default -> out.println(help());
+                default -> OUT.println(help());
             }
 
     }
 
     public static void register() {
-        out.println("Please set your username: ");
-        String username = scanner.nextLine();
-        out.println("Please set your password: ");
-        String password = scanner.nextLine();
-        out.println("Please set your email");
-        String email = scanner.nextLine();
+        OUT.println("Please set your username: ");
+        String username = SCANNER.nextLine();
+        OUT.println("Please set your password: ");
+        String password = SCANNER.nextLine();
+        OUT.println("Please set your email");
+        String email = SCANNER.nextLine();
 
         try {
             Object registerReturn = ServerFacade.register(username, password, email);
             if (registerReturn instanceof RegisterResponse) {
-                out.println("You successfully register the account.");
+                OUT.println("You successfully register the account.");
                 RegisterResponse registerResponseReturned = (RegisterResponse) registerReturn;
                 String authToken = registerResponseReturned.authToken();
-                out.println();
+                OUT.println();
                 PostLogin postlogin = new PostLogin("http://localhost:8080", authToken);
                 postlogin.run();
             } else {
                 MessageResponse messageResponseRegister = (MessageResponse) registerReturn;
-                out.println(messageResponseRegister.message());
-                out.println(help());
+                OUT.println(messageResponseRegister.message());
+                OUT.println(help());
             }
         } catch (IOException e) {
-           out.println(e.getMessage());
+           OUT.println(e.getMessage());
         }
     }
 
     public static void login()
     {
-        out.println("Please type your username.");
-        String username = scanner.nextLine();
-        out.println("Please type your password");
-        String password = scanner.nextLine();
+        OUT.println("Please type your username.");
+        String username = SCANNER.nextLine();
+        OUT.println("Please type your password");
+        String password = SCANNER.nextLine();
 
         try
         {
@@ -92,7 +92,7 @@ public class Prelogin
             {
                 LoginResponse loginResponseReturn = (LoginResponse)loginReturn;
                 String authToken = loginResponseReturn.authToken();
-                out.println("You successfully login the account.");
+                OUT.println("You successfully login the account.");
                 // turn to postLogin. do this later
                 PostLogin postLogin = new PostLogin("http://localhost:8080", authToken);
                 postLogin.run();
@@ -100,13 +100,13 @@ public class Prelogin
             else
             {
                 MessageResponse messageResponse = (MessageResponse) loginReturn;
-                out.println(messageResponse.message());
+                OUT.println(messageResponse.message());
             }
-            out.println(help());
+            OUT.println(help());
         }
         catch (IOException E)
         {
-            out.println(E.getMessage());
+            OUT.println(E.getMessage());
         }
     }
 
@@ -122,7 +122,7 @@ public class Prelogin
 
     public void quit()
     {
-        out.println("Your game is exit."); // the print is not showing up in console.
+        OUT.println("Your game is exit."); // the print is not showing up in console.
         System.exit(0);
     }
 

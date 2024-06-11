@@ -93,7 +93,7 @@ public class ServerFacade{
 
 
     // make request
-    private static HttpURLConnection sendRequest(URL uri, Object RequestBody, String method, String authToken) throws IOException {
+    private static HttpURLConnection sendRequest(URL uri, Object requestBody, String method, String authToken) throws IOException {
         Gson gson = new Gson();
         HttpURLConnection http = (HttpURLConnection) uri.openConnection();
         http.setRequestMethod(method);
@@ -101,9 +101,9 @@ public class ServerFacade{
         {
             http.addRequestProperty("authorization", authToken);
         }
-        if (RequestBody != null)
+        if (requestBody != null)
         {
-            String jsonRequestBody = gson.toJson(RequestBody); // make it as json before putting into body
+            String jsonRequestBody = gson.toJson(requestBody); // make it as json before putting into body
             writeRequestBody(jsonRequestBody, http);
         }
         http.connect();

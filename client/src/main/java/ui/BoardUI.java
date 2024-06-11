@@ -185,7 +185,7 @@ public class BoardUI
             return switchTypeToGetPieceWHITE(targetPiece, pieceOnUIBoard, out);
         }
     }
-    private static void drawEachRow(PrintStream out, int boardRow, int StartRowNumber)
+    private static void drawEachRow(PrintStream out, int boardRow, int startRowNumber)
     {
 
         int prefixLength = (COLUMNS /16);
