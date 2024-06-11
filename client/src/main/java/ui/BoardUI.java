@@ -187,73 +187,50 @@ public class BoardUI
     }
     private static void drawEachRow(PrintStream out, int boardRow, int startRowNumber)
     {
-
         int prefixLength = (COLUMNS /16);
         out.print(SET_TEXT_COLOR_BLACK);
-
         out.print(EMPTY.repeat(prefixLength));
-        if (color == WHITE)
-        {
+        if (color == WHITE) {
             int copyWhite = boardRow;
             copyWhite++;
             out.print(String.valueOf(copyWhite));
-            out.print(EMPTY.repeat(prefixLength));
-        }
-        else
-        {
+            out.print(EMPTY.repeat(prefixLength));}
+        else {
             int copyRowBlack = boardRow;
             copyRowBlack++;
             out.print(String.valueOf(copyRowBlack));
-            out.print(EMPTY.repeat(prefixLength));
-        }
-
-
-        if (color == WHITE)
-        {
-            // means start from white spot
-            if (boardRow % 2 == 0)
-            {
-                for (int boardCol = 1; boardCol <= COLUMNS; boardCol++)
-                {
-                    if (boardCol % 2 != 0)
-                    {
-                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
-                    }
-                    else
-                    {
-                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out);
-                    }
-                }
-            }
+            out.print(EMPTY.repeat(prefixLength));}
+        if (color == WHITE) {
+            if (boardRow % 2 == 0) {
+                for (int boardCol = 1; boardCol <= COLUMNS; boardCol++) {
+                    if (boardCol % 2 != 0) {putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be update
+                    } else {putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out);}}}
             else
             {
                 for (int boardCol = 1; boardCol <= COLUMNS; boardCol++)
                 {
-                    // white spot
                     if (boardCol % 2 != 0)
                     {
                         putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
                     }
-                    else // black spot
+                    else
                     {
                         putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out);
                     }
                 }
-                // the last row must be in the 7 so should write in here
             }
         }
         else
         {
             int copyRow = boardRow;
             copyRow++;
-            // means start from white spot
             if (copyRow % 2 == 0)
             {
                 for (int boardCol = 8; boardCol > 0; boardCol--)
                 {
                     if (boardCol % 2 == 0)
                     {
-                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out);
                     }
                     else
                     {
@@ -263,12 +240,10 @@ public class BoardUI
             }
             else
             {
-
                 for (int boardCol = 8; boardCol > 0; boardCol--)
                 {
                     int copyCol = boardCol;
                     copyCol--;
-                    // white spot
                     if (copyCol % 2 != 0)
                     {
                         putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
@@ -278,10 +253,8 @@ public class BoardUI
                         putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out);
                     }
                 }
-                // the last row must be in the 7 so should write in here
             }
         }
-
         setGray(out);
         out.print(EMPTY.repeat(prefixLength));
         out.print(SET_TEXT_COLOR_BLACK);
@@ -299,7 +272,6 @@ public class BoardUI
         }
         out.print(EMPTY.repeat(prefixLength));
         out.println();
-
         if (boardRow == 7 && color == WHITE) {
             setGray(out); // make the next line gray
             String[] lettersInHeaderWhite = {"a", "b", "c", "d", "e", "f", "g", "h"};
@@ -309,7 +281,6 @@ public class BoardUI
         {
             String[] lettersInHeaderBlack = {"h", "g", "f", "e", "d", "c", "b", "a"};
             drawHeaders(out, lettersInHeaderBlack);
-
         }
     }
 
