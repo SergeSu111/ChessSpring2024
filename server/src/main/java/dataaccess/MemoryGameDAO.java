@@ -28,14 +28,8 @@ public class MemoryGameDAO implements GameDAO{
         return randomInt;
     }
 
-    /**
-     * @param playerColor
-     * @param gameID
-     * @return
-     * @throws DataAccessException
-     */
     @Override
-    public GameData getGame(ChessGame.TeamColor playerColor, int gameID) throws DataAccessException {
+    public GameData getGame(int gameID) throws DataAccessException {
         for (GameData singleGame : GAME_DATA_MEMORY)
         {
             if (singleGame.gameID() == gameID)
@@ -84,7 +78,7 @@ public class MemoryGameDAO implements GameDAO{
      */
     @Override
     public void joinGame(int gameID, ChessGame.TeamColor playerColor, String username) throws DataAccessException {
-        GameData foundGame = getGame(playerColor, gameID);
+        GameData foundGame = getGame(gameID);
         usedGame = foundGame;
         GAME_DATA_MEMORY.remove(foundGame); // we removed the old one first.
         updateGame(username, playerColor, foundGame);

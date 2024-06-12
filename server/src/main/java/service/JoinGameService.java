@@ -1,5 +1,6 @@
 package service;
 
+import chess.PawnMovesCalculator;
 import httprequest.JoinGameRequest;
 import model.GameData;
 import chess.ChessGame;
@@ -38,6 +39,10 @@ public class JoinGameService
                     // just need to call joinGame Because joinGame will call updateGame in it.
                     gameDB.joinGame(joinGameRequest.gameID(), joinGameRequest.playerColor(), username);
                 }
+            }
+            else
+            {
+                throw new DataAccessException("The game is null in db.");
             }
         }
     }

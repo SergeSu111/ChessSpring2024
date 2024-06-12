@@ -149,7 +149,7 @@ public class UnitTests {
         sqlUserRefer.createUser(userData);
         UserData returnedUserData = sqlUserRefer.getUser(userData.username());
         int gameID =  sqlGameRefer.createGame("game2");
-        GameData returnedGame = sqlGameRefer.getGame(ChessGame.TeamColor.WHITE, gameID);
+        GameData returnedGame = sqlGameRefer.getGame(gameID);
         assertDoesNotThrow(() ->  sqlGameRefer.updateGame(returnedUserData.username(), ChessGame.TeamColor.WHITE, returnedGame));
     }
 
@@ -159,7 +159,7 @@ public class UnitTests {
         sqlUserRefer.createUser(userData);
         UserData returnedUserData = sqlUserRefer.getUser(userData.username());
         int gameID =  sqlGameRefer.createGame("game2");
-        GameData returnedGame = sqlGameRefer.getGame(ChessGame.TeamColor.WHITE, gameID);
+        GameData returnedGame = sqlGameRefer.getGame(gameID);
         DataAccessException dataAccessException = assertThrows(DataAccessException.class, () -> sqlGameRefer.updateGame(null, ChessGame.TeamColor.WHITE, returnedGame));
         assertEquals(dataAccessException.getMessage(), "Username is null");
 
@@ -185,14 +185,14 @@ public class UnitTests {
     public void getGameSuccess() throws DataAccessException {
         sqlUserRefer.createUser(userData);
         int gameID = sqlGameRefer.createGame("game1");
-        assertDoesNotThrow(() -> sqlGameRefer.getGame(ChessGame.TeamColor.WHITE, gameID));
+        assertDoesNotThrow(() -> sqlGameRefer.getGame(gameID));
     }
 
     @Test
     @Order(18)
     public void getGameFailed()
     {
-        assertThrows(DataAccessException.class, () -> sqlGameRefer.getGame(null, 123));
+        assertThrows(DataAccessException.class, () -> sqlGameRefer.getGame(100000));
     }
 
 }

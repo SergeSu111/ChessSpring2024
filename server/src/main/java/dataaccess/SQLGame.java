@@ -104,7 +104,7 @@ public class SQLGame implements GameDAO
                    }
                    else
                    {
-                       return null;
+                       throw new DataAccessException("The game is not found.");
                    }
                } catch (SQLException e) {
                    throw new DataAccessException(e.getMessage());

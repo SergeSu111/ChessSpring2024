@@ -98,7 +98,7 @@ public class UnitTests
         String authToken = registerResponseBob.authToken();
         String gameName = "Game1";
         CreateGameResponse createGameResponseTest = createGameServiceTest.createGame(createGameRequestTest, authToken);
-        GameData game1 = gameDAO.getGame(ChessGame.TeamColor.WHITE, createGameResponseTest.gameID());
+        GameData game1 = gameDAO.getGame(createGameResponseTest.gameID());
         assertEquals(gameName, game1.gameName());
     }
 
