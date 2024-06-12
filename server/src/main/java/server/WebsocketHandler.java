@@ -21,6 +21,7 @@ import websocket.messages.websocketResponse.Notification;
 
 import java.io.IOException;
 import java.security.Key;
+import java.util.Objects;
 
 @WebSocket
 public class WebsocketHandler
@@ -82,11 +83,33 @@ public class WebsocketHandler
                     }
                 }
             }
+            if (game != null && username != null)
+            {
+                if (username.equals(game.whiteUsername())) // white color
+                {
+                    Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
+                    String message = notification.notificationJoinObserve(); // get the message of join game
+                    connectionManager.broadcast(authToken, message); // send to everyone else
+                }
+                else if (username.equals(game.blackUsername())) // black color
+                {
+                    Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
+                    String message = notification.notificationJoinObserve();
+                    connectionManager.broadcast(authToken, message);
+                }
+                else // observe
+                {
+                    Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, null);
+                    String message = notification.notificationJoinObserve(); // give me the observe part's message
+                    connectionManager.broadcast(authToken, message);
+                }
+            }
 
         } catch (DataAccessException | IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     public static void leave(UserGameCommand userGameCommand, Session session)
     {

@@ -23,7 +23,7 @@ public class Notification extends ServerMessage {
         this.username = username;
     }
 
-    public String notification()
+    public String notificationJoinObserve()
     {
         if (joinedColor == null) // means observe
         {
