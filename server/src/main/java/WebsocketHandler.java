@@ -33,7 +33,11 @@ public class WebsocketHandler
         {
             case itemBack == KeyItems.join -> joinGame();
             case itemBack == KeyItems.observe -> observeGame();
-            case
+            case itemBack == KeyItems.move -> MovePiece();
+            case itemBack == KeyItems.leave -> LeaveGame();
+            case itemBack == KeyItems.resign -> Resign();
+            case itemBack == KeyItems.check -> checkGame();
+            case itemBack == KeyItems.checkmate -> CheckMateGame();
         }
     }
 
