@@ -4,6 +4,7 @@ import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import handlers.*;
 import spark.*;
+import WebsocketHandler;
 
 import static dataaccess.DatabaseManager.createDatabase;
 
@@ -12,7 +13,7 @@ public class Server {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
-
+        Spark.webSocket("/ws", WebsocketHandler.class); // we are going to create a websocket handler to handle it?
         // Register your endpoints and handle exceptions here.
         Spark.post("/user", (req, res) -> new RegisterHandler(req, res).httpHandlerRequest(req, res));
         Spark.post("/session", (req, res) -> new LoginHandler(req, res).httpHandlerRequest(req, res));
