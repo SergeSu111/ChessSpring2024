@@ -1,10 +1,15 @@
+package server;
+
 import chess.ChessGame;
 import com.google.gson.Gson;
 import com.google.protobuf.Enum;
+import dataaccess.UserDAO;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.client.io.ConnectionManager;
 import websocket.commands.UserGameCommand;
+import websocket.commands.websocketRequests.ConnectPlayer;
 
 import java.security.Key;
 
@@ -12,8 +17,8 @@ import java.security.Key;
 public class WebsocketHandler
 {
     // websocket back-end. Receiving messages from websocket facade. return the messages from it to send back to websocketFacade.
-    private String keyItem;
-    private final ConnectionManager connectionManager = new ConnectionManager();
+    private final MyConnectionManager connectionManager = new MyConnectionManager();
+
 
     public enum KeyItems {join, observe, move, leave, resign, check, checkmate}
     @OnWebSocketMessage
@@ -22,12 +27,9 @@ public class WebsocketHandler
         Gson gson = new Gson();
         UserGameCommand userGameCommand = gson.fromJson(message, UserGameCommand.class); // make it to be userGameCommand
 
-        if (userGameCommand.getCommandType() == UserGameCommand.CommandType.CONNECT) // if it is connect, observe or join
-        {
-
-        }
         switch (userGameCommand.getCommandType())
-        {;
+        {
+            case UserGameCommand.CommandType.CONNECT -> ObserveOrJoin(userGameCommand, session);
             case UserGameCommand.CommandType.LEAVE -> observeGame();
             case UserGameCommand.CommandType.MAKE_MOVE -> MovePiece();
             case UserGameCommand.CommandType.RESIGN -> LeaveGame();
@@ -35,10 +37,12 @@ public class WebsocketHandler
         }
     }
 
-    public void joinGame(String authTokenJoiner, Session session)
+    public static void ObserveOrJoin(UserGameCommand userGameCommand, Session session)
     {
-        connectionManager.add(authTokenJoiner, session); // add the player in to websocket
+        ConnectPlayer connectPlayer = (ConnectPlayer)userGameCommand;
+        String authToken = connectPlayer.getAuthString();
 
     }
+
 
 }

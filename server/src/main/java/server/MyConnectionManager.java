@@ -1,4 +1,4 @@
-
+package server;
 
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ConnectionManager
+public class MyConnectionManager
 {
     // big websocket space. ConcurrentHashMap is better than hashmap
     public final ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>();
