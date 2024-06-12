@@ -16,6 +16,7 @@ import org.eclipse.jetty.websocket.client.io.ConnectionManager;
 import websocket.commands.UserGameCommand;
 import websocket.commands.websocketRequests.ConnectPlayer;
 import websocket.messages.ServerMessage;
+import websocket.messages.websocketResponse.ErrorWebsocket;
 import websocket.messages.websocketResponse.Notification;
 
 import java.io.IOException;
@@ -54,11 +55,34 @@ public class WebsocketHandler
             SQLGame sqlGame = new SQLGame();
             String username = sqlAuth.getAuth(authToken);
             connectionManager.add(authToken, session);
-            if (username == null) // authorized
+            int gameID = connectPlayer.getGameID();
+            if (username == null) // unauthorized
             {
-                connectionManager.s
-
+                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR, "Unauthorized.");
+                for (Connection connection : MyConnectionManager.connections.values())
+                {
+                    if (connection.authToken.equals(authToken))
+                    {
+                        connection.send(error.getErrorMessage());
+                    }
+                }
             }
+            GameData game = sqlGame.getGame(gameID);
+            if (game == null)
+            {
+                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR, "Game is not existed.");
+                for (Connection connection : MyConnectionManager.connections.values())
+                {
+                    if (connection.session.isOpen())
+                    {
+                        if (connection.authToken.equals(authToken))
+                        {
+                            connection.send(error.getErrorMessage());
+                        }
+                    }
+                }
+            }
+
         } catch (DataAccessException | IOException e) {
             throw new RuntimeException(e);
         }

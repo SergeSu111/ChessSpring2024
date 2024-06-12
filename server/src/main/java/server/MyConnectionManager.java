@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MyConnectionManager
 {
     // big websocket space. ConcurrentHashMap is better than hashmap
-    public final ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>();
+    public final static ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>();
 
     public void add(String authToken, Session session)
     {
