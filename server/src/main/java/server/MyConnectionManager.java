@@ -23,7 +23,7 @@ public class MyConnectionManager
         connections.remove(authToken);
     }
 
-    public void broadcast(String senderAuthToken, Notification notification) throws IOException {
+    public void broadcast(String senderAuthToken, String notification) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values())
         {
@@ -31,7 +31,7 @@ public class MyConnectionManager
             {
                 if (!c.authToken.equals(senderAuthToken)) // we need to send the message to them
                 {
-                    c.send(notification.toString()); // send one by one to all others
+                    c.send(notification); // send one by one to all others
                 }
             }
             else

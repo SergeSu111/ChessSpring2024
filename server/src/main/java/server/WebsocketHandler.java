@@ -15,8 +15,10 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.client.io.ConnectionManager;
 import websocket.commands.UserGameCommand;
 import websocket.commands.websocketRequests.ConnectPlayer;
+import websocket.messages.ServerMessage;
+import websocket.messages.websocketResponse.Notification;
 
-import javax.management.Notification;
+import java.io.IOException;
 import java.security.Key;
 
 @WebSocket
@@ -61,20 +63,22 @@ public class WebsocketHandler
                         GameData targetGame = sqlGame.getGame(connectPlayer.getJoinedColor(), connectPlayer.getGameID());
                         if (targetGame.blackUsername() == null && connectPlayer.getJoinedColor() == ChessGame.TeamColor.BLACK)
                         {
-                            Notification notification = new Notification()
+                            Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, connectPlayer.getJoinedColor());
+                            String message = notification.notification(); // get the message
+                            connectionManager.broadcast(authToken, message);
                         }
                     }
                 }
                 else // observe Game
                 {
-
+                    Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, connectPlayer.getJoinedColor());
+                    String message = notification.notification(); // get the message
+                    connectionManager.broadcast(authToken, message);
                 }
             }
-        } catch (DataAccessException e) {
+        } catch (DataAccessException | IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
 
