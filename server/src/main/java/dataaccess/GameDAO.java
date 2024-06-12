@@ -10,7 +10,7 @@ public interface GameDAO {
         return 1;
     }
 
-    public default GameData getGame(ChessGame.TeamColor playerColor, int gameID) throws DataAccessException {
+    public default GameData getGame(int gameID) throws DataAccessException {
         return null;
     }
 

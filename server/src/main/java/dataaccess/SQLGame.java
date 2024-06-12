@@ -79,15 +79,12 @@ public class SQLGame implements GameDAO
         }
     }
 
+
     @Override
-    public GameData getGame(ChessGame.TeamColor playerColor, int gameID) throws DataAccessException {
+    public GameData getGame(int gameID) throws DataAccessException {
         String whiteUserName, blackUserName, gameName, chessGame;
         Gson gson = new Gson();
         GameData getGameData;
-        if (playerColor == null)
-        {
-            throw new DataAccessException("The color is null");
-        }
        try (var conn = DatabaseManager.getConnection())
        {
            try (var preparedStatement = conn.prepareStatement("SELECT gameIDCol, whiteUserNameCol, blackUserNameCol, gameNameCol, ChessGameCol FROM Games WHERE gameIDCol = ?;"))
@@ -221,7 +218,7 @@ public class SQLGame implements GameDAO
         {
             throw new DataAccessException("Your username is null");
         }
-        GameData game = getGame(playerColor, gameID);
+        GameData game = getGame(gameID);
         updateGame(username, playerColor, game);
     }
 

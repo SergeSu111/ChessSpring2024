@@ -26,7 +26,7 @@ public class JoinGameService
         }
         else
         {
-            GameData foundGame = gameDB.getGame(joinGameRequest.playerColor(), joinGameRequest.gameID());
+            GameData foundGame = gameDB.getGame(joinGameRequest.gameID());
             if (foundGame != null)
             {
                 if (joinGameRequest.playerColor() == ChessGame.TeamColor.WHITE && foundGame.whiteUsername() != null || joinGameRequest.playerColor() == ChessGame.TeamColor.BLACK && foundGame.blackUsername() != null)
@@ -39,8 +39,6 @@ public class JoinGameService
                     gameDB.joinGame(joinGameRequest.gameID(), joinGameRequest.playerColor(), username);
                 }
             }
-
-
         }
     }
 

@@ -37,9 +37,9 @@ public class WebsocketHandler
         switch (userGameCommand.getCommandType())
         {
             case UserGameCommand.CommandType.CONNECT -> ObserveOrJoin(userGameCommand, session);
-            case UserGameCommand.CommandType.LEAVE -> observeGame();
-            case UserGameCommand.CommandType.MAKE_MOVE -> MovePiece();
-            case UserGameCommand.CommandType.RESIGN -> LeaveGame();
+            case UserGameCommand.CommandType.LEAVE -> leave(userGameCommand, session);
+            case UserGameCommand.CommandType.MAKE_MOVE -> MovePiece(userGameCommand, session);
+            case UserGameCommand.CommandType.RESIGN -> resign(userGameCommand, session);
             // how about the check and checkmate?
         }
     }
@@ -66,6 +66,7 @@ public class WebsocketHandler
                             Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, connectPlayer.getJoinedColor());
                             String message = notification.notification(); // get the message
                             connectionManager.broadcast(authToken, message);
+
                         }
                     }
                 }
@@ -80,6 +81,20 @@ public class WebsocketHandler
             throw new RuntimeException(e);
         }
     }
+
+    public static void leave(UserGameCommand userGameCommand, Session session)
+    {
+
+    }
+
+    public static void MovePiece(UserGameCommand userGameCommand, Session session)
+    {}
+
+    public static void resign(UserGameCommand userGameCommand, Session session)
+    {
+    }
+
+
 
 
 }
