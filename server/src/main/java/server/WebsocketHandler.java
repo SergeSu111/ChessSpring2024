@@ -54,28 +54,10 @@ public class WebsocketHandler
             SQLGame sqlGame = new SQLGame();
             String username = sqlAuth.getAuth(authToken);
             connectionManager.add(authToken, session);
-            if (username != null) // authorized
+            if (username == null) // authorized
             {
-                if (connectPlayer.getJoinedColor() != null)
-                {
-                    if (sqlGame.getGame(connectPlayer.getJoinedColor(), connectPlayer.getGameID()) != null) // get the game
-                    {
-                        GameData targetGame = sqlGame.getGame(connectPlayer.getJoinedColor(), connectPlayer.getGameID());
-                        if (targetGame.blackUsername() == null && connectPlayer.getJoinedColor() == ChessGame.TeamColor.BLACK)
-                        {
-                            Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, connectPlayer.getJoinedColor());
-                            String message = notification.notification(); // get the message
-                            connectionManager.broadcast(authToken, message);
+                connectionManager.s
 
-                        }
-                    }
-                }
-                else // observe Game
-                {
-                    Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, connectPlayer.getJoinedColor());
-                    String message = notification.notification(); // get the message
-                    connectionManager.broadcast(authToken, message);
-                }
             }
         } catch (DataAccessException | IOException e) {
             throw new RuntimeException(e);
