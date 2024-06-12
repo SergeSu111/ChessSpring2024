@@ -4,7 +4,7 @@ import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import handlers.*;
 import spark.*;
-import WebsocketHandler;
+
 
 import static dataaccess.DatabaseManager.createDatabase;
 
