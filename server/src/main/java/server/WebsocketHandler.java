@@ -42,7 +42,7 @@ public class WebsocketHandler
         switch (userGameCommand.getCommandType())
         {
             case UserGameCommand.CommandType.CONNECT -> ObserveOrJoin(message, session);
-            case UserGameCommand.CommandType.LEAVE -> leave(userGameCommand, session);
+            case UserGameCommand.CommandType.LEAVE -> leave(message, session);
             case UserGameCommand.CommandType.MAKE_MOVE -> MovePiece(userGameCommand, session);
             case UserGameCommand.CommandType.RESIGN -> resign(userGameCommand, session);
             // how about the check and checkmate?
@@ -52,13 +52,15 @@ public class WebsocketHandler
     public static void SendingErrorMessage(String authToken, ErrorWebsocket error, int gameID) throws IOException {
        Vector<Connection> smallGame = MyConnectionManager.connections.get(gameID);
         Vector<Connection> removeList = new Vector<>();
+        Gson gson = new Gson();
        for (Connection connection : smallGame)
        {
            if (connection.session.isOpen())
            {
                if (connection.authToken.equals(authToken))
                {
-                   connection.send(error.getErrorMessage());
+                   String errorJson = gson.toJson(error);
+                   connection.send(errorJson);
                }
            }
            else
@@ -66,11 +68,11 @@ public class WebsocketHandler
                removeList.add(connection);
            }
        }
-
-       for (var connection : removeList)
-       {
-          smallGame.remove(connection);
-       }
+//
+//       for (var connection : removeList)
+//       {
+//          smallGame.remove(connection);
+//       }
     }
 
 
@@ -93,18 +95,20 @@ public class WebsocketHandler
                 removeList.add(connection);
             }
         }
-        for (var connection : removeList)
-        {
-            smallGame.remove(connection);
-            // DO I need to put the smallGame into the connections again?
-        }
+//        for (var connection : removeList)
+//        {
+//            smallGame.remove(connection);
+//            // DO I need to put the smallGame into the connections again?
+//        }
     }
     public static void ObserveOrJoin(String message, Session session)
     {
+
         Gson gson = new Gson();
         ConnectPlayer connectPlayer = gson.fromJson(message, ConnectPlayer.class); // make it to be userGameCommand
         try
         {
+            GameData game = null;
             String authToken = connectPlayer.getAuthString();
             SQLAuth sqlAuth =  new SQLAuth();
             SQLGame sqlGame = new SQLGame();
@@ -116,19 +120,25 @@ public class WebsocketHandler
                 ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR, "Unauthorized.");
                 SendingErrorMessage(authToken, error, gameID);
             }
-            GameData game = sqlGame.getGame(gameID);
-            if (game == null)
+            try
+            {
+                game = sqlGame.getGame(gameID);
+            }
+            catch (DataAccessException e)
             {
                 ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR, "Game is not existed.");
                 SendingErrorMessage(authToken, error, gameID);
+
             }
             if (game != null && username != null)
             {
                 if (username.equals(game.whiteUsername())) // white color
                 {
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
-                    String messageBack = notification.notificationJoinObserve(); // get the message of join game
-                    connectionManager.broadcast(gameID, authToken, messageBack); // send to everyone else
+//                    String messageBack = notification.notificationJoinObserve(); // get the message of join game
+                    notification.setMessage(username + " is joining the game with white color.");
+                    String messageJson = gson.toJson(notification);
+                    connectionManager.broadcast(gameID, authToken, messageJson); // send to everyone else
                     ChessGame gameCurrent = game.game(); // just get the game already set up
                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameCurrent);
                     SendingLoadGame(authToken, loadGame, gameID); // send the loading game to client
@@ -136,8 +146,10 @@ public class WebsocketHandler
                 else if (username.equals(game.blackUsername())) // black color
                 {
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
-                    String messageBack = notification.notificationJoinObserve();
-                    connectionManager.broadcast(gameID, authToken, messageBack);
+//                    String messageBack = notification.notificationJoinObserve();
+                    notification.setMessage(username + " is joining the game with black color.");
+                    String messageJson = gson.toJson(notification);
+                    connectionManager.broadcast(gameID, authToken, messageJson);
                     ChessGame gameCurrent = game.game(); // Do I need to set the ChessGame to be black perspective?
                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameCurrent);
                     SendingLoadGame(authToken, loadGame, gameID);
@@ -145,8 +157,10 @@ public class WebsocketHandler
                 else // observe
                 {
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, null);
-                    String messageBack = notification.notificationJoinObserve(); // give me the observe part's message
-                    connectionManager.broadcast(gameID,authToken, messageBack);
+//                    String messageBack = notification.notificationJoinObserve(); // give me the observe part's message
+                    notification.setMessage(username + " is observing the game.");
+                    String messageJson = gson.toJson(notification);
+                    connectionManager.broadcast(gameID,authToken, messageJson);
                     ChessGame gameCurrent = game.game();
                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameCurrent);
                     SendingLoadGame(authToken, loadGame, gameID);
@@ -158,10 +172,10 @@ public class WebsocketHandler
         }
     }
 
-    public static void leave(UserGameCommand userGameCommand, Session session)
+    public static void leave(String message, Session session)
     {
         Gson gson = new Gson();
-        Leave leave = gson.fromJson(String.valueOf(userGameCommand), Leave.class);
+        Leave leave = gson.fromJson(message, Leave.class);
         try
         {
             String authToken = leave.getAuthString();
@@ -182,14 +196,18 @@ public class WebsocketHandler
                 if (username.equals(gameCurrent.whiteUsername()))
                 {
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
-                    connectionManager.broadcast(gameID, authToken, notification.notificationForLeaving());
+                    notification.setMessage(username + " is leaving the game.");
+                    String messageJson = gson.toJson(notification);
+                    connectionManager.broadcast(gameID, authToken, messageJson);
                     connectionManager.remove(gameID, authToken);
                     sqlGame.updateGame(null, ChessGame.TeamColor.WHITE, gameCurrent); // remove the user from game.
                 }
                 else if (username.equals(gameCurrent.blackUsername()))
                 {
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
-                    connectionManager.broadcast(gameID, authToken, notification.notificationForLeaving());
+                    notification.setMessage(username + " is leaving the game.");
+                     String messageJson = gson.toJson(notification);
+                    connectionManager.broadcast(gameID, authToken, messageJson);
                     connectionManager.remove(gameID, authToken);
                     sqlGame.updateGame(null, ChessGame.TeamColor.BLACK, gameCurrent);
 
@@ -197,7 +215,9 @@ public class WebsocketHandler
                 else // observer
                 {
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, null);
-                    connectionManager.broadcast(gameID, authToken, notification.notificationForLeaving());
+                    notification.setMessage(username + " is leaving the game.");
+                    String messageJson = gson.toJson(notification);
+                    connectionManager.broadcast(gameID, authToken, messageJson);
                     connectionManager.remove(gameID, authToken);
                 }
             }

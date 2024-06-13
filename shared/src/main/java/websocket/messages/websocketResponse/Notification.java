@@ -7,6 +7,7 @@ public class Notification extends ServerMessage {
 
     private String username;
 
+    private String message;
     private ChessGame.TeamColor joinedColor;
 
     public Notification(ServerMessageType type, String username, ChessGame.TeamColor joinedColor) {
@@ -23,17 +24,11 @@ public class Notification extends ServerMessage {
         this.username = username;
     }
 
-    public String notificationJoinObserve()
-    {
-        if (joinedColor == null) // means observe
-        {
-            return this.username + " is observing the game.";
-        }
-        return this.username + " is joining the game as " + joinedColor + ".";
+    public String getMessage() {
+        return message;
     }
 
-    public String notificationForLeaving()
-    {
-        return this.username + " is leaving the game.";
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

@@ -26,6 +26,8 @@ public class MyConnectionManager
         else
         {
             var smallGame = new Vector<Connection>();
+            connections.put(gameID, smallGame);
+            smallGame.add(connection);
         }
     }
 
@@ -64,10 +66,10 @@ public class MyConnectionManager
                 }
             }
 
-            for (var connection : removeList)
-            {
-                smallGame.remove(connection);
-            }
+//            for (var connection : removeList)
+//            {
+//                smallGame.remove(connection);
+//            }
         }
 
     }
