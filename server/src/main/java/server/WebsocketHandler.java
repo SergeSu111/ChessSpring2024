@@ -17,6 +17,7 @@ import websocket.commands.UserGameCommand;
 import websocket.commands.websocketRequests.ConnectPlayer;
 import websocket.messages.ServerMessage;
 import websocket.messages.websocketResponse.ErrorWebsocket;
+import websocket.messages.websocketResponse.LoadGame;
 import websocket.messages.websocketResponse.Notification;
 
 import java.io.IOException;
@@ -90,6 +91,16 @@ public class WebsocketHandler
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
                     String message = notification.notificationJoinObserve(); // get the message of join game
                     connectionManager.broadcast(authToken, message); // send to everyone else
+                    ChessGame gameCurrent = game.game(); // just get the game already set up
+                    LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameCurrent);
+                    for (Connection connection : MyConnectionManager.connections.values())
+                    {
+                        if (connection.authToken.equals(authToken))
+                        {
+                            connection.send(loadGame.toString());
+                        }
+                    }
+
                 }
                 else if (username.equals(game.blackUsername())) // black color
                 {
@@ -106,7 +117,7 @@ public class WebsocketHandler
             }
 
         } catch (DataAccessException | IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 

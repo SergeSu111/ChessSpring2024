@@ -5,12 +5,13 @@ import org.eclipse.jetty.websocket.api.Session;
 import javax.management.Notification;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MyConnectionManager
 {
     // big websocket space. ConcurrentHashMap is better than hashmap
-    public final static ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>();
+    public final static ConcurrentHashMap<Integer, Vector<Connection>> connections = new ConcurrentHashMap<>();
 
     public void add(String authToken, Session session)
     {
