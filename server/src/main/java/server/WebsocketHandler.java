@@ -1,12 +1,11 @@
 package server;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import com.google.protobuf.Enum;
-import dataaccess.DataAccessException;
-import dataaccess.SQLAuth;
-import dataaccess.SQLGame;
-import dataaccess.UserDAO;
+import dataaccess.*;
 import model.GameData;
 import org.eclipse.jetty.util.Scanner;
 import org.eclipse.jetty.websocket.api.Session;
@@ -16,6 +15,7 @@ import org.eclipse.jetty.websocket.client.io.ConnectionManager;
 import websocket.commands.UserGameCommand;
 import websocket.commands.websocketRequests.ConnectPlayer;
 import websocket.commands.websocketRequests.Leave;
+import websocket.commands.websocketRequests.MakeMove;
 import websocket.messages.ServerMessage;
 import websocket.messages.websocketResponse.ErrorWebsocket;
 import websocket.messages.websocketResponse.LoadGame;
@@ -23,6 +23,7 @@ import websocket.messages.websocketResponse.Notification;
 
 import java.io.IOException;
 import java.security.Key;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Vector;
 
@@ -43,7 +44,7 @@ public class WebsocketHandler
         {
             case UserGameCommand.CommandType.CONNECT -> ObserveOrJoin(message, session);
             case UserGameCommand.CommandType.LEAVE -> leave(message, session);
-            case UserGameCommand.CommandType.MAKE_MOVE -> MovePiece(userGameCommand, session);
+            case UserGameCommand.CommandType.MAKE_MOVE -> MovePiece(message, session);
             case UserGameCommand.CommandType.RESIGN -> resign(userGameCommand, session);
             // how about the check and checkmate?
         }
@@ -223,8 +224,122 @@ public class WebsocketHandler
         }
     }
 
-    public static void MovePiece(UserGameCommand userGameCommand, Session session)
+    public static void MovePiece(String message, Session session)
     {
+        try
+        {
+            GameData gameCurrent = null;
+            Gson gson = new Gson();
+            SQLGame sqlGame = new SQLGame();
+            SQLUser sqlUser = new SQLUser();
+            SQLAuth sqlAuth = new SQLAuth();
+            MakeMove makeMove = gson.fromJson(message, MakeMove.class);
+            int gameID = makeMove.getGameID();
+            String authToken = makeMove.getAuthString();
+
+            String username = sqlAuth.getAuth(authToken);
+            if (username == null)
+            {
+                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
+                error.setErrorMessage("Unauthorized.");
+                String errorJson = gson.toJson(error);
+                SendingErrorMessage(session, errorJson);
+            }
+            try
+            {
+                gameCurrent = sqlGame.getGame(gameID);
+            }
+            catch (DataAccessException e)
+            {
+                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
+                error.setErrorMessage("Game is not found.");
+                String errorJson = gson.toJson(error);
+                SendingErrorMessage(session, errorJson);
+            }
+
+            if ( gameCurrent != null && username != null)
+            {
+                ChessMove chessMove = makeMove.getChessMove(); // get the chessMove
+                ChessGame chessGame = gameCurrent.game(); // get the game
+                Collection<ChessMove> validMoves = chessGame.validMoves(chessMove.getStartPosition());
+
+                if (validMoves.contains(chessMove))
+                {
+                    chessGame.makeMove(chessMove);
+                    if (username.equals(gameCurrent.blackUsername()))  // black user
+                    {
+                        if (chessGame.isInCheck(ChessGame.TeamColor.WHITE))
+                        {
+                            Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
+                            notification.setMessage(gameCurrent.whiteUsername() + " is in check.");
+                            String messageJson = gson.toJson(notification);
+                            connectionManager.broadcast(gameID, authToken, messageJson);
+                        }
+
+                        if (chessGame.isInCheckmate(ChessGame.TeamColor.WHITE))
+                        {
+                            Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
+                            notification.setMessage(gameCurrent.whiteUsername() + " is in checkmate.");
+                            String messageJson = gson.toJson(notification);
+                            connectionManager.broadcast(gameID, authToken, messageJson);
+                        }
+                        // for stalemate, do we need to check for both black and white?
+                        if (chessGame.isInStalemate(ChessGame.TeamColor.WHITE))
+                        {
+                            Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
+                            notification.setMessage(gameCurrent.whiteUsername() + " is in stalemate.");
+                            String messageJson = gson.toJson(notification);
+                            connectionManager.broadcast(gameID, authToken, messageJson);
+                        }
+                    }
+                    else if (username.equals(gameCurrent.whiteUsername())) // white user
+                    {
+                        if (chessGame.isInCheck(ChessGame.TeamColor.BLACK))
+                        {
+                            Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
+                            notification.setMessage(gameCurrent.blackUsername() + " is in check.");
+                            String messageJson = gson.toJson(notification);
+                            connectionManager.broadcast(gameID, authToken, messageJson);
+                        }
+
+                        if (chessGame.isInCheckmate(ChessGame.TeamColor.BLACK))
+                        {
+                            Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
+                            notification.setMessage(gameCurrent.blackUsername() + " is in checkmate.");
+                            String messageJson = gson.toJson(notification);
+                            connectionManager.broadcast(gameID, authToken, messageJson);
+                        }
+
+                        if (chessGame.isInStalemate(ChessGame.TeamColor.BLACK))
+                        {
+                            Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
+                            notification.setMessage(gameCurrent.blackUsername() + " is in stalemate.");
+                            String messageJson = gson.toJson(notification);
+                            connectionManager.broadcast(gameID, authToken, messageJson);
+                        }
+                    }
+                    else // observer
+                    {
+                        ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
+                        error.setErrorMessage("Observer should not make move.");
+                        String errorJson = gson.toJson(error);
+                        SendingErrorMessage(session, errorJson);
+                    }
+
+                }
+                else
+                {
+                    ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
+                    error.setErrorMessage("The move is not valid");
+                    String errorJson = gson.toJson(error);
+                    SendingErrorMessage(session, errorJson);
+                }
+            }
+
+        } catch (DataAccessException | IOException | InvalidMoveException e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
 
