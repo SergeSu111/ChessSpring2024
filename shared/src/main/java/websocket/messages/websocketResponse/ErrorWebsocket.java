@@ -6,9 +6,8 @@ public class ErrorWebsocket extends ServerMessage {
 
     private String errorMessage;
 
-    public ErrorWebsocket(ServerMessageType type, String errorMessage) {
+    public ErrorWebsocket(ServerMessageType type) {
         super(type);
-        this.errorMessage = errorMessage;
     }
     public String getErrorMessage() {
         return errorMessage;

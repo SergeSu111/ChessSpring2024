@@ -49,25 +49,16 @@ public class WebsocketHandler
         }
     }
 
-    public static void SendingErrorMessage(String authToken, ErrorWebsocket error, int gameID) throws IOException {
-       Vector<Connection> smallGame = MyConnectionManager.connections.get(gameID);
-        Vector<Connection> removeList = new Vector<>();
-        Gson gson = new Gson();
-       for (Connection connection : smallGame)
-       {
-           if (connection.session.isOpen())
-           {
-               if (connection.authToken.equals(authToken))
-               {
-                   String errorJson = gson.toJson(error);
-                   connection.send(errorJson);
-               }
-           }
-           else
-           {
-               removeList.add(connection);
-           }
-       }
+    public static void SendingErrorMessage(Session session, String errorJson) throws IOException {
+     Connection connection = new Connection(null, session);
+     if (connection.session.isOpen())
+     {
+         if (connection.session.equals(session))
+         {
+             connection.send(errorJson);
+         }
+     }
+
 //
 //       for (var connection : removeList)
 //       {
@@ -114,11 +105,12 @@ public class WebsocketHandler
             SQLGame sqlGame = new SQLGame();
             int gameID = connectPlayer.getGameID();
             String username = sqlAuth.getAuth(authToken);
-            connectionManager.add(authToken ,session, gameID);
             if (username == null) // unauthorized
             {
-                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR, "Unauthorized.");
-                SendingErrorMessage(authToken, error, gameID);
+                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
+                error.setErrorMessage("Unauthorized.");
+                String errorJson = gson.toJson(error);
+                SendingErrorMessage(session, errorJson);
             }
             try
             {
@@ -126,12 +118,15 @@ public class WebsocketHandler
             }
             catch (DataAccessException e)
             {
-                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR, "Game is not existed.");
-                SendingErrorMessage(authToken, error, gameID);
+                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
+                error.setErrorMessage("Game is not found.");
+                String errorJson = gson.toJson(error);
+                SendingErrorMessage(session, errorJson);
 
             }
             if (game != null && username != null)
             {
+                connectionManager.add(authToken ,session, gameID);
                 if (username.equals(game.whiteUsername())) // white color
                 {
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
@@ -185,8 +180,10 @@ public class WebsocketHandler
             String username = sqlAuth.getAuth(authToken);
             if (username == null)
             {
-                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR, "Unauthorized.");
-                SendingErrorMessage(authToken, error, gameID);
+                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
+                error.setErrorMessage("Unauthorized.");
+                String errorJson = gson.toJson(error);
+                SendingErrorMessage(session, errorJson);
             }
 
             else
@@ -227,7 +224,8 @@ public class WebsocketHandler
     }
 
     public static void MovePiece(UserGameCommand userGameCommand, Session session)
-    {}
+    {
+    }
 
     public static void resign(UserGameCommand userGameCommand, Session session)
     {

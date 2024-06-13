@@ -91,7 +91,8 @@ public class WebSocketTests {
     @Test
     @Order(2)
     @DisplayName("Connect Bad AuthToken")
-    public void connectBadAuthToken() {
+    public void connectBadAuthToken()
+    {
         connectToGame(new WebsocketUser(black.username(), "badAuth"), gameID, false, Set.of(), Set.of());
 
         connectToGame(new WebsocketUser(observer.username(), "badAuth"), gameID, false, Set.of(black), Set.of());
