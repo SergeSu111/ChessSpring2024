@@ -15,6 +15,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.client.io.ConnectionManager;
 import websocket.commands.UserGameCommand;
 import websocket.commands.websocketRequests.ConnectPlayer;
+import websocket.commands.websocketRequests.Leave;
 import websocket.messages.ServerMessage;
 import websocket.messages.websocketResponse.ErrorWebsocket;
 import websocket.messages.websocketResponse.LoadGame;
@@ -98,7 +99,8 @@ public class WebsocketHandler
     }
     public static void ObserveOrJoin(UserGameCommand userGameCommand, Session session)
     {
-        ConnectPlayer connectPlayer = (ConnectPlayer)userGameCommand;
+        Gson gson = new Gson();
+        ConnectPlayer connectPlayer = gson.fromJson(String.valueOf(userGameCommand), ConnectPlayer.class);
         try
         {
             String authToken = connectPlayer.getAuthString();
@@ -156,7 +158,49 @@ public class WebsocketHandler
 
     public static void leave(UserGameCommand userGameCommand, Session session)
     {
+        Gson gson = new Gson();
+        Leave leave = gson.fromJson(String.valueOf(userGameCommand), Leave.class);
+        try
+        {
+            String authToken = leave.getAuthString();
+            int gameID = leave.getGameID();
+            SQLAuth sqlAuth =  new SQLAuth();
+            SQLGame sqlGame = new SQLGame();
+            String username = sqlAuth.getAuth(authToken);
+            if (username == null)
+            {
+                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR, "Unauthorized.");
+                SendingErrorMessage(authToken, error, gameID);
+            }
+            else
+            {
+                GameData gameCurrent = sqlGame.getGame(gameID);
 
+                if (username.equals(gameCurrent.whiteUsername()))
+                {
+                    Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
+                    connectionManager.broadcast(gameID, authToken, notification.notificationForLeaving());
+                    connectionManager.remove(gameID, authToken);
+                    // Do I need to remove the user from database?
+                }
+                else if (username.equals(gameCurrent.blackUsername()))
+                {
+                    Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
+                    connectionManager.broadcast(gameID, authToken, notification.notificationForLeaving());
+                    connectionManager.remove(gameID, authToken);
+                    // Do I need to remove the user from database?
+                }
+                else // means the user who wants to leave is observer?
+                {
+
+                }
+            }
+
+
+
+        } catch (DataAccessException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void MovePiece(UserGameCommand userGameCommand, Session session)

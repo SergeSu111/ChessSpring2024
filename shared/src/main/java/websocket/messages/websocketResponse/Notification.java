@@ -31,4 +31,9 @@ public class Notification extends ServerMessage {
         }
         return this.username + " is joining the game as " + joinedColor + ".";
     }
+
+    public String notificationForLeaving()
+    {
+        return this.username + " is leaving the game.";
+    }
 }
