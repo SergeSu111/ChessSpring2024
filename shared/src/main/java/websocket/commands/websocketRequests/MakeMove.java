@@ -7,12 +7,12 @@ public class MakeMove extends UserGameCommand {
 
     private int gameID;
 
-    private ChessMove chessMove;
+    private ChessMove move;
 
-    public MakeMove(String authToken, int gameID, ChessMove chessMove) {
+    public MakeMove(String authToken, int gameID, ChessMove move) {
         super(authToken);
         this.gameID = gameID;
-        this.chessMove = chessMove;
+        this.move = move;
     }
 
     public int getGameID() {
@@ -24,10 +24,10 @@ public class MakeMove extends UserGameCommand {
     }
 
     public ChessMove getChessMove() {
-        return chessMove;
+        return move;
     }
 
     public void setChessMove(ChessMove chessMove) {
-        this.chessMove = chessMove;
+        this.move = move;
     }
 }
