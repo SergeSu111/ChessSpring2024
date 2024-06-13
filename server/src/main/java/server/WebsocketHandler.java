@@ -73,6 +73,29 @@ public class WebsocketHandler
     }
 
 
+    public static void SendingLoadGame(String authToken, LoadGame loadGame, int gameID) throws IOException {
+        Vector<Connection> smallGame = MyConnectionManager.connections.get(gameID);
+        Vector<Connection> removeList = new Vector<>();
+        for (Connection connection : smallGame)
+        {
+            if (connection.session.isOpen())
+            {
+                if (connection.authToken.equals(authToken)) // only send to myself
+                {
+                    connection.send(loadGame.toString()); // toString or toJson?
+                }
+            }
+            else
+            {
+                removeList.add(connection);
+            }
+        }
+        for (var connection : removeList)
+        {
+            smallGame.remove(connection);
+            // DO I need to put the smallGame into the connections again?
+        }
+    }
     public static void ObserveOrJoin(UserGameCommand userGameCommand, Session session)
     {
         ConnectPlayer connectPlayer = (ConnectPlayer)userGameCommand;
@@ -101,29 +124,28 @@ public class WebsocketHandler
                 {
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
                     String message = notification.notificationJoinObserve(); // get the message of join game
-                    connectionManager.broadcast(authToken, message); // send to everyone else
+                    connectionManager.broadcast(gameID, authToken, message); // send to everyone else
                     ChessGame gameCurrent = game.game(); // just get the game already set up
                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameCurrent);
-                    for (Connection connection : MyConnectionManager.connections.values())
-                    {
-                        if (connection.authToken.equals(authToken))
-                        {
-                            connection.send(loadGame.toString());
-                        }
-                    }
-
+                    SendingLoadGame(authToken, loadGame, gameID); // send the loading game to client
                 }
                 else if (username.equals(game.blackUsername())) // black color
                 {
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
                     String message = notification.notificationJoinObserve();
-                    connectionManager.broadcast(authToken, message);
+                    connectionManager.broadcast(gameID, authToken, message);
+                    ChessGame gameCurrent = game.game(); // Do I need to set the ChessGame to be black perspective?
+                    LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameCurrent);
+                    SendingLoadGame(authToken, loadGame, gameID);
                 }
                 else // observe
                 {
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, null);
                     String message = notification.notificationJoinObserve(); // give me the observe part's message
-                    connectionManager.broadcast(authToken, message);
+                    connectionManager.broadcast(gameID,authToken, message);
+                    ChessGame gameCurrent = game.game();
+                    LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameCurrent);
+                    SendingLoadGame(authToken, loadGame, gameID);
                 }
             }
 
@@ -131,7 +153,6 @@ public class WebsocketHandler
             throw new RuntimeException(e.getMessage());
         }
     }
-
 
     public static void leave(UserGameCommand userGameCommand, Session session)
     {
