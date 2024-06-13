@@ -225,6 +225,7 @@ public class WebsocketHandler
 
     public static void MovePiece(UserGameCommand userGameCommand, Session session)
     {
+
     }
 
     public static void resign(UserGameCommand userGameCommand, Session session)
