@@ -23,6 +23,7 @@ import websocket.messages.websocketResponse.Notification;
 import java.io.IOException;
 import java.security.Key;
 import java.util.Objects;
+import java.util.Vector;
 
 @WebSocket
 public class WebsocketHandler
@@ -47,6 +48,31 @@ public class WebsocketHandler
         }
     }
 
+    public static void SendingErrorMessage(String authToken, ErrorWebsocket error, int gameID) throws IOException {
+       Vector<Connection> smallGame = MyConnectionManager.connections.get(gameID);
+        Vector<Connection> removeList = new Vector<>();
+       for (Connection connection : smallGame)
+       {
+           if (connection.session.isOpen())
+           {
+               if (connection.authToken.equals(authToken))
+               {
+                   connection.send(error.getErrorMessage());
+               }
+           }
+           else
+           {
+               removeList.add(connection);
+           }
+       }
+
+       for (var connection : removeList)
+       {
+          smallGame.remove(connection);
+       }
+    }
+
+
     public static void ObserveOrJoin(UserGameCommand userGameCommand, Session session)
     {
         ConnectPlayer connectPlayer = (ConnectPlayer)userGameCommand;
@@ -55,34 +81,19 @@ public class WebsocketHandler
             String authToken = connectPlayer.getAuthString();
             SQLAuth sqlAuth =  new SQLAuth();
             SQLGame sqlGame = new SQLGame();
-            String username = sqlAuth.getAuth(authToken);
-            connectionManager.add(authToken, session);
             int gameID = connectPlayer.getGameID();
+            String username = sqlAuth.getAuth(authToken);
+            connectionManager.add(authToken ,session, gameID);
             if (username == null) // unauthorized
             {
                 ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR, "Unauthorized.");
-                for (Connection connection : MyConnectionManager.connections.values())
-                {
-                    if (connection.authToken.equals(authToken))
-                    {
-                        connection.send(error.getErrorMessage());
-                    }
-                }
+                SendingErrorMessage(authToken, error, gameID);
             }
             GameData game = sqlGame.getGame(gameID);
             if (game == null)
             {
                 ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR, "Game is not existed.");
-                for (Connection connection : MyConnectionManager.connections.values())
-                {
-                    if (connection.session.isOpen())
-                    {
-                        if (connection.authToken.equals(authToken))
-                        {
-                            connection.send(error.getErrorMessage());
-                        }
-                    }
-                }
+                SendingErrorMessage(authToken, error, gameID);
             }
             if (game != null && username != null)
             {

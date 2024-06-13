@@ -63,6 +63,11 @@ public class MyConnectionManager
                     removeList.add(connection);
                 }
             }
+
+            for (var connection : removeList)
+            {
+                smallGame.remove(connection);
+            }
         }
 
     }
