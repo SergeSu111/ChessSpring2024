@@ -333,7 +333,7 @@ public class WebsocketHandler
                                     SendingLoadGameToAllOthers(authToken, loadGame, gameID); // send the board to others.
                                 }
                             }
-                           
+
                         }
                         else // not the user's turn, sending error
                         {
@@ -428,6 +428,7 @@ public class WebsocketHandler
 
     public static void resign(UserGameCommand userGameCommand, Session session)
     {
+
     }
 
 
