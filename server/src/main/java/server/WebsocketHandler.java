@@ -35,6 +35,8 @@ public class WebsocketHandler
     private static final MyConnectionManager connectionManager = new MyConnectionManager();
 
     public enum KeyItems {join, observe, move, leave, resign, check, checkmate}
+
+    public static Boolean isResign = false;
     @OnWebSocketMessage
     public void onMessage(Session session, String message) // the message is just a websocketRequest, just make it as json to pass in.
     {
@@ -288,7 +290,7 @@ public class WebsocketHandler
                     {
                         if (ChessGame.turn == ChessGame.TeamColor.BLACK)
                         {
-                            if (!chessGame.isInCheckmate(ChessGame.TeamColor.BLACK) || !chessGame.isInStalemate(ChessGame.TeamColor.BLACK) || !resign())
+                            if (!chessGame.isInCheckmate(ChessGame.TeamColor.BLACK) && !chessGame.isInStalemate(ChessGame.TeamColor.BLACK) && isResign == false)
                             {
                                 chessGame.makeMove(chessMove);
                                 ChessGame.turn = ChessGame.TeamColor.WHITE; // CHANGE the turn
@@ -334,6 +336,13 @@ public class WebsocketHandler
                                     SendingLoadGameToAllOthers(authToken, loadGame, gameID); // send the board to others.
                                 }
                             }
+                            else // try to make move after game over
+                            {
+                                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
+                                error.setErrorMessage("You cannot make move after game over.");
+                                String errorJson = gson.toJson(error);
+                                SendingErrorMessage(session, errorJson);
+                            }
 
                         }
                         else // not the user's turn, sending error
@@ -349,7 +358,7 @@ public class WebsocketHandler
                     {
                         if (ChessGame.turn == ChessGame.TeamColor.WHITE)
                         {
-                            if (!chessGame.isInCheckmate(ChessGame.TeamColor.WHITE) || !chessGame.isInStalemate(ChessGame.TeamColor.WHITE) || !resign())
+                            if (!chessGame.isInCheckmate(ChessGame.TeamColor.WHITE) && !chessGame.isInStalemate(ChessGame.TeamColor.WHITE) && isResign == false)
                             {
                                 chessGame.makeMove(chessMove);
                                 ChessGame.turn = ChessGame.TeamColor.BLACK;
@@ -391,6 +400,13 @@ public class WebsocketHandler
                                     SendingLoadGame(authToken, loadGame, gameID); // send the updating game
                                     SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
                                 }
+                            }
+                            else
+                            {
+                                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
+                                error.setErrorMessage("You cannot make move after game over.");
+                                String errorJson = gson.toJson(error);
+                                SendingErrorMessage(session, errorJson);
                             }
                         }
                         else
@@ -468,6 +484,7 @@ public class WebsocketHandler
                     {
                         ResignMaker.send(messageJson);
                     }
+                    isResign = true;
                 }
                 else if (username.equals(gameData.blackUsername()))
                 {
@@ -480,6 +497,7 @@ public class WebsocketHandler
                     {
                         ResignMaker.send(messageJson);
                     }
+                    isResign = true;
                 }
                 else // observer
                 {
