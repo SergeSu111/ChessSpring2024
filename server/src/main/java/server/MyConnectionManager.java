@@ -46,7 +46,7 @@ public class MyConnectionManager
         }
     }
 
-    public void broadcast(int gameID, String senderAuthToken, String notification) throws IOException {
+    public void broadcast(int gameID, Session senderSession, String notification) throws IOException {
         var removeList = new Vector<Connection>();
         if (connections.get(gameID) != null)
         {
@@ -55,7 +55,7 @@ public class MyConnectionManager
             {
                 if (connection.session.isOpen())
                 {
-                    if (!connection.authToken.equals(senderAuthToken))
+                    if (!connection.session.equals(senderSession))
                     {
                         connection.send(notification);
                     }
