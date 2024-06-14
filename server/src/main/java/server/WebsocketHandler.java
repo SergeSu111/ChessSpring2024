@@ -16,6 +16,7 @@ import websocket.commands.UserGameCommand;
 import websocket.commands.websocketRequests.ConnectPlayer;
 import websocket.commands.websocketRequests.Leave;
 import websocket.commands.websocketRequests.MakeMove;
+import websocket.commands.websocketRequests.Resign;
 import websocket.messages.ServerMessage;
 import websocket.messages.websocketResponse.ErrorWebsocket;
 import websocket.messages.websocketResponse.LoadGame;
@@ -45,7 +46,7 @@ public class WebsocketHandler
             case UserGameCommand.CommandType.CONNECT -> ObserveOrJoin(message, session);
             case UserGameCommand.CommandType.LEAVE -> leave(message, session);
             case UserGameCommand.CommandType.MAKE_MOVE -> MovePiece(message, session);
-            case UserGameCommand.CommandType.RESIGN -> resign(userGameCommand, session);
+            case UserGameCommand.CommandType.RESIGN -> resign(message, session);
             // how about the check and checkmate?
         }
     }
@@ -422,12 +423,78 @@ public class WebsocketHandler
         } catch (DataAccessException | IOException | InvalidMoveException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
-    public static void resign(UserGameCommand userGameCommand, Session session)
-    {
+    public static void resign(String message, Session session) {
+        try
+        {
+            GameData gameData = null;
+            Gson gson = new Gson();
+            Resign resign = gson.fromJson(message, Resign.class);
+            int gameID = resign.getGameID();
+            String authToken = resign.getAuthString();
+            SQLGame sqlGame = new SQLGame();
+            SQLUser sqlUser = new SQLUser();
+            SQLAuth sqlAuth = new SQLAuth();
+            String username = sqlAuth.getAuth(authToken);
+            if (username == null)
+            {
+                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
+                error.setErrorMessage("Unauthorized.");
+                String errorJson = gson.toJson(error);
+                SendingErrorMessage(session, errorJson);
+            }
+            try
+            {
+                gameData = sqlGame.getGame(gameID);
+            }
+            catch (DataAccessException e)
+            {
+                ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
+                error.setErrorMessage("Game is not found.");
+                String errorJson = gson.toJson(error);
+                SendingErrorMessage(session, errorJson);
+            }
+            if (username != null && gameData != null)
+            {
+                if (username.equals(gameData.whiteUsername()))
+                {
+                    Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
+                    notification.setMessage(username + " resigns the game.");
+                    String messageJson = gson.toJson(notification);
+                    connectionManager.broadcast(gameID, session, messageJson); // send to everyone else
+                    Connection ResignMaker = new Connection(authToken, session);
+                    if (ResignMaker.session.isOpen()) // and send to myself
+                    {
+                        ResignMaker.send(messageJson);
+                    }
+                }
+                else if (username.equals(gameData.blackUsername()))
+                {
+                    Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
+                    notification.setMessage(username + " resigns the game.");
+                    String messageJson = gson.toJson(notification);
+                    connectionManager.broadcast(gameID, session, messageJson);
+                    Connection ResignMaker = new Connection(authToken, session);
+                    if (ResignMaker.session.isOpen())
+                    {
+                        ResignMaker.send(messageJson);
+                    }
+                }
+                else // observer
+                {
+                    ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
+                    error.setErrorMessage("Observer cannot resign.");
+                    String errorJson = gson.toJson(error);
+                    SendingErrorMessage(session, errorJson);
+                }
+            }
+        }
+        catch (DataAccessException | IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+
 
     }
 
