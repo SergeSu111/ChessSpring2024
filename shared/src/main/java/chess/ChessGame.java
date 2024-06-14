@@ -14,18 +14,18 @@ public class ChessGame{
 
     private ChessBoard board;
 
-    private TeamColor turn;
+    public static TeamColor turn;
 
     public ChessGame() {
         this.board = new ChessBoard(); // get the ChessBoard by creating a Chessboard object by constructor
         this.board.resetBoard(); // reset The board;
-        this.turn = TeamColor.WHITE; // the default turn is white
+        turn = TeamColor.WHITE; // the default turn is white
     }
 
     public ChessGame(ChessBoard board, TeamColor turn)
     {
         this.board = board;
-        this.turn  = turn;
+        turn  = turn;
 
     }
 
@@ -34,7 +34,7 @@ public class ChessGame{
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        return this.turn;
+        return turn;
     }
 
     /**
@@ -43,7 +43,7 @@ public class ChessGame{
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        this.turn = team; // set the turn color to the team
+        turn = team; // set the turn color to the team
     }
 
     /**
