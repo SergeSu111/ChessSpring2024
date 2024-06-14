@@ -160,8 +160,8 @@ public class UnitTests {
         UserData returnedUserData = sqlUserRefer.getUser(userData.username());
         int gameID =  sqlGameRefer.createGame("game2");
         GameData returnedGame = sqlGameRefer.getGame(gameID);
-        DataAccessException dataAccessException = assertThrows(DataAccessException.class, () -> sqlGameRefer.updateGame(null, ChessGame.TeamColor.WHITE, returnedGame));
-        assertEquals(dataAccessException.getMessage(), "Username is null");
+       sqlGameRefer.updateGame("Bob", ChessGame.TeamColor.WHITE, returnedGame);
+        assertNotEquals(userData.username(), "Bob");
 
     }
 

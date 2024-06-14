@@ -475,29 +475,55 @@ public class WebsocketHandler
             {
                 if (username.equals(gameData.whiteUsername()))
                 {
-                    Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
-                    notification.setMessage(username + " resigns the game.");
-                    String messageJson = gson.toJson(notification);
-                    connectionManager.broadcast(gameID, session, messageJson); // send to everyone else
-                    Connection ResignMaker = new Connection(authToken, session);
-                    if (ResignMaker.session.isOpen()) // and send to myself
+                    if (isResign != true)
                     {
-                        ResignMaker.send(messageJson);
+                        Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
+                        notification.setMessage(username + " resigns the game.");
+                        String messageJson = gson.toJson(notification);
+                        connectionManager.broadcast(gameID, session, messageJson); // send to everyone else
+                        Connection ResignMaker = new Connection(authToken, session);
+                        if (ResignMaker.session.isOpen()) // and send to myself
+                        {
+                            ResignMaker.send(messageJson);
+                        }
+                        sqlGame.updateGame(null, ChessGame.TeamColor.WHITE, gameData);
+                        isResign = true;
                     }
-                    isResign = true;
+                    else
+                    {
+                        ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
+                        error.setErrorMessage("You cannot resign after one player already resigned.");
+                        String errorJson = gson.toJson(error);
+                        SendingErrorMessage(session, errorJson);
+                    }
+
                 }
                 else if (username.equals(gameData.blackUsername()))
                 {
-                    Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
-                    notification.setMessage(username + " resigns the game.");
-                    String messageJson = gson.toJson(notification);
-                    connectionManager.broadcast(gameID, session, messageJson);
-                    Connection ResignMaker = new Connection(authToken, session);
-                    if (ResignMaker.session.isOpen())
+                    if (isResign != true)
                     {
-                        ResignMaker.send(messageJson);
+                        Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
+                        notification.setMessage(username + " resigns the game.");
+                        String messageJson = gson.toJson(notification);
+                        connectionManager.broadcast(gameID, session, messageJson);
+                        Connection ResignMaker = new Connection(authToken, session);
+                        if (ResignMaker.session.isOpen())
+                        {
+                            ResignMaker.send(messageJson);
+                        }
+
+                        sqlGame.updateGame(null, ChessGame.TeamColor.BLACK, gameData);
+
+
+                        isResign = true;
                     }
-                    isResign = true;
+                    else
+                    {
+                        ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
+                        error.setErrorMessage("You cannot resign after one player already resigned.");
+                        String errorJson = gson.toJson(error);
+                        SendingErrorMessage(session, errorJson);
+                    }
                 }
                 else // observer
                 {
