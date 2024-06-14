@@ -67,6 +67,23 @@ public class WebsocketHandler
 //       }
     }
 
+    // send to all others the loading game
+    public static void SendingLoadGameToAllOthers(String authToken, LoadGame loadGame, int gameID) throws IOException {
+        Vector<Connection> smallGame = MyConnectionManager.connections.get(gameID);
+        for (Connection connection : smallGame)
+        {
+            if (connection.session.isOpen())
+            {
+                if (!connection.authToken.equals(authToken))
+                {
+                    Gson gson = new Gson();
+                    String loadGameJson = gson.toJson(loadGame);
+                    connection.send(loadGameJson);
+                }
+            }
+        }
+    }
+
 
     public static void SendingLoadGame(String authToken, LoadGame loadGame, int gameID) throws IOException {
         Vector<Connection> smallGame = MyConnectionManager.connections.get(gameID);
@@ -93,6 +110,7 @@ public class WebsocketHandler
 //            // DO I need to put the smallGame into the connections again?
 //        }
     }
+
     public static void ObserveOrJoin(String message, Session session)
     {
 
@@ -301,10 +319,16 @@ public class WebsocketHandler
                             String messageJson = gson.toJson(notification);
                             connectionManager.broadcast(gameID, session, messageJson);
                             Connection connectionMover = new Connection(authToken, session);
-                            if (connectionMover.session.isOpen())
-                            {
-                                connectionMover.send(messageJson);
-                            }
+//                            if (connectionMover.session.isOpen())
+//                            {
+//                                connectionMover.send(messageJson);
+//                            }
+                            LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
+                            SendingLoadGame(authToken, loadGame, gameID); // send the updating game to myself
+
+                            SendingLoadGameToAllOthers(authToken, loadGame, gameID); // send the board to others.
+
+
                         }
 
                     }
@@ -340,10 +364,13 @@ public class WebsocketHandler
                             String messageJson = gson.toJson(notification);
                             connectionManager.broadcast(gameID, session, messageJson);
                             Connection connectionMover = new Connection(authToken, session);
-                            if (connectionMover.session.isOpen())
-                            {
-                                connectionMover.send(messageJson);
-                            }
+//                            if (connectionMover.session.isOpen())
+//                            {
+//                                connectionMover.send(messageJson);
+//                            }
+                            LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
+                            SendingLoadGame(authToken, loadGame, gameID); // send the updating game
+                            SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
                         }
                     }
                     else // observer
