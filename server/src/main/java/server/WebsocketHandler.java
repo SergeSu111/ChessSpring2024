@@ -281,7 +281,8 @@ public class WebsocketHandler
                             Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
                             notification.setMessage(gameCurrent.whiteUsername() + " is in checkmate.");
                             String messageJson = gson.toJson(notification);
-                            connectionManager.broadcast(gameID, session, messageJson);
+                            connectionManager.broadcast(gameID, session, messageJson); // send to all others.
+
                         }
                         // for stalemate, do we need to check for both black and white?
                         else if (chessGame.isInStalemate(ChessGame.TeamColor.WHITE))
@@ -299,6 +300,11 @@ public class WebsocketHandler
                             notification.setMessage(username + " is making move from " + chessMove.getStartPosition() + " to " + chessMove.getEndPosition());
                             String messageJson = gson.toJson(notification);
                             connectionManager.broadcast(gameID, session, messageJson);
+                            Connection connectionMover = new Connection(authToken, session);
+                            if (connectionMover.session.isOpen())
+                            {
+                                connectionMover.send(messageJson);
+                            }
                         }
 
                     }
@@ -333,6 +339,11 @@ public class WebsocketHandler
                             notification.setMessage(username + " is making move from " + chessMove.getStartPosition() + " to " + chessMove.getEndPosition());
                             String messageJson = gson.toJson(notification);
                             connectionManager.broadcast(gameID, session, messageJson);
+                            Connection connectionMover = new Connection(authToken, session);
+                            if (connectionMover.session.isOpen())
+                            {
+                                connectionMover.send(messageJson);
+                            }
                         }
                     }
                     else // observer
