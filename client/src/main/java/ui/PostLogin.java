@@ -195,12 +195,12 @@ public class PostLogin
 //                        OUT.println(SET_TEXT_COLOR_BLACK);
 //                        OUT.println(EMPTY);
 //                        OUT.println(EMPTY);
-                        webSocketFacade.ConnectPlayer(authToken, gameID);
+                        webSocketFacade.ConnectPlayer(authToken, gamesNumber.get(gameID-1));
                         // go to gameUI
                     }
                     else
                     {
-                        webSocketFacade.ConnectPlayer(authToken, gameID);
+                        webSocketFacade.ConnectPlayer(authToken, gamesNumber.get(gameID-1));
 //                        OUT.println(SET_BG_COLOR_BLACK);
 //                        OUT.println(SET_TEXT_COLOR_BLACK);
 //                        OUT.println(EMPTY);
