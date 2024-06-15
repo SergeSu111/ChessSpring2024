@@ -36,7 +36,6 @@ public class WebsocketHandler
 
     public enum KeyItems {join, observe, move, leave, resign, check, checkmate}
 
-    public static Boolean isResign = false;
     @OnWebSocketMessage
     public void onMessage(Session session, String message) // the message is just a websocketRequest, just make it as json to pass in.
     {
@@ -288,12 +287,13 @@ public class WebsocketHandler
                 {
                     if (username.equals(gameCurrent.blackUsername()))  // black user
                     {
-                        if (ChessGame.turn == ChessGame.TeamColor.BLACK)
+                        if (chessGame.turn == ChessGame.TeamColor.BLACK)
                         {
-                            if (!chessGame.isInCheckmate(ChessGame.TeamColor.BLACK) && !chessGame.isInStalemate(ChessGame.TeamColor.BLACK) && isResign == false)
+                            if (!chessGame.isInCheckmate(ChessGame.TeamColor.BLACK) && !chessGame.isInStalemate(ChessGame.TeamColor.BLACK) && chessGame.isResigned != true)
                             {
                                 chessGame.makeMove(chessMove);
-                                ChessGame.turn = ChessGame.TeamColor.WHITE; // CHANGE the turn
+//                                sqlGame.updateChessGame(chessGame, gameID, gameCurrent);
+                                chessGame.turn = ChessGame.TeamColor.WHITE; // CHANGE the turn
                                 if (chessGame.isInCheck(ChessGame.TeamColor.WHITE))
                                 {
                                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
@@ -356,12 +356,13 @@ public class WebsocketHandler
                     }
                     else if (username.equals(gameCurrent.whiteUsername())) // white user
                     {
-                        if (ChessGame.turn == ChessGame.TeamColor.WHITE)
+                        if (chessGame.turn == ChessGame.TeamColor.WHITE)
                         {
-                            if (!chessGame.isInCheckmate(ChessGame.TeamColor.WHITE) && !chessGame.isInStalemate(ChessGame.TeamColor.WHITE) && isResign == false)
+                            if (!chessGame.isInCheckmate(ChessGame.TeamColor.WHITE) && !chessGame.isInStalemate(ChessGame.TeamColor.WHITE) && chessGame.isResigned != true)
                             {
                                 chessGame.makeMove(chessMove);
-                                ChessGame.turn = ChessGame.TeamColor.BLACK;
+//                                sqlGame.updateChessGame(chessGame, gameID, gameCurrent); // update the chessGame in db
+                                chessGame.turn = ChessGame.TeamColor.BLACK;
                                 if (chessGame.isInCheck(ChessGame.TeamColor.BLACK))
                                 {
                                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
@@ -376,6 +377,7 @@ public class WebsocketHandler
                                     notification.setMessage(gameCurrent.blackUsername() + " is in checkmate.");
                                     String messageJson = gson.toJson(notification);
                                     connectionManager.broadcast(gameID, session, messageJson);
+
                                 }
 
                                 else if (chessGame.isInStalemate(ChessGame.TeamColor.BLACK))
@@ -384,6 +386,7 @@ public class WebsocketHandler
                                     notification.setMessage(gameCurrent.blackUsername() + " is in stalemate.");
                                     String messageJson = gson.toJson(notification);
                                     connectionManager.broadcast(gameID, session, messageJson);
+
                                 }
                                 else
                                 {
@@ -445,6 +448,7 @@ public class WebsocketHandler
         try
         {
             GameData gameData = null;
+            ChessGame chessGame = null;
             Gson gson = new Gson();
             Resign resign = gson.fromJson(message, Resign.class);
             int gameID = resign.getGameID();
@@ -463,6 +467,7 @@ public class WebsocketHandler
             try
             {
                 gameData = sqlGame.getGame(gameID);
+                chessGame = gameData.game();
             }
             catch (DataAccessException e)
             {
@@ -475,7 +480,7 @@ public class WebsocketHandler
             {
                 if (username.equals(gameData.whiteUsername()))
                 {
-                    if (isResign != true)
+                    if (chessGame.isResigned != true)
                     {
                         Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
                         notification.setMessage(username + " resigns the game.");
@@ -486,8 +491,9 @@ public class WebsocketHandler
                         {
                             ResignMaker.send(messageJson);
                         }
-                        sqlGame.updateGame(null, ChessGame.TeamColor.WHITE, gameData);
-                        isResign = true;
+
+                        chessGame.isResigned = true;
+                        sqlGame.updateChessGame(chessGame, gameID, gameData);
                     }
                     else
                     {
@@ -500,7 +506,7 @@ public class WebsocketHandler
                 }
                 else if (username.equals(gameData.blackUsername()))
                 {
-                    if (isResign != true)
+                    if (chessGame.isResigned != true)
                     {
                         Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
                         notification.setMessage(username + " resigns the game.");
@@ -512,10 +518,8 @@ public class WebsocketHandler
                             ResignMaker.send(messageJson);
                         }
 
-                        sqlGame.updateGame(null, ChessGame.TeamColor.BLACK, gameData);
-
-
-                        isResign = true;
+                        chessGame.isResigned = true;
+//                        sqlGame.updateChessGame(chessGame, gameID, gameData);
                     }
                     else
                     {

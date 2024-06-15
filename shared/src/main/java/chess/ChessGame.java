@@ -14,7 +14,9 @@ public class ChessGame{
 
     private ChessBoard board;
 
-    public static TeamColor turn;
+    public TeamColor turn;
+
+    public boolean isResigned = false;
 
     public ChessGame() {
         this.board = new ChessBoard(); // get the ChessBoard by creating a Chessboard object by constructor
