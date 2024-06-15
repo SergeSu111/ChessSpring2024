@@ -168,10 +168,6 @@ public class SQLGame implements GameDAO
     @Override
     public void updateGame(String username, ChessGame.TeamColor playerColor, GameData targetGame) throws DataAccessException {
         int gameID = targetGame.gameID();
-//        if (username == null)
-//        {
-//            throw new DataAccessException("Username is null");
-//        }
         try (var conn = DatabaseManager.getConnection())
         {
             if (playerColor == ChessGame.TeamColor.WHITE)

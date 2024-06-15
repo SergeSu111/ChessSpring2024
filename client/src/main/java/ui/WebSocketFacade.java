@@ -4,14 +4,14 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
-import websocket.commands.websocketRequests.ConnectPlayer;
-import websocket.commands.websocketRequests.Leave;
-import websocket.commands.websocketRequests.MakeMove;
-import websocket.commands.websocketRequests.Resign;
+import websocket.commands.websocketrequests.ConnectPlayer;
+import websocket.commands.websocketrequests.Leave;
+import websocket.commands.websocketrequests.MakeMove;
+import websocket.commands.websocketrequests.Resign;
 import websocket.messages.ServerMessage;
-import websocket.messages.websocketResponse.ErrorWebsocket;
-import websocket.messages.websocketResponse.LoadGame;
-import websocket.messages.websocketResponse.Notification;
+import websocket.messages.websocketresponse.ErrorWebsocket;
+import websocket.messages.websocketresponse.LoadGame;
+import websocket.messages.websocketresponse.Notification;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -46,9 +46,9 @@ public class WebSocketFacade extends Endpoint
                     ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
                     switch (serverMessage.getServerMessageType())
                     {
-                        case ServerMessage.ServerMessageType.NOTIFICATION -> SendingNotificationBack(message);
-                        case ServerMessage.ServerMessageType.ERROR -> SendingErrorBack(message);
-                        case ServerMessage.ServerMessageType.LOAD_GAME -> SendingLoadGameBack(message);
+                        case ServerMessage.ServerMessageType.NOTIFICATION -> sendingNotificationBack(message);
+                        case ServerMessage.ServerMessageType.ERROR -> sendingErrorBack(message);
+                        case ServerMessage.ServerMessageType.LOAD_GAME -> sendingLoadGameBack(message);
                     }
                 }
             });
@@ -57,21 +57,21 @@ public class WebSocketFacade extends Endpoint
         }
     }
 
-    public void SendingNotificationBack(String message)
+    public void sendingNotificationBack(String message)
     {
         Gson gson = new Gson();
         Notification notification = gson.fromJson(message, Notification.class);
         System.out.println(notification.getMessage());
     }
 
-    public void SendingErrorBack(String message)
+    public void sendingErrorBack(String message)
     {
         Gson gson = new Gson();
         ErrorWebsocket error = gson.fromJson(message, ErrorWebsocket.class);
         System.out.println(error.getErrorMessage());
     }
 
-    public void SendingLoadGameBack(String message)
+    public void sendingLoadGameBack(String message)
     {
         Gson gson = new Gson();
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
@@ -88,7 +88,7 @@ public class WebSocketFacade extends Endpoint
         }
     }
 
-    public void ConnectPlayer(String authToken, int gameID) throws IOException // we don need to care about color, back-end check for us
+    public void connectPlayer(String authToken, int gameID) throws IOException // we don need to care about color, back-end check for us
     {   Gson gson = new Gson();
         ConnectPlayer connectPlayer = new ConnectPlayer(authToken, gameID);
         String connectPlayerJson = gson.toJson(connectPlayer);
@@ -114,16 +114,6 @@ public class WebSocketFacade extends Endpoint
         Resign resign = new Resign(authToken, gameID);
         String resignJson = gson.toJson(resign);
         this.session.getBasicRemote().sendText(resignJson);
-    }
-
-
-    public ChessGame.TeamColor getColor() {
-        return color;
-    }
-
-    public void setColor(ChessGame.TeamColor color) {
-        this.color = color;
-
     }
 
     @Override

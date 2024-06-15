@@ -1,4 +1,4 @@
-package websocket.commands.websocketRequests;
+package websocket.commands.websocketrequests;
 
 import chess.ChessMove;
 import websocket.commands.UserGameCommand;
@@ -27,7 +27,4 @@ public class MakeMove extends UserGameCommand {
         return move;
     }
 
-    public void setChessMove(ChessMove chessMove) {
-        this.move = move;
-    }
 }

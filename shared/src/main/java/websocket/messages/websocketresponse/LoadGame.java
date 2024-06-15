@@ -1,4 +1,4 @@
-package websocket.messages.websocketResponse;
+package websocket.messages.websocketresponse;
 
 import chess.ChessGame;
 import websocket.messages.ServerMessage;
@@ -13,9 +13,5 @@ public class LoadGame extends ServerMessage {
 
     public ChessGame getGame() {
         return game;
-    }
-
-    public void setGame(ChessGame game) {
-        this.game = game;
     }
 }

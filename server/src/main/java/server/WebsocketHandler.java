@@ -4,35 +4,30 @@ import chess.ChessGame;
 import chess.ChessMove;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
-import com.google.protobuf.Enum;
 import dataaccess.*;
 import model.GameData;
-import org.eclipse.jetty.util.Scanner;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.eclipse.jetty.websocket.client.io.ConnectionManager;
 import websocket.commands.UserGameCommand;
-import websocket.commands.websocketRequests.ConnectPlayer;
-import websocket.commands.websocketRequests.Leave;
-import websocket.commands.websocketRequests.MakeMove;
-import websocket.commands.websocketRequests.Resign;
+import websocket.commands.websocketrequests.ConnectPlayer;
+import websocket.commands.websocketrequests.Leave;
+import websocket.commands.websocketrequests.MakeMove;
+import websocket.commands.websocketrequests.Resign;
 import websocket.messages.ServerMessage;
-import websocket.messages.websocketResponse.ErrorWebsocket;
-import websocket.messages.websocketResponse.LoadGame;
-import websocket.messages.websocketResponse.Notification;
+import websocket.messages.websocketresponse.ErrorWebsocket;
+import websocket.messages.websocketresponse.LoadGame;
+import websocket.messages.websocketresponse.Notification;
 
 import java.io.IOException;
-import java.security.Key;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Vector;
 
 @WebSocket
 public class WebsocketHandler
 {
     // websocket back-end. Receiving messages from websocket facade. return the messages from it to send back to websocketFacade.
-    private static final MyConnectionManager connectionManager = new MyConnectionManager();
+    private static final MyConnectionManager CONNECTION_MANAGER = new MyConnectionManager();
 
     public enum KeyItems {join, observe, move, leave, resign, check, checkmate}
 
@@ -52,7 +47,7 @@ public class WebsocketHandler
         }
     }
 
-    public static void SendingErrorMessage(Session session, String errorJson) throws IOException {
+    public static void sendingErrorMessage(Session session, String errorJson) throws IOException {
      Connection connection = new Connection(null, session);
      if (connection.session.isOpen())
      {
@@ -61,17 +56,11 @@ public class WebsocketHandler
              connection.send(errorJson);
          }
      }
-
-//
-//       for (var connection : removeList)
-//       {
-//          smallGame.remove(connection);
-//       }
     }
 
     // send to all others the loading game
-    public static void SendingLoadGameToAllOthers(String authToken, LoadGame loadGame, int gameID) throws IOException {
-        Vector<Connection> smallGame = MyConnectionManager.connections.get(gameID);
+    public static void sendingLoadGameToAllOthers(String authToken, LoadGame loadGame, int gameID) throws IOException {
+        Vector<Connection> smallGame = MyConnectionManager.CONNECTIONS.get(gameID);
         for (Connection connection : smallGame)
         {
             if (connection.session.isOpen())
@@ -87,8 +76,8 @@ public class WebsocketHandler
     }
 
 
-    public static void SendingLoadGame(String authToken, LoadGame loadGame, int gameID) throws IOException {
-        Vector<Connection> smallGame = MyConnectionManager.connections.get(gameID);
+    public static void sendingLoadGame(String authToken, LoadGame loadGame, int gameID) throws IOException {
+        Vector<Connection> smallGame = MyConnectionManager.CONNECTIONS.get(gameID);
         Vector<Connection> removeList = new Vector<>();
         for (Connection connection : smallGame)
         {
@@ -106,13 +95,7 @@ public class WebsocketHandler
                 removeList.add(connection);
             }
         }
-//        for (var connection : removeList)
-//        {
-//            smallGame.remove(connection);
-//            // DO I need to put the smallGame into the connections again?
-//        }
     }
-
     public static void ObserveOrJoin(String message, Session session)
     {
 
@@ -131,7 +114,7 @@ public class WebsocketHandler
                 ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                 error.setErrorMessage("Unauthorized.");
                 String errorJson = gson.toJson(error);
-                SendingErrorMessage(session, errorJson);
+                sendingErrorMessage(session, errorJson);
             }
             try
             {
@@ -142,22 +125,22 @@ public class WebsocketHandler
                 ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                 error.setErrorMessage("Game is not found.");
                 String errorJson = gson.toJson(error);
-                SendingErrorMessage(session, errorJson);
+                sendingErrorMessage(session, errorJson);
 
             }
             if (game != null && username != null)
             {
-                connectionManager.add(authToken ,session, gameID);
+                CONNECTION_MANAGER.add(authToken ,session, gameID);
                 if (username.equals(game.whiteUsername())) // white color
                 {
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
 //                    String messageBack = notification.notificationJoinObserve(); // get the message of join game
                     notification.setMessage(username + " is joining the game with white color.");
                     String messageJson = gson.toJson(notification);
-                    connectionManager.broadcast(gameID, session, messageJson); // send to everyone else
+                    CONNECTION_MANAGER.broadcast(gameID, session, messageJson); // send to everyone else
                     ChessGame gameCurrent = game.game(); // just get the game already set up
                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameCurrent);
-                    SendingLoadGame(authToken, loadGame, gameID); // send the loading game to client
+                    sendingLoadGame(authToken, loadGame, gameID); // send the loading game to client
                 }
                 else if (username.equals(game.blackUsername())) // black color
                 {
@@ -165,10 +148,10 @@ public class WebsocketHandler
 //                    String messageBack = notification.notificationJoinObserve();
                     notification.setMessage(username + " is joining the game with black color.");
                     String messageJson = gson.toJson(notification);
-                    connectionManager.broadcast(gameID, session, messageJson);
+                    CONNECTION_MANAGER.broadcast(gameID, session, messageJson);
                     ChessGame gameCurrent = game.game(); // Do I need to set the ChessGame to be black perspective?
                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameCurrent);
-                    SendingLoadGame(authToken, loadGame, gameID);
+                    sendingLoadGame(authToken, loadGame, gameID);
                 }
                 else // observe
                 {
@@ -176,10 +159,10 @@ public class WebsocketHandler
 //                    String messageBack = notification.notificationJoinObserve(); // give me the observe part's message
                     notification.setMessage(username + " is observing the game.");
                     String messageJson = gson.toJson(notification);
-                    connectionManager.broadcast(gameID,session, messageJson);
+                    CONNECTION_MANAGER.broadcast(gameID,session, messageJson);
                     ChessGame gameCurrent = game.game();
                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, gameCurrent);
-                    SendingLoadGame(authToken, loadGame, gameID);
+                    sendingLoadGame(authToken, loadGame, gameID);
                 }
             }
 
@@ -204,7 +187,7 @@ public class WebsocketHandler
                 ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                 error.setErrorMessage("Unauthorized.");
                 String errorJson = gson.toJson(error);
-                SendingErrorMessage(session, errorJson);
+                sendingErrorMessage(session, errorJson);
             }
 
             else
@@ -216,8 +199,8 @@ public class WebsocketHandler
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
                     notification.setMessage(username + " is leaving the game.");
                     String messageJson = gson.toJson(notification);
-                    connectionManager.broadcast(gameID, session, messageJson);
-                    connectionManager.remove(gameID, authToken);
+                    CONNECTION_MANAGER.broadcast(gameID, session, messageJson);
+                    CONNECTION_MANAGER.remove(gameID, authToken);
                     sqlGame.updateGame(null, ChessGame.TeamColor.WHITE, gameCurrent); // remove the user from game.
                 }
                 else if (username.equals(gameCurrent.blackUsername()))
@@ -225,8 +208,8 @@ public class WebsocketHandler
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
                     notification.setMessage(username + " is leaving the game.");
                      String messageJson = gson.toJson(notification);
-                    connectionManager.broadcast(gameID, session, messageJson);
-                    connectionManager.remove(gameID, authToken);
+                    CONNECTION_MANAGER.broadcast(gameID, session, messageJson);
+                    CONNECTION_MANAGER.remove(gameID, authToken);
                     sqlGame.updateGame(null, ChessGame.TeamColor.BLACK, gameCurrent);
 
                 }
@@ -235,8 +218,8 @@ public class WebsocketHandler
                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, null);
                     notification.setMessage(username + " is leaving the game.");
                     String messageJson = gson.toJson(notification);
-                    connectionManager.broadcast(gameID, session, messageJson);
-                    connectionManager.remove(gameID, authToken);
+                    CONNECTION_MANAGER.broadcast(gameID, session, messageJson);
+                    CONNECTION_MANAGER.remove(gameID, authToken);
                 }
             }
         } catch (DataAccessException | IOException e) {
@@ -263,7 +246,7 @@ public class WebsocketHandler
                 ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                 error.setErrorMessage("Unauthorized.");
                 String errorJson = gson.toJson(error);
-                SendingErrorMessage(session, errorJson);
+                sendingErrorMessage(session, errorJson);
             }
             try
             {
@@ -274,7 +257,7 @@ public class WebsocketHandler
                 ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                 error.setErrorMessage("Game is not found.");
                 String errorJson = gson.toJson(error);
-                SendingErrorMessage(session, errorJson);
+                sendingErrorMessage(session, errorJson);
             }
 
             if ( gameCurrent != null && username != null)
@@ -299,11 +282,11 @@ public class WebsocketHandler
                                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
                                     notification.setMessage(gameCurrent.whiteUsername() + " is in checkmate.");
                                     String messageJson = gson.toJson(notification);
-                                    connectionManager.broadcast(gameID, null, messageJson); // send to all others.
+                                    CONNECTION_MANAGER.broadcast(gameID, null, messageJson); // send to all others.
 
                                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
-                                    SendingLoadGame(authToken, loadGame, gameID); // send the updating game
-                                    SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
+                                    sendingLoadGame(authToken, loadGame, gameID); // send the updating game
+                                    sendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
                                 }
 
                                 else if (chessGame.isInCheck(ChessGame.TeamColor.WHITE))
@@ -311,10 +294,10 @@ public class WebsocketHandler
                                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
                                     notification.setMessage(gameCurrent.whiteUsername() + " is in check.");
                                     String messageJson = gson.toJson(notification);
-                                    connectionManager.broadcast(gameID, null, messageJson);
+                                    CONNECTION_MANAGER.broadcast(gameID, null, messageJson);
                                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
-                                    SendingLoadGame(authToken, loadGame, gameID); // send the updating game
-                                    SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
+                                    sendingLoadGame(authToken, loadGame, gameID); // send the updating game
+                                    sendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
                                 }
 
 
@@ -324,11 +307,11 @@ public class WebsocketHandler
                                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
                                     notification.setMessage(gameCurrent.whiteUsername() + " is in stalemate.");
                                     String messageJson = gson.toJson(notification);
-                                    connectionManager.broadcast(gameID, null, messageJson);
+                                    CONNECTION_MANAGER.broadcast(gameID, null, messageJson);
 
                                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
-                                    SendingLoadGame(authToken, loadGame, gameID); // send the updating game
-                                    SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
+                                    sendingLoadGame(authToken, loadGame, gameID); // send the updating game
+                                    sendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
                                 }
 
                                 // normal making move
@@ -338,16 +321,11 @@ public class WebsocketHandler
                                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
                                     notification.setMessage(username + " is making move from " + chessMove.getStartPosition() + " to " + chessMove.getEndPosition());
                                     String messageJson = gson.toJson(notification);
-                                    connectionManager.broadcast(gameID, session, messageJson);
-                                    Connection connectionMover = new Connection(authToken, session);
-//                            if (connectionMover.session.isOpen())
-//                            {
-//                                connectionMover.send(messageJson);
-//                            }
+                                    CONNECTION_MANAGER.broadcast(gameID, session, messageJson);
                                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
-                                    SendingLoadGame(authToken, loadGame, gameID); // send the updating game to myself
+                                    sendingLoadGame(authToken, loadGame, gameID); // send the updating game to myself
 
-                                    SendingLoadGameToAllOthers(authToken, loadGame, gameID); // send the board to others.
+                                    sendingLoadGameToAllOthers(authToken, loadGame, gameID); // send the board to others.
                                 }
                             }
 
@@ -356,7 +334,7 @@ public class WebsocketHandler
                                 ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                                 error.setErrorMessage("You cannot make move after game over.");
                                 String errorJson = gson.toJson(error);
-                                SendingErrorMessage(session, errorJson);
+                                sendingErrorMessage(session, errorJson);
                             }
 
                         }
@@ -365,7 +343,7 @@ public class WebsocketHandler
                             ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                             error.setErrorMessage("This is not your turn, cannot move.");
                             String errorJson = gson.toJson(error);
-                            SendingErrorMessage(session, errorJson);
+                            sendingErrorMessage(session, errorJson);
                         }
 
                     }
@@ -383,7 +361,7 @@ public class WebsocketHandler
                                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
                                     notification.setMessage(gameCurrent.blackUsername() + " is in check.");
                                     String messageJson = gson.toJson(notification);
-                                    connectionManager.broadcast(gameID, session, messageJson);
+                                    CONNECTION_MANAGER.broadcast(gameID, session, messageJson);
 
                                     Connection connectionMover = new Connection(authToken, session);
                                     if (connectionMover.session.isOpen())
@@ -392,8 +370,8 @@ public class WebsocketHandler
                                     }
 
                                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
-                                    SendingLoadGame(authToken, loadGame, gameID); // send the updating game
-                                    SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
+                                    sendingLoadGame(authToken, loadGame, gameID); // send the updating game
+                                    sendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
                                 }
 
                                 else if (chessGame.isInCheckmate(ChessGame.TeamColor.BLACK))
@@ -401,7 +379,7 @@ public class WebsocketHandler
                                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
                                     notification.setMessage(gameCurrent.blackUsername() + " is in checkmate.");
                                     String messageJson = gson.toJson(notification);
-                                    connectionManager.broadcast(gameID, session, messageJson);
+                                    CONNECTION_MANAGER.broadcast(gameID, session, messageJson);
 
                                     Connection connectionMover = new Connection(authToken, session);
                                     if (connectionMover.session.isOpen())
@@ -410,8 +388,8 @@ public class WebsocketHandler
                                     }
 
                                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
-                                    SendingLoadGame(authToken, loadGame, gameID); // send the updating game
-                                    SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
+                                    sendingLoadGame(authToken, loadGame, gameID); // send the updating game
+                                    sendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
                                 }
 
                                 else if (chessGame.isInStalemate(ChessGame.TeamColor.BLACK))
@@ -419,7 +397,7 @@ public class WebsocketHandler
                                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
                                     notification.setMessage(gameCurrent.blackUsername() + " is in stalemate.");
                                     String messageJson = gson.toJson(notification);
-                                    connectionManager.broadcast(gameID, session, messageJson);
+                                    CONNECTION_MANAGER.broadcast(gameID, session, messageJson);
 
                                     Connection connectionMover = new Connection(authToken, session);
                                     if (connectionMover.session.isOpen())
@@ -427,8 +405,8 @@ public class WebsocketHandler
                                         connectionMover.send(messageJson);
                                     }
                                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
-                                    SendingLoadGame(authToken, loadGame, gameID); // send the updating game
-                                    SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
+                                    sendingLoadGame(authToken, loadGame, gameID); // send the updating game
+                                    sendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
 
                                 }
                                 else
@@ -436,15 +414,10 @@ public class WebsocketHandler
                                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
                                     notification.setMessage(username + " is making move from " + chessMove.getStartPosition() + " to " + chessMove.getEndPosition());
                                     String messageJson = gson.toJson(notification);
-                                    connectionManager.broadcast(gameID, session, messageJson);
-//                                    Connection connectionMover = new Connection(authToken, session);
-//                                    if (connectionMover.session.isOpen())
-//                                    {
-//                                        connectionMover.send(messageJson);
-//                                    }
+                                    CONNECTION_MANAGER.broadcast(gameID, session, messageJson);
                                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
-                                    SendingLoadGame(authToken, loadGame, gameID); // send the updating game
-                                    SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
+                                    sendingLoadGame(authToken, loadGame, gameID); // send the updating game
+                                    sendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
                                 }
                             }
                             else
@@ -452,7 +425,7 @@ public class WebsocketHandler
                                 ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                                 error.setErrorMessage("You cannot make move after game over.");
                                 String errorJson = gson.toJson(error);
-                                SendingErrorMessage(session, errorJson);
+                                sendingErrorMessage(session, errorJson);
                             }
                         }
                         else
@@ -460,7 +433,7 @@ public class WebsocketHandler
                             ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                             error.setErrorMessage("This is not your turn, cannot move.");
                             String errorJson = gson.toJson(error);
-                            SendingErrorMessage(session, errorJson);
+                            sendingErrorMessage(session, errorJson);
                         }
 
                     }
@@ -469,7 +442,7 @@ public class WebsocketHandler
                         ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                         error.setErrorMessage("Observer should not make move.");
                         String errorJson = gson.toJson(error);
-                        SendingErrorMessage(session, errorJson);
+                        sendingErrorMessage(session, errorJson);
                     }
 
                 }
@@ -478,7 +451,7 @@ public class WebsocketHandler
                     ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                     error.setErrorMessage("The move is not valid");
                     String errorJson = gson.toJson(error);
-                    SendingErrorMessage(session, errorJson);
+                    sendingErrorMessage(session, errorJson);
                 }
             }
 
@@ -505,7 +478,7 @@ public class WebsocketHandler
                 ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                 error.setErrorMessage("Unauthorized.");
                 String errorJson = gson.toJson(error);
-                SendingErrorMessage(session, errorJson);
+                sendingErrorMessage(session, errorJson);
             }
             try
             {
@@ -517,7 +490,7 @@ public class WebsocketHandler
                 ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                 error.setErrorMessage("Game is not found.");
                 String errorJson = gson.toJson(error);
-                SendingErrorMessage(session, errorJson);
+                sendingErrorMessage(session, errorJson);
             }
             if (username != null && gameData != null)
             {
@@ -528,11 +501,11 @@ public class WebsocketHandler
                         Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.WHITE);
                         notification.setMessage(username + " resigns the game.");
                         String messageJson = gson.toJson(notification);
-                        connectionManager.broadcast(gameID, session, messageJson); // send to everyone else
-                        Connection ResignMaker = new Connection(authToken, session);
-                        if (ResignMaker.session.isOpen()) // and send to myself
+                        CONNECTION_MANAGER.broadcast(gameID, session, messageJson); // send to everyone else
+                        Connection resignMaker = new Connection(authToken, session);
+                        if (resignMaker.session.isOpen()) // and send to myself
                         {
-                            ResignMaker.send(messageJson);
+                            resignMaker.send(messageJson);
                         }
 
                         chessGame.isResigned = true;
@@ -543,7 +516,7 @@ public class WebsocketHandler
                         ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                         error.setErrorMessage("You cannot resign after one player already resigned.");
                         String errorJson = gson.toJson(error);
-                        SendingErrorMessage(session, errorJson);
+                        sendingErrorMessage(session, errorJson);
                     }
 
                 }
@@ -554,11 +527,11 @@ public class WebsocketHandler
                         Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
                         notification.setMessage(username + " resigns the game.");
                         String messageJson = gson.toJson(notification);
-                        connectionManager.broadcast(gameID, session, messageJson);
-                        Connection ResignMaker = new Connection(authToken, session);
-                        if (ResignMaker.session.isOpen())
+                        CONNECTION_MANAGER.broadcast(gameID, session, messageJson);
+                        Connection resignMaker = new Connection(authToken, session);
+                        if (resignMaker.session.isOpen())
                         {
-                            ResignMaker.send(messageJson);
+                            resignMaker.send(messageJson);
                         }
 
                         chessGame.isResigned = true;
@@ -569,7 +542,7 @@ public class WebsocketHandler
                         ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                         error.setErrorMessage("You cannot resign after one player already resigned.");
                         String errorJson = gson.toJson(error);
-                        SendingErrorMessage(session, errorJson);
+                        sendingErrorMessage(session, errorJson);
                     }
                 }
                 else // observer
@@ -577,7 +550,7 @@ public class WebsocketHandler
                     ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
                     error.setErrorMessage("Observer cannot resign.");
                     String errorJson = gson.toJson(error);
-                    SendingErrorMessage(session, errorJson);
+                    sendingErrorMessage(session, errorJson);
                 }
             }
         }

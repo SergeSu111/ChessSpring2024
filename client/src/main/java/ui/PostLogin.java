@@ -190,21 +190,12 @@ public class PostLogin
                     OUT.println("You successfully join the game");
                     if (playerColorChanged == ChessGame.TeamColor.BLACK)
                     {
-
-//                        OUT.println(SET_BG_COLOR_BLACK);
-//                        OUT.println(SET_TEXT_COLOR_BLACK);
-//                        OUT.println(EMPTY);
-//                        OUT.println(EMPTY);
-                        webSocketFacade.ConnectPlayer(authToken, gamesNumber.get(gameID-1));
+                        webSocketFacade.connectPlayer(authToken, gamesNumber.get(gameID-1));
                         // go to gameUI
                     }
                     else
                     {
-                        webSocketFacade.ConnectPlayer(authToken, gamesNumber.get(gameID-1));
-//                        OUT.println(SET_BG_COLOR_BLACK);
-//                        OUT.println(SET_TEXT_COLOR_BLACK);
-//                        OUT.println(EMPTY);
-//                        OUT.println(EMPTY);
+                        webSocketFacade.connectPlayer(authToken, gamesNumber.get(gameID-1));
                     }
                     OUT.println(RESET_BG_COLOR);
                     OUT.println(RESET_TEXT_COLOR);
@@ -221,9 +212,6 @@ public class PostLogin
 
     public void observeGame()
     {
-        // for observe. I do not have endpoint for that.
-        // directly call the board?
-        // Everytime before I call the callBoard, I should make it to be 1.
         try
         {
             Object listGameObj = ServerFacade.listGame(authToken);
@@ -240,7 +228,7 @@ public class PostLogin
                 String gameIdStr = SCANNER.nextLine();
                 int gameID = Integer.parseInt(gameIdStr);
                 OUT.println("You successfully observe the game");
-                webSocketFacade.ConnectPlayer(authToken, gameID);
+                webSocketFacade.connectPlayer(authToken, gameID);
             }
         }
         catch(IOException e)

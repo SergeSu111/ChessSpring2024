@@ -1,4 +1,4 @@
-package websocket.commands.websocketRequests;
+package websocket.commands.websocketrequests;
 
 import websocket.commands.UserGameCommand;
 
