@@ -39,9 +39,9 @@ public class WebsocketHandler
 
         switch (userGameCommand.getCommandType())
         {
-            case UserGameCommand.CommandType.CONNECT -> ObserveOrJoin(message, session);
+            case UserGameCommand.CommandType.CONNECT -> observeOrJoin(message, session);
             case UserGameCommand.CommandType.LEAVE -> leave(message, session);
-            case UserGameCommand.CommandType.MAKE_MOVE -> MovePiece(message, session);
+            case UserGameCommand.CommandType.MAKE_MOVE -> movePiece(message, session);
             case UserGameCommand.CommandType.RESIGN -> resign(message, session);
             // how about the check and checkmate?
         }
@@ -96,7 +96,7 @@ public class WebsocketHandler
             }
         }
     }
-    public static void ObserveOrJoin(String message, Session session)
+    public static void observeOrJoin(String message, Session session)
     {
 
         Gson gson = new Gson();
@@ -227,7 +227,7 @@ public class WebsocketHandler
         }
     }
 
-    public static void MovePiece(String message, Session session)
+    public static void movePiece(String message, Session session)
     {
         try
         {
