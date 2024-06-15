@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import websocket.messages.ServerMessage;
@@ -20,7 +21,7 @@ public class WebSocketFacade extends Endpoint
 
     NotificationHandler notificationHandler;
 
-    private ChessGame.TeamColor color;
+    private static ChessGame.TeamColor color;
     public WebSocketFacade(String url, ChessGame.TeamColor color)
     {
         this.color = color;
@@ -68,8 +69,18 @@ public class WebSocketFacade extends Endpoint
     private static void SendingLoadGameBack(String message)
     {
         Gson gson = new Gson();
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         LoadGame loadGame = gson.fromJson(message, LoadGame.class);
         ChessGame game = loadGame.getGame();
+        ChessBoard board = game.getBoard();
+        if (color == ChessGame.TeamColor.WHITE)
+        {
+            BoardUI.callWhiteBoard(out, board); // draw the white board to console
+        }
+        else
+        {
+            BoardUI.callBlackBoard(out, board); // draw the white board to console
+        }
 
 
 
@@ -82,11 +93,7 @@ public class WebSocketFacade extends Endpoint
 
     public void setColor(ChessGame.TeamColor color) {
         this.color = color;
-        if (color == ChessGame.TeamColor.WHITE)
-        {
-            var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-            BoardUI.callWhiteBoard(out);
-        }
+
     }
 
     @Override
