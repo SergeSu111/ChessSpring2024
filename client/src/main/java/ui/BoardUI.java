@@ -28,22 +28,22 @@ public class BoardUI
     }
 
 
-    public static void callWhiteBoard(PrintStream out)
+    public static void callWhiteBoard(PrintStream out, ChessBoard board)
     {
         color = WHITE;
         int startRowNumberWhite = 1;
         String[] lettersInHeaderWhite = {"a", "b", "c", "d", "e", "f", "g", "h"};
         drawHeaders(out, lettersInHeaderWhite);
-        drawBoard(out, startRowNumberWhite);
+        drawBoard(out, startRowNumberWhite, board);
     }
 
-    public static void callBlackBoard(PrintStream out)
+    public static void callBlackBoard(PrintStream out, ChessBoard board)
     {
         color = BLACK;
         int startRowNumberBlack = 8;
         String[] lettersInHeaderBlack = {"h", "g", "f", "e", "d", "c", "b", "a"};
         drawHeaders(out, lettersInHeaderBlack);
-        drawBoard(out, startRowNumberBlack);
+        drawBoard(out, startRowNumberBlack, board);
     }
     private static void drawHeaders(PrintStream out, String[] lettersInHeader)
     {
@@ -79,20 +79,20 @@ public class BoardUI
         setGray(out);
     }
 
-    private static void drawBoard(PrintStream out, int startRowNumber)
+    private static void drawBoard(PrintStream out, int startRowNumber, ChessBoard board)
     {
         if (color == WHITE)
         {
             for (int boardRow = 0; boardRow < ROWS; boardRow++)
             {
-                drawEachRow(out, boardRow, startRowNumber);
+                drawEachRow(out, boardRow, startRowNumber, board);
             }
         }
         else
         {
             for (int boardRow = 7; boardRow > -1; boardRow--)
             {
-                drawEachRow(out, boardRow, startRowNumber);
+                drawEachRow(out, boardRow, startRowNumber, board);
             }
         }
 
@@ -100,13 +100,12 @@ public class BoardUI
 //        out.println(RESET_TEXT_COLOR);
     }
 
-    private static void putPieceOnWhiteSpot(int squareRow, int boardCol, int prefixLength, PrintStream out)
+    private static void putPieceOnWhiteSpot(int squareRow, int boardCol, int prefixLength, PrintStream out, ChessBoard board)
     {
         boardCol--;
         setWhite(out);
         //out.print(SET_TEXT_COLOR_);
         out.print(EMPTY.repeat(prefixLength)); // make the small piece into spot have the same prefix;
-        board.resetBoard(); // reset so I can get the reset pieces.
         ChessPiece targetPiece = board.getPiece(new ChessPosition(squareRow + 1, boardCol + 1));
         // how can I turned the piece I got onto the board?
         if (targetPiece != null)
@@ -122,12 +121,11 @@ public class BoardUI
         }
     }
 
-    private static void putPieceOnBlackSpot(int squareRow, int boardCol, int prefixLength, PrintStream out)
+    private static void putPieceOnBlackSpot(int squareRow, int boardCol, int prefixLength, PrintStream out, ChessBoard board)
     {
         boardCol--;
         setBlack(out);
         out.print(EMPTY.repeat(prefixLength));
-        board.resetBoard();
         ChessPiece targetPiece = board.getPiece(new ChessPosition(squareRow + 1, boardCol + 1));
         if (targetPiece != null)
         {
@@ -185,7 +183,7 @@ public class BoardUI
             return switchTypeToGetPieceWHITE(targetPiece, pieceOnUIBoard, out);
         }
     }
-    private static void drawEachRow(PrintStream out, int boardRow, int startRowNumber)
+    private static void drawEachRow(PrintStream out, int boardRow, int startRowNumber, ChessBoard board)
     {
         int prefixLength = (COLUMNS /16);
         out.print(SET_TEXT_COLOR_BLACK);
@@ -203,19 +201,19 @@ public class BoardUI
         if (color == WHITE) {
             if (boardRow % 2 == 0) {
                 for (int boardCol = 1; boardCol <= COLUMNS; boardCol++) {
-                    if (boardCol % 2 != 0) {putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be update
-                    } else {putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out);}}}
+                    if (boardCol % 2 != 0) {putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out, board); // the null is current pieceOnUIBoard, it will be update
+                    } else {putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out, board);}}}
             else
             {
                 for (int boardCol = 1; boardCol <= COLUMNS; boardCol++)
                 {
                     if (boardCol % 2 != 0)
                     {
-                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
+                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out, board); // the null is current pieceOnUIBoard, it will be updated
                     }
                     else
                     {
-                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out);
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out, board);
                     }
                 }
             }
@@ -230,11 +228,11 @@ public class BoardUI
                 {
                     if (boardCol % 2 == 0)
                     {
-                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out);
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out, board);
                     }
                     else
                     {
-                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out);
+                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out, board);
                     }
                 }
             }
@@ -246,11 +244,11 @@ public class BoardUI
                     copyCol--;
                     if (copyCol % 2 != 0)
                     {
-                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out); // the null is current pieceOnUIBoard, it will be updated
+                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out, board); // the null is current pieceOnUIBoard, it will be updated
                     }
                     else // black spot
                     {
-                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out);
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out, board);
                     }
                 }
             }
