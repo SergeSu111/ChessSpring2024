@@ -2,8 +2,12 @@ package ui;
 
 import chess.ChessBoard;
 import chess.ChessGame;
+import chess.ChessMove;
 import com.google.gson.Gson;
 import websocket.commands.websocketRequests.ConnectPlayer;
+import websocket.commands.websocketRequests.Leave;
+import websocket.commands.websocketRequests.MakeMove;
+import websocket.commands.websocketRequests.Resign;
 import websocket.messages.ServerMessage;
 import websocket.messages.websocketResponse.ErrorWebsocket;
 import websocket.messages.websocketResponse.LoadGame;
@@ -91,6 +95,26 @@ public class WebSocketFacade extends Endpoint
         this.session.getBasicRemote().sendText(connectPlayerJson);
     }
 
+    public void makeMove(String authToken, int gameID, ChessMove chessMove) throws IOException {
+        Gson gson = new Gson();
+        MakeMove makeMove = new MakeMove(authToken, gameID, chessMove);
+        String makeMoveJson = gson.toJson(makeMove);
+        this.session.getBasicRemote().sendText(makeMoveJson);
+    }
+
+    public void leave(String authToken, int gameID) throws IOException {
+        Gson gson = new Gson();
+        Leave leave = new Leave(authToken, gameID);
+        String leaveJson = gson.toJson(leave);
+        this.session.getBasicRemote().sendText(leaveJson);
+    }
+
+    public void resign(String authToken, int gameID) throws IOException {
+        Gson gson = new Gson();
+        Resign resign = new Resign(authToken, gameID);
+        String resignJson = gson.toJson(resign);
+        this.session.getBasicRemote().sendText(resignJson);
+    }
 
 
     public ChessGame.TeamColor getColor() {
