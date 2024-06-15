@@ -294,28 +294,41 @@ public class WebsocketHandler
                                 chessGame.makeMove(chessMove);
                                 sqlGame.updateChessGame(chessGame, gameID); // update in db
                                 chessGame.turn = ChessGame.TeamColor.WHITE; // CHANGE the turn
-                                if (chessGame.isInCheck(ChessGame.TeamColor.WHITE))
-                                {
-                                    Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
-                                    notification.setMessage(gameCurrent.whiteUsername() + " is in check.");
-                                    String messageJson = gson.toJson(notification);
-                                    connectionManager.broadcast(gameID, session, messageJson);
-                                }
-
                                 if (chessGame.isInCheckmate(ChessGame.TeamColor.WHITE))
                                 {
                                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
                                     notification.setMessage(gameCurrent.whiteUsername() + " is in checkmate.");
                                     String messageJson = gson.toJson(notification);
-                                    connectionManager.broadcast(gameID, session, messageJson); // send to all others.
+                                    connectionManager.broadcast(gameID, null, messageJson); // send to all others.
+
+                                    LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
+                                    SendingLoadGame(authToken, loadGame, gameID); // send the updating game
+                                    SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
                                 }
+
+                                else if (chessGame.isInCheck(ChessGame.TeamColor.WHITE))
+                                {
+                                    Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
+                                    notification.setMessage(gameCurrent.whiteUsername() + " is in check.");
+                                    String messageJson = gson.toJson(notification);
+                                    connectionManager.broadcast(gameID, null, messageJson);
+                                    LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
+                                    SendingLoadGame(authToken, loadGame, gameID); // send the updating game
+                                    SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
+                                }
+
+
                                 // for stalemate, do we need to check for both black and white?
                                 else if (chessGame.isInStalemate(ChessGame.TeamColor.WHITE))
                                 {
                                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
                                     notification.setMessage(gameCurrent.whiteUsername() + " is in stalemate.");
                                     String messageJson = gson.toJson(notification);
-                                    connectionManager.broadcast(gameID, session, messageJson);
+                                    connectionManager.broadcast(gameID, null, messageJson);
+
+                                    LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
+                                    SendingLoadGame(authToken, loadGame, gameID); // send the updating game
+                                    SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
                                 }
 
                                 // normal making move

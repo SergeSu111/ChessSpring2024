@@ -36,11 +36,11 @@ public class MyConnectionManager
         if (connections.get(gameID) != null) // means the game is exist
         {
             var smallGame = connections.get(gameID);
-            for (Connection connection : smallGame)
+            for (int i = smallGame.size() -1; i >= 0; i-- )
             {
-                if (Objects.equals(connection.authToken, authToken))
+                if (Objects.equals(smallGame.get(i).authToken, authToken))
                 {
-                    smallGame.remove(connection); // delete it
+                    smallGame.remove(i); // delete it
                 }
             }
         }
