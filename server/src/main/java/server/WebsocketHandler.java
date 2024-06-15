@@ -372,6 +372,12 @@ public class WebsocketHandler
                                     String messageJson = gson.toJson(notification);
                                     connectionManager.broadcast(gameID, session, messageJson);
 
+                                    Connection connectionMover = new Connection(authToken, session);
+                                    if (connectionMover.session.isOpen())
+                                    {
+                                        connectionMover.send(messageJson);
+                                    }
+
                                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
                                     SendingLoadGame(authToken, loadGame, gameID); // send the updating game
                                     SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
@@ -383,6 +389,12 @@ public class WebsocketHandler
                                     notification.setMessage(gameCurrent.blackUsername() + " is in checkmate.");
                                     String messageJson = gson.toJson(notification);
                                     connectionManager.broadcast(gameID, session, messageJson);
+
+                                    Connection connectionMover = new Connection(authToken, session);
+                                    if (connectionMover.session.isOpen())
+                                    {
+                                        connectionMover.send(messageJson);
+                                    }
 
                                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
                                     SendingLoadGame(authToken, loadGame, gameID); // send the updating game
@@ -396,6 +408,11 @@ public class WebsocketHandler
                                     String messageJson = gson.toJson(notification);
                                     connectionManager.broadcast(gameID, session, messageJson);
 
+                                    Connection connectionMover = new Connection(authToken, session);
+                                    if (connectionMover.session.isOpen())
+                                    {
+                                        connectionMover.send(messageJson);
+                                    }
                                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
                                     SendingLoadGame(authToken, loadGame, gameID); // send the updating game
                                     SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
@@ -407,11 +424,11 @@ public class WebsocketHandler
                                     notification.setMessage(username + " is making move from " + chessMove.getStartPosition() + " to " + chessMove.getEndPosition());
                                     String messageJson = gson.toJson(notification);
                                     connectionManager.broadcast(gameID, session, messageJson);
-                                    Connection connectionMover = new Connection(authToken, session);
-//                            if (connectionMover.session.isOpen())
-//                            {
-//                                connectionMover.send(messageJson);
-//                            }
+//                                    Connection connectionMover = new Connection(authToken, session);
+//                                    if (connectionMover.session.isOpen())
+//                                    {
+//                                        connectionMover.send(messageJson);
+//                                    }
                                     LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
                                     SendingLoadGame(authToken, loadGame, gameID); // send the updating game
                                     SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
