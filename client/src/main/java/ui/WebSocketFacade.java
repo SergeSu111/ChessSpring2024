@@ -33,7 +33,7 @@ public class WebSocketFacade extends Endpoint
                     ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
                     switch (serverMessage.getServerMessageType())
                     {
-                        case ServerMessage.ServerMessageType.NOTIFICATION -> SendingNotification();
+                        case ServerMessage.ServerMessageType.NOTIFICATION -> SendingNotification(message);
                         case ServerMessage.ServerMessageType.ERROR ->
                         case ServerMessage.ServerMessageType.LOAD_GAME ->
                     }
@@ -43,6 +43,13 @@ public class WebSocketFacade extends Endpoint
         } catch (URISyntaxException | DeploymentException | IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static void SendingNotification(String message)
+    {
+        Gson gson = new Gson();
+        Notification notification = gson.fromJson(message, Notification.class);
+        System.out.println(notification.getMessage());
     }
 
     @Override
