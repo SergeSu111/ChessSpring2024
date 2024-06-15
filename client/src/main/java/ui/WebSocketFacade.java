@@ -57,21 +57,21 @@ public class WebSocketFacade extends Endpoint
         }
     }
 
-    private static void SendingNotificationBack(String message)
+    public void SendingNotificationBack(String message)
     {
         Gson gson = new Gson();
         Notification notification = gson.fromJson(message, Notification.class);
         System.out.println(notification.getMessage());
     }
 
-    private static void SendingErrorBack(String message)
+    public void SendingErrorBack(String message)
     {
         Gson gson = new Gson();
         ErrorWebsocket error = gson.fromJson(message, ErrorWebsocket.class);
         System.out.println(error.getErrorMessage());
     }
 
-    private static void SendingLoadGameBack(String message)
+    public void SendingLoadGameBack(String message)
     {
         Gson gson = new Gson();
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);

@@ -21,6 +21,8 @@ public class PostLogin
     private static final PrintStream OUT = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
     private static final Scanner SCANNER = new Scanner(System.in);
+
+    private WebSocketFacade webSocketFacade = new WebSocketFacade("http://localhost:8080", ChessGame.TeamColor.WHITE);
     ArrayList<Integer> gamesNumber = new ArrayList<>();
     private Prelogin prelogin;
 
@@ -188,21 +190,21 @@ public class PostLogin
                     OUT.println("You successfully join the game");
                     if (playerColorChanged == ChessGame.TeamColor.BLACK)
                     {
-                        BoardUI.callWhiteBoard(OUT);
-                        OUT.println(SET_BG_COLOR_BLACK);
-                        OUT.println(SET_TEXT_COLOR_BLACK);
-                        OUT.println(EMPTY);
-                        OUT.println(EMPTY);
-                        BoardUI.callBlackBoard(OUT);
+
+//                        OUT.println(SET_BG_COLOR_BLACK);
+//                        OUT.println(SET_TEXT_COLOR_BLACK);
+//                        OUT.println(EMPTY);
+//                        OUT.println(EMPTY);
+                        webSocketFacade.ConnectPlayer(authToken, gameID);
+                        // go to gameUI
                     }
                     else
                     {
-                        BoardUI.callBlackBoard(OUT);
-                        OUT.println(SET_BG_COLOR_BLACK);
-                        OUT.println(SET_TEXT_COLOR_BLACK);
-                        OUT.println(EMPTY);
-                        OUT.println(EMPTY);
-                        BoardUI.callWhiteBoard(OUT);
+                        webSocketFacade.ConnectPlayer(authToken, gameID);
+//                        OUT.println(SET_BG_COLOR_BLACK);
+//                        OUT.println(SET_TEXT_COLOR_BLACK);
+//                        OUT.println(EMPTY);
+//                        OUT.println(EMPTY);
                     }
                     OUT.println(RESET_BG_COLOR);
                     OUT.println(RESET_TEXT_COLOR);
@@ -234,13 +236,11 @@ public class PostLogin
             else
             {
                 System.err.println();
+                OUT.println("Please tell me which game you would like to observe.");
+                String gameIdStr = SCANNER.nextLine();
+                int gameID = Integer.parseInt(gameIdStr);
                 OUT.println("You successfully observe the game");
-                BoardUI.callBlackBoard(OUT);
-                OUT.println(SET_BG_COLOR_BLACK);
-                OUT.println(SET_TEXT_COLOR_BLACK);
-                OUT.println(EMPTY);
-                OUT.println(EMPTY);
-                BoardUI.callWhiteBoard(OUT);
+                webSocketFacade.ConnectPlayer(authToken, gameID);
             }
         }
         catch(IOException e)
