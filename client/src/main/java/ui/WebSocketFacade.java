@@ -3,6 +3,7 @@ package ui;
 import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.Gson;
+import websocket.commands.websocketRequests.ConnectPlayer;
 import websocket.messages.ServerMessage;
 import websocket.messages.websocketResponse.ErrorWebsocket;
 import websocket.messages.websocketResponse.LoadGame;
@@ -81,10 +82,15 @@ public class WebSocketFacade extends Endpoint
         {
             BoardUI.callBlackBoard(out, board); // draw the white board to console
         }
-
-
-
     }
+
+    public void ConnectPlayer(String authToken, int gameID) throws IOException // we don need to care about color, back-end check for us
+    {   Gson gson = new Gson();
+        ConnectPlayer connectPlayer = new ConnectPlayer(authToken, gameID);
+        String connectPlayerJson = gson.toJson(connectPlayer);
+        this.session.getBasicRemote().sendText(connectPlayerJson);
+    }
+
 
 
     public ChessGame.TeamColor getColor() {
