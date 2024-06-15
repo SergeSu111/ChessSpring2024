@@ -205,13 +205,13 @@ public class SQLGame implements GameDAO
         }
     }
 
-    public void updateChessGame(ChessGame chessGame, int gameID, GameData gameData)
+    public void updateChessGame(ChessGame chessGame, int gameID)
     {
         Gson gson = new Gson();
         String jsonChessGame = gson.toJson(chessGame);
         try (var conn = DatabaseManager.getConnection())
         {
-            try (var preparedStatement = conn.prepareStatement("UPDATE Games SET ChessGameCol = ? WHIERE gameIDCol = ?"))
+            try (var preparedStatement = conn.prepareStatement("UPDATE Games SET ChessGameCol = ? WHERE gameIDCol = ?"))
             {
                 preparedStatement.setString(1, jsonChessGame);
                 preparedStatement.setInt(2, gameID);

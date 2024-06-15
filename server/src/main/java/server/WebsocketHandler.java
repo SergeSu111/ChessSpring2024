@@ -292,7 +292,7 @@ public class WebsocketHandler
                             if (!chessGame.isInCheckmate(ChessGame.TeamColor.BLACK) && !chessGame.isInStalemate(ChessGame.TeamColor.BLACK) && chessGame.isResigned != true)
                             {
                                 chessGame.makeMove(chessMove);
-//                                sqlGame.updateChessGame(chessGame, gameID, gameCurrent);
+                                sqlGame.updateChessGame(chessGame, gameID); // update in db
                                 chessGame.turn = ChessGame.TeamColor.WHITE; // CHANGE the turn
                                 if (chessGame.isInCheck(ChessGame.TeamColor.WHITE))
                                 {
@@ -361,7 +361,7 @@ public class WebsocketHandler
                             if (!chessGame.isInCheckmate(ChessGame.TeamColor.WHITE) && !chessGame.isInStalemate(ChessGame.TeamColor.WHITE) && chessGame.isResigned != true)
                             {
                                 chessGame.makeMove(chessMove);
-//                                sqlGame.updateChessGame(chessGame, gameID, gameCurrent); // update the chessGame in db
+                                sqlGame.updateChessGame(chessGame, gameID); // update the chessGame in db
                                 chessGame.turn = ChessGame.TeamColor.BLACK;
                                 if (chessGame.isInCheck(ChessGame.TeamColor.BLACK))
                                 {
@@ -493,7 +493,7 @@ public class WebsocketHandler
                         }
 
                         chessGame.isResigned = true;
-                        sqlGame.updateChessGame(chessGame, gameID, gameData);
+                        sqlGame.updateChessGame(chessGame, gameID);
                     }
                     else
                     {
@@ -519,7 +519,7 @@ public class WebsocketHandler
                         }
 
                         chessGame.isResigned = true;
-//                        sqlGame.updateChessGame(chessGame, gameID, gameData);
+                        sqlGame.updateChessGame(chessGame, gameID);
                     }
                     else
                     {
