@@ -302,7 +302,7 @@ public class WebsocketHandler
                                     connectionManager.broadcast(gameID, session, messageJson);
                                 }
 
-                                else if (chessGame.isInCheckmate(ChessGame.TeamColor.WHITE))
+                                if (chessGame.isInCheckmate(ChessGame.TeamColor.WHITE))
                                 {
                                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
                                     notification.setMessage(gameCurrent.whiteUsername() + " is in checkmate.");
@@ -321,6 +321,7 @@ public class WebsocketHandler
                                 // normal making move
                                 else
                                 {
+
                                     Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
                                     notification.setMessage(username + " is making move from " + chessMove.getStartPosition() + " to " + chessMove.getEndPosition());
                                     String messageJson = gson.toJson(notification);
@@ -336,6 +337,7 @@ public class WebsocketHandler
                                     SendingLoadGameToAllOthers(authToken, loadGame, gameID); // send the board to others.
                                 }
                             }
+
                             else // try to make move after game over
                             {
                                 ErrorWebsocket error = new ErrorWebsocket(ServerMessage.ServerMessageType.ERROR);
@@ -369,6 +371,10 @@ public class WebsocketHandler
                                     notification.setMessage(gameCurrent.blackUsername() + " is in check.");
                                     String messageJson = gson.toJson(notification);
                                     connectionManager.broadcast(gameID, session, messageJson);
+
+                                    LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
+                                    SendingLoadGame(authToken, loadGame, gameID); // send the updating game
+                                    SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
                                 }
 
                                 else if (chessGame.isInCheckmate(ChessGame.TeamColor.BLACK))
@@ -378,6 +384,9 @@ public class WebsocketHandler
                                     String messageJson = gson.toJson(notification);
                                     connectionManager.broadcast(gameID, session, messageJson);
 
+                                    LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
+                                    SendingLoadGame(authToken, loadGame, gameID); // send the updating game
+                                    SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
                                 }
 
                                 else if (chessGame.isInStalemate(ChessGame.TeamColor.BLACK))
@@ -386,6 +395,10 @@ public class WebsocketHandler
                                     notification.setMessage(gameCurrent.blackUsername() + " is in stalemate.");
                                     String messageJson = gson.toJson(notification);
                                     connectionManager.broadcast(gameID, session, messageJson);
+
+                                    LoadGame loadGame = new LoadGame(ServerMessage.ServerMessageType.LOAD_GAME, chessGame);
+                                    SendingLoadGame(authToken, loadGame, gameID); // send the updating game
+                                    SendingLoadGameToAllOthers(authToken, loadGame , gameID); // send to others
 
                                 }
                                 else
