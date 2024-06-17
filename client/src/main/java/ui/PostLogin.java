@@ -23,7 +23,7 @@ public class PostLogin
     private static final Scanner SCANNER = new Scanner(System.in);
 
     private WebSocketFacade webSocketFacade = new WebSocketFacade("http://localhost:8080", ChessGame.TeamColor.WHITE);
-    ArrayList<Integer> gamesNumber = new ArrayList<>();
+    public static ArrayList<Integer> gamesNumber = new ArrayList<>();
     private Prelogin prelogin;
 
     private final String authToken;
@@ -84,6 +84,9 @@ public class PostLogin
     }
 
     public void createGame() {
+        OUT.println(RESET_BG_COLOR);
+        OUT.println(RESET_TEXT_COLOR);
+
         OUT.println("Please type the game name you want to create.");
         String gameName = SCANNER.nextLine();
         int number = 1;
@@ -123,6 +126,8 @@ public class PostLogin
 
     public void listGame()
     {
+        OUT.println(RESET_BG_COLOR);
+        OUT.println(RESET_TEXT_COLOR);
         int length = 1;
         try
         {
@@ -165,6 +170,9 @@ public class PostLogin
 
     public void joinGame()
     {
+        OUT.println(RESET_BG_COLOR);
+        OUT.println(RESET_TEXT_COLOR);
+
         Gson gson = new Gson();
         OUT.println("Please tell me which game you would like to join.");
         String gameIdStr = SCANNER.nextLine();
@@ -215,6 +223,9 @@ public class PostLogin
 
     public void observeGame()
     {
+        OUT.println(RESET_BG_COLOR);
+        OUT.println(RESET_TEXT_COLOR);
+
         try
         {
             Object listGameObj = ServerFacade.listGame(authToken);

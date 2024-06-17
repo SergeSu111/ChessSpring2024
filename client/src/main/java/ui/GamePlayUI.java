@@ -1,11 +1,17 @@
 package ui;
 
 import chess.ChessGame;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
+
+import static ui.EscapeSequences.RESET_BG_COLOR;
+import static ui.EscapeSequences.RESET_TEXT_COLOR;
 
 public class GamePlayUI
 {
@@ -13,7 +19,7 @@ public class GamePlayUI
 
     private static final Scanner SCANNER = new Scanner(System.in);
 
-    private WebSocketFacade webSocketFacade = new WebSocketFacade("http://localhost:8080", ChessGame.TeamColor.WHITE);
+    private final WebSocketFacade webSocketFacade = new WebSocketFacade("http://localhost:8080", ChessGame.TeamColor.WHITE);
 
     private PostLogin postLogin;
 
@@ -65,8 +71,37 @@ public class GamePlayUI
                 """;
     }
 
-    public static void leave()
-    {}
+    public void leave() {
+        // just in case
+        OUT.println(RESET_BG_COLOR);
+        OUT.println(RESET_TEXT_COLOR);
+
+        Gson gson = new Gson();
+        try
+        {
+            OUT.println("Please tell me which game you would like to leave.");
+            String gameIdStr = SCANNER.nextLine();
+            int gameID = Integer.parseInt(gameIdStr);
+            OUT.println("Are you sure you want to leave? YES / NO");
+            String answer = SCANNER.nextLine();
+            if (Objects.equals(answer, "YES"))
+            {
+                webSocketFacade.leave(authToken, PostLogin.gamesNumber.get(gameID - 1));
+                System.out.println(PostLogin.gamesNumber);
+                PostLogin postlogin = new PostLogin("http://localhost:8080", authToken);
+                postlogin.run();
+            }
+            else
+            {
+                System.out.println("You are still in the game.");
+            }
+        }
+        catch (IOException E)
+        {
+            System.out.println(E.getMessage());
+        }
+
+    }
 
     public static void Resign()
     {
