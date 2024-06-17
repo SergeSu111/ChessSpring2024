@@ -1,13 +1,11 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 
 import java.io.PipedReader;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 
 import static chess.ChessGame.TeamColor.BLACK;
 import static chess.ChessGame.TeamColor.WHITE;
@@ -28,25 +26,25 @@ public class BoardUI
     }
 
 
-    public static void callWhiteBoard(PrintStream out, ChessBoard board)
+    public static void callWhiteBoard(PrintStream out, ChessBoard board, Collection<ChessMove> validMoves)
     {
         color = WHITE;
         int startRowNumberWhite = 1;
         String[] lettersInHeaderWhite = {"a", "b", "c", "d", "e", "f", "g", "h"};
         drawHeaders(out, lettersInHeaderWhite);
-        drawBoard(out, startRowNumberWhite, board);
+        drawBoard(out, startRowNumberWhite, board, validMoves);
         out.println(RESET_BG_COLOR);
         out.println(RESET_TEXT_COLOR);
 
     }
 
-    public static void callBlackBoard(PrintStream out, ChessBoard board)
+    public static void callBlackBoard(PrintStream out, ChessBoard board, Collection<ChessMove> validMoves)
     {
         color = BLACK;
         int startRowNumberBlack = 8;
         String[] lettersInHeaderBlack = {"h", "g", "f", "e", "d", "c", "b", "a"};
         drawHeaders(out, lettersInHeaderBlack);
-        drawBoard(out, startRowNumberBlack, board);
+        drawBoard(out, startRowNumberBlack, board, validMoves);
         out.println(RESET_BG_COLOR);
         out.println(RESET_TEXT_COLOR);
 
@@ -85,20 +83,20 @@ public class BoardUI
         setGray(out);
     }
 
-    private static void drawBoard(PrintStream out, int startRowNumber, ChessBoard board)
+    private static void drawBoard(PrintStream out, int startRowNumber, ChessBoard board, Collection<ChessMove> validMoves)
     {
         if (color == WHITE)
         {
             for (int boardRow = 0; boardRow < ROWS; boardRow++)
             {
-                drawEachRow(out, boardRow, startRowNumber, board);
+                drawEachRow(out, boardRow, startRowNumber, board, validMoves);
             }
         }
         else
         {
             for (int boardRow = 7; boardRow > -1; boardRow--)
             {
-                drawEachRow(out, boardRow, startRowNumber, board);
+                drawEachRow(out, boardRow, startRowNumber, board, validMoves);
             }
         }
 
@@ -106,7 +104,7 @@ public class BoardUI
 //        out.println(RESET_TEXT_COLOR);
     }
 
-    private static void putPieceOnWhiteSpot(int squareRow, int boardCol, int prefixLength, PrintStream out, ChessBoard board)
+    private static void putPieceOnWhiteSpot(int squareRow, int boardCol, int prefixLength, PrintStream out, ChessBoard board, Collection<ChessMove> validMoves)
     {
         boardCol--;
         setWhite(out);
@@ -114,11 +112,21 @@ public class BoardUI
         out.print(EMPTY.repeat(prefixLength)); // make the small piece into spot have the same prefix;
         ChessPiece targetPiece = board.getPiece(new ChessPosition(squareRow + 1, boardCol + 1));
         // how can I turned the piece I got onto the board?
+
+        for (ChessMove eachMove : validMoves)
+        {
+            if (eachMove.getEndPosition().equals(new ChessPosition(squareRow + 1, boardCol + 1)))
+            {
+                out.print(SET_BG_COLOR_GREEN);
+                out.print(SET_TEXT_COLOR_RED);
+            }
+        }
+
         if (targetPiece != null)
         {
             String returnedPiece = pickPiece(targetPiece, null, out);
             out.print(returnedPiece);
-            out.print(EMPTY.repeat(prefixLength));
+            out.print(EMPTY.repeat(prefixLength)); // should I still put this here?
         }
         else
         {
@@ -127,17 +135,28 @@ public class BoardUI
         }
     }
 
-    private static void putPieceOnBlackSpot(int squareRow, int boardCol, int prefixLength, PrintStream out, ChessBoard board)
+    private static void putPieceOnBlackSpot(int squareRow, int boardCol, int prefixLength, PrintStream out, ChessBoard board, Collection<ChessMove> validMoves)
     {
         boardCol--;
         setBlack(out);
         out.print(EMPTY.repeat(prefixLength));
         ChessPiece targetPiece = board.getPiece(new ChessPosition(squareRow + 1, boardCol + 1));
+
+        for (ChessMove eachMove : validMoves)
+        {
+            if (eachMove.getEndPosition().equals(new ChessPosition(squareRow + 1, boardCol + 1)))
+            {
+                out.print(SET_BG_COLOR_GREEN);
+                out.print(SET_TEXT_COLOR_RED);
+            }
+        }
+
         if (targetPiece != null)
         {
             String returnedPiece = pickPiece(targetPiece, null, out);
             out.print(returnedPiece);
             out.print(EMPTY.repeat(prefixLength));
+
         }
         else
         {
@@ -189,7 +208,7 @@ public class BoardUI
             return switchTypeToGetPieceWHITE(targetPiece, pieceOnUIBoard, out);
         }
     }
-    private static void drawEachRow(PrintStream out, int boardRow, int startRowNumber, ChessBoard board)
+    private static void drawEachRow(PrintStream out, int boardRow, int startRowNumber, ChessBoard board, Collection<ChessMove> validMoves)
     {
         int prefixLength = (COLUMNS /16);
         out.print(SET_TEXT_COLOR_BLACK);
@@ -212,11 +231,11 @@ public class BoardUI
                 {
                     if (boardCol % 2 != 0)
                     {
-                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out, board); // the null is current pieceOnUIBoard, it will be update
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out, board, validMoves); // the null is current pieceOnUIBoard, it will be update
                     }
                     else
                     {
-                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out, board);
+                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out, board, validMoves);
                     }
                 }
             }
@@ -226,11 +245,11 @@ public class BoardUI
                 {
                     if (boardCol % 2 != 0)
                     {
-                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out, board); // the null is current pieceOnUIBoard, it will be updated
+                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out, board, validMoves); // the null is current pieceOnUIBoard, it will be updated
                     }
                     else
                     {
-                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out, board);
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out, board, validMoves);
                     }
                 }
             }
@@ -245,11 +264,11 @@ public class BoardUI
                 {
                     if (boardCol % 2 == 0)
                     {
-                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out, board);
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out, board, validMoves);
                     }
                     else
                     {
-                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out, board);
+                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out, board, validMoves);
                     }
                 }
             }
@@ -261,11 +280,11 @@ public class BoardUI
                     copyCol--;
                     if (copyCol % 2 != 0)
                     {
-                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out, board); // the null is current pieceOnUIBoard, it will be updated
+                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out, board, validMoves); // the null is current pieceOnUIBoard, it will be updated
                     }
                     else // black spot
                     {
-                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out, board);
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out, board, validMoves);
                     }
                 }
             }

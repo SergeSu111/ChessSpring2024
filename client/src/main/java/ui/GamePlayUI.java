@@ -1,7 +1,6 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
+import chess.*;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.SQLAuth;
@@ -12,11 +11,11 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Scanner;
 
-import static ui.EscapeSequences.RESET_BG_COLOR;
-import static ui.EscapeSequences.RESET_TEXT_COLOR;
+import static ui.EscapeSequences.*;
 
 public class GamePlayUI
 {
@@ -171,6 +170,16 @@ public class GamePlayUI
 
     }
 
-    public static void highLight()
-    {}
+    public void highLight()
+    {
+        OUT.println("Please tell me which piece you would like to move.");
+        int row = SCANNER.nextInt(); // if the perspective changes, the row and column are not the same.
+        int column = SCANNER.nextInt();
+        ChessPosition chessPosition = new ChessPosition(row, column);
+        ChessGame chessGameRecord = webSocketFacade.chessGame;
+        ChessBoard board = chessGameRecord.getBoard();
+        ChessPiece targetPiece = board.getPiece(chessPosition);
+        Collection<ChessMove> potentialMoves = chessGameRecord.validMoves(chessPosition);
+
+    }
 }
