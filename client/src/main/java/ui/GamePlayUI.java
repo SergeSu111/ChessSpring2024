@@ -103,8 +103,29 @@ public class GamePlayUI
 
     }
 
-    public static void resign()
+    public  void resign()
     {
+        Gson gson = new Gson();
+        try
+        {
+            OUT.print("Please tell me which game you would like to resign?");
+            String gameIDStr = SCANNER.nextLine();
+            int gameID = Integer.parseInt(gameIDStr);
+            OUT.println("Are you sure you want to leave? YES / NO");
+            String answer = SCANNER.nextLine();
+            if (Objects.equals(answer, "YES"))
+            {
+                webSocketFacade.resign(authToken, PostLogin.gamesNumber.get(gameID - 1));
+            }
+            else
+            {
+                System.out.println("You are still in the game.");
+            }
+        }
+        catch (IOException E)
+        {
+            System.out.println(E.getMessage());
+        }
     }
 
     public static void redraw()
