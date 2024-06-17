@@ -141,28 +141,28 @@ public class GamePlayUI
 
     public void redraw()
     {
-        try
-        {
-            SQLAuth sqlAuth = new SQLAuth();
-            ChessGame chessGameRecord = webSocketFacade.chessGame;
-            ChessBoard chessBoard = chessGameRecord.getBoard();
-            String username = sqlAuth.getAuth(this.authToken);
-            if (color == ChessGame.TeamColor.BLACK)
-            {
-                BoardUI.callWhiteBoard(OUT, chessBoard);
-            }
-            else if (color == ChessGame.TeamColor.WHITE)
-            {
-                BoardUI.callWhiteBoard(OUT, chessBoard);
-            }
-            else // Observer
-            {
-                BoardUI.callWhiteBoard(OUT, chessBoard);
-            }
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+//        try
+//        {
+//            SQLAuth sqlAuth = new SQLAuth();
+//            ChessGame chessGameRecord = webSocketFacade.chessGame;
+//            ChessBoard chessBoard = chessGameRecord.getBoard();
+//            String username = sqlAuth.getAuth(this.authToken);
+//            if (color == ChessGame.TeamColor.BLACK)
+//            {
+//                BoardUI.callWhiteBoard(OUT, chessBoard);
+//            }
+//            else if (color == ChessGame.TeamColor.WHITE)
+//            {
+//                BoardUI.callWhiteBoard(OUT, chessBoard);
+//            }
+//            else // Observer
+//            {
+//                BoardUI.callWhiteBoard(OUT, chessBoard);
+//            }
+//
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        }
     }
 
     public static void makeMove()
@@ -180,6 +180,18 @@ public class GamePlayUI
         ChessBoard board = chessGameRecord.getBoard();
         ChessPiece targetPiece = board.getPiece(chessPosition);
         Collection<ChessMove> potentialMoves = chessGameRecord.validMoves(chessPosition);
+        if (color == ChessGame.TeamColor.BLACK)
+        {
+            BoardUI.callBlackBoard(OUT, board, potentialMoves);
+        }
+        else if (color == ChessGame.TeamColor.WHITE)
+        {
+            BoardUI.callWhiteBoard(OUT, board, potentialMoves);
+        }
+        else // Observer
+        {
+            OUT.println("Observer cannot move.");
+        }
 
     }
 }
