@@ -49,11 +49,11 @@ public class GamePlayUI
     {
         switch (input)
         {
-            case "Redraw Chess Board" -> Redraw();
+            case "Redraw Chess Board" -> redraw();
             case "Leave" -> leave();
-            case "Make Move" -> MakeMove();
-            case "Resign" -> Resign();
-            case "Highlight Legal Moves" ->HighLight();
+            case "Make Move" -> makeMove();
+            case "Resign" -> resign();
+            case "Highlight Legal Moves" ->highLight();
             case "Help" -> OUT.println(help());
             default -> OUT.println(help());
         }
@@ -103,19 +103,19 @@ public class GamePlayUI
 
     }
 
-    public static void Resign()
+    public static void resign()
     {
     }
 
-    public static void Redraw()
+    public static void redraw()
     {
     }
 
-    public static void MakeMove()
+    public static void makeMove()
     {
 
     }
 
-    public static void HighLight()
+    public static void highLight()
     {}
 }
