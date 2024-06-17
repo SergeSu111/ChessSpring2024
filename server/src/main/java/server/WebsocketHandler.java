@@ -474,12 +474,12 @@ public class WebsocketHandler
                         Notification notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, username, ChessGame.TeamColor.BLACK);
                         notification.setMessage(username + " resigns the game.");
                         String messageJson = gson.toJson(notification);
-                        CONNECTION_MANAGER.broadcast(gameID, session, messageJson);
-                        Connection resignMaker = new Connection(authToken, session);
-                        if (resignMaker.session.isOpen())
-                        {
-                            resignMaker.send(messageJson);
-                        }
+                        CONNECTION_MANAGER.broadcast(gameID, null, messageJson);
+//                        Connection resignMaker = new Connection(authToken, session);
+//                        if (resignMaker.session.isOpen())
+//                        {
+//                            resignMaker.send(messageJson);
+//                        }
 
                         chessGame.isResigned = true;
                         sqlGame.updateChessGame(chessGame, gameID);

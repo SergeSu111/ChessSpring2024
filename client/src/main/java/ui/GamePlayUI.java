@@ -115,7 +115,9 @@ public class GamePlayUI
             String answer = SCANNER.nextLine();
             if (Objects.equals(answer, "YES"))
             {
+                System.out.println("Before");
                 webSocketFacade.resign(authToken, PostLogin.gamesNumber.get(gameID - 1));
+                System.out.println("After");
             }
             else
             {
@@ -130,6 +132,7 @@ public class GamePlayUI
 
     public static void redraw()
     {
+
     }
 
     public static void makeMove()
