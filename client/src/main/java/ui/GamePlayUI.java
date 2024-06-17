@@ -20,6 +20,7 @@ import static ui.EscapeSequences.RESET_TEXT_COLOR;
 
 public class GamePlayUI
 {
+
     private static final PrintStream OUT = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
     private static final Scanner SCANNER = new Scanner(System.in);
@@ -101,7 +102,7 @@ public class GamePlayUI
                 System.out.println("You are still in the game.");
             }
         }
-        catch (IOException E)
+        catch (Exception E)
         {
             System.out.println(E.getMessage());
         }
@@ -129,7 +130,7 @@ public class GamePlayUI
                 System.out.println("You are still in the game.");
             }
         }
-        catch (IOException E)
+        catch (Exception E)
         {
             System.out.println(E.getMessage());
         }
@@ -161,7 +162,7 @@ public class GamePlayUI
                 BoardUI.callWhiteBoard(OUT, chessBoard);
             }
 
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }

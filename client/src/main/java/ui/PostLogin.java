@@ -11,6 +11,7 @@ import org.junit.platform.commons.function.Try;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Array;
+import java.nio.channels.ScatteringByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -117,7 +118,7 @@ public class PostLogin
                 OUT.println(messageResponse.message());
             }
         }
-        catch(IOException E)
+        catch(Exception E)
             {
                 OUT.println(E.getMessage());
             }
@@ -162,7 +163,7 @@ public class PostLogin
             }
             OUT.println(help());
         }
-        catch (IOException E)
+        catch (Exception E)
         {
             OUT.println(E.getMessage());
         }
@@ -210,11 +211,9 @@ public class PostLogin
                     gamePlayUI.run(); // go to the gamePlayUI
                     OUT.println(RESET_BG_COLOR);
                     OUT.println(RESET_TEXT_COLOR);
-
-
                 }
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 OUT.println(e.getMessage());
             }
@@ -279,6 +278,7 @@ public class PostLogin
             prelogin1.run();
         }
     }
+
 
 
 
