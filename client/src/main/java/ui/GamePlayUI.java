@@ -47,7 +47,7 @@ public class GamePlayUI
             case "Leave" -> leave();
             case "Make Move" -> MakeMove();
             case "Resign" -> Resign();
-            case "Highlight Legal Moves" ->HightLight();
+            case "Highlight Legal Moves" ->HighLight();
             case "Help" -> OUT.println(help());
             default -> OUT.println(help());
         }
@@ -64,4 +64,23 @@ public class GamePlayUI
                Help - With possible commands.
                 """;
     }
+
+    public static void leave()
+    {}
+
+    public static void Resign()
+    {
+    }
+
+    public static void Redraw()
+    {
+    }
+
+    public static void MakeMove()
+    {
+
+    }
+
+    public static void HighLight()
+    {}
 }
