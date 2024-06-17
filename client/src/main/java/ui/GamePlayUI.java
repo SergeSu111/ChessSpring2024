@@ -25,15 +25,18 @@ public class GamePlayUI
 
     private static final Scanner SCANNER = new Scanner(System.in);
 
-    private final WebSocketFacade webSocketFacade = new WebSocketFacade("http://localhost:8080", ChessGame.TeamColor.WHITE);
+    private final WebSocketFacade webSocketFacade;
 
     private PostLogin postLogin;
 
+
+    public ChessGame chessGame = null;
     private String authToken;
-    public GamePlayUI(String serverUrl, String authToken)
+    public GamePlayUI(String serverUrl, String authToken, WebSocketFacade webSocketFacade)
     {
         ServerFacade serverfacade = new ServerFacade(serverUrl);
         this.authToken = authToken;
+        this.webSocketFacade = webSocketFacade;
     }
 
     public void run()
@@ -121,9 +124,7 @@ public class GamePlayUI
             String answer = SCANNER.nextLine();
             if (Objects.equals(answer, "YES"))
             {
-                System.out.println("Before");
                 webSocketFacade.resign(authToken, PostLogin.gamesNumber.get(gameID - 1));
-                System.out.println("After");
             }
             else
             {
@@ -138,33 +139,28 @@ public class GamePlayUI
 
     public void redraw()
     {
-        try
-        {
-            OUT.println("Please tell me which game you would like to redraw?");
-            String gameIDStr = SCANNER.nextLine();
-            int gameID = Integer.parseInt(gameIDStr);
-            SQLGame sqlGame = new SQLGame();
-            SQLAuth sqlAuth = new SQLAuth();
-            GameData game = sqlGame.getGame(gameID);
-            ChessGame chessGame = game.game();
-            ChessBoard chessBoard = chessGame.getBoard();
-            String username = sqlAuth.getAuth(this.authToken);
-            if (username.equals(game.blackUsername()))
-            {
-                BoardUI.callBlackBoard(OUT, chessBoard);
-            }
-            else if (username.equals(game.whiteUsername()))
-            {
-                BoardUI.callWhiteBoard(OUT, chessBoard);
-            }
-            else // Observer
-            {
-                BoardUI.callWhiteBoard(OUT, chessBoard);
-            }
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+//        try
+//        {
+//            SQLAuth sqlAuth = new SQLAuth();
+//            ChessGame chessGameRecord = webSocketFacade.chessGame;
+//            ChessBoard chessBoard = chessGameRecord.getBoard();
+//            String username = sqlAuth.getAuth(this.authToken);
+//            if (username.equals())
+//            {
+//                BoardUI.callBlackBoard(OUT, chessBoard);
+//            }
+//            else if (username.equals(game.whiteUsername()))
+//            {
+//                BoardUI.callWhiteBoard(OUT, chessBoard);
+//            }
+//            else // Observer
+//            {
+//                BoardUI.callWhiteBoard(OUT, chessBoard);
+//            }
+//
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        }
     }
 
     public static void makeMove()

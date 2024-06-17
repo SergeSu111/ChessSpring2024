@@ -4,6 +4,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
+import model.GameData;
 import websocket.commands.websocketrequests.ConnectPlayer;
 import websocket.commands.websocketrequests.Leave;
 import websocket.commands.websocketrequests.MakeMove;
@@ -27,8 +28,13 @@ public class WebSocketFacade extends Endpoint
     NotificationHandler notificationHandler;
 
     private static ChessGame.TeamColor color;
-    public WebSocketFacade(String url, ChessGame.TeamColor color)
+
+    public ChessGame chessGame;
+
+    public GameData gameData;
+    public WebSocketFacade(String url, ChessGame.TeamColor color, ChessGame chessGame)
     {
+        this.chessGame = chessGame;
         this.color = color;
         try{
             url = url.replace("http", "ws");
@@ -77,10 +83,12 @@ public class WebSocketFacade extends Endpoint
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         LoadGame loadGame = gson.fromJson(message, LoadGame.class);
         ChessGame game = loadGame.getGame();
+        this.chessGame = game;
         ChessBoard board = game.getBoard();
         if (color == ChessGame.TeamColor.WHITE)
         {
             BoardUI.callWhiteBoard(out, board); // draw the white board to console
+
         }
         else
         {

@@ -475,7 +475,7 @@ public class WebsocketHandler
                         notification.setMessage(username + " resigns the game.");
                         String messageJson = gson.toJson(notification);
                         CONNECTION_MANAGER.broadcast(gameID, null, messageJson);
-//                        Connection resignMaker = new Connection(authToken, session);
+                        Connection resignMaker = new Connection(authToken, session);
 //                        if (resignMaker.session.isOpen())
 //                        {
 //                            resignMaker.send(messageJson);
