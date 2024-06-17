@@ -162,7 +162,7 @@ public class GamePlayUI
             }
 
         } catch (DataAccessException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 
