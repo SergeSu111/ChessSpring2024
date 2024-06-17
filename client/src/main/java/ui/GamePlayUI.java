@@ -1,7 +1,12 @@
 package ui;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
+import dataaccess.SQLAuth;
+import dataaccess.SQLGame;
+import model.GameData;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -130,9 +135,35 @@ public class GamePlayUI
         }
     }
 
-    public static void redraw()
+    public void redraw()
     {
+        try
+        {
+            OUT.println("Please tell me which game you would like to redraw?");
+            String gameIDStr = SCANNER.nextLine();
+            int gameID = Integer.parseInt(gameIDStr);
+            SQLGame sqlGame = new SQLGame();
+            SQLAuth sqlAuth = new SQLAuth();
+            GameData game = sqlGame.getGame(gameID);
+            ChessGame chessGame = game.game();
+            ChessBoard chessBoard = chessGame.getBoard();
+            String username = sqlAuth.getAuth(this.authToken);
+            if (username.equals(game.blackUsername()))
+            {
+                BoardUI.callBlackBoard(OUT, chessBoard);
+            }
+            else if (username.equals(game.whiteUsername()))
+            {
+                BoardUI.callWhiteBoard(OUT, chessBoard);
+            }
+            else // Observer
+            {
+                BoardUI.callWhiteBoard(OUT, chessBoard);
+            }
 
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void makeMove()
