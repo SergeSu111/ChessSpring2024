@@ -98,12 +98,12 @@ public class WebSocketFacade extends Endpoint
         ChessBoard board = game.getBoard();
         if (color == ChessGame.TeamColor.WHITE)
         {
-            BoardUI.callWhiteBoard(out, board); // draw the white board to console
+            BoardUI.callWhiteBoard(out, board, null); // draw the white board to console
 
         }
         else if (color == ChessGame.TeamColor.BLACK)
         {
-            BoardUI.callBlackBoard(out, board); // draw the white board to console
+            BoardUI.callBlackBoard(out, board, null); // draw the black board to console
         }
     }
 
