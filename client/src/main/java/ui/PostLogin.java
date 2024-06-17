@@ -228,8 +228,10 @@ public class PostLogin
                 String gameIdStr = SCANNER.nextLine();
                 int gameID = Integer.parseInt(gameIdStr);
                 OUT.println("You successfully observe the game");
-                webSocketFacade.connectPlayer(authToken, gameID);
+                webSocketFacade.connectPlayer(authToken,  gamesNumber.get(gameID-1));
             }
+            OUT.println(RESET_BG_COLOR);
+            OUT.println(RESET_TEXT_COLOR);
         }
         catch(IOException e)
         {
