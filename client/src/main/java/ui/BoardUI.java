@@ -204,11 +204,22 @@ public class BoardUI
             copyRowBlack++;
             out.print(String.valueOf(copyRowBlack));
             out.print(EMPTY.repeat(prefixLength));}
-        if (color == WHITE) {
-            if (boardRow % 2 == 0) {
-                for (int boardCol = 1; boardCol <= COLUMNS; boardCol++) {
-                    if (boardCol % 2 != 0) {putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out, board); // the null is current pieceOnUIBoard, it will be update
-                    } else {putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out, board);}}}
+        if (color == WHITE)
+        {
+            if (boardRow % 2 == 0)
+            {
+                for (int boardCol = 1; boardCol <= COLUMNS; boardCol++)
+                {
+                    if (boardCol % 2 != 0)
+                    {
+                        putPieceOnWhiteSpot(boardRow, boardCol, prefixLength, out, board); // the null is current pieceOnUIBoard, it will be update
+                    }
+                    else
+                    {
+                        putPieceOnBlackSpot(boardRow, boardCol, prefixLength, out, board);
+                    }
+                }
+            }
             else
             {
                 for (int boardCol = 1; boardCol <= COLUMNS; boardCol++)

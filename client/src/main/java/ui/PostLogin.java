@@ -199,15 +199,17 @@ public class PostLogin
                     OUT.println("You successfully join the game");
                     if (playerColorChanged == ChessGame.TeamColor.BLACK)
                     {
+                        webSocketFacade.setColor(ChessGame.TeamColor.BLACK);
                         webSocketFacade.connectPlayer(authToken, gamesNumber.get(gameID-1));
                         // go to gameUI
                     }
                     else
                     {
+                        webSocketFacade.setColor(ChessGame.TeamColor.WHITE);
                         webSocketFacade.connectPlayer(authToken, gamesNumber.get(gameID-1));
                     }
 
-                    GamePlayUI gamePlayUI = new GamePlayUI("http://localhost:8080", authToken, webSocketFacade);
+                    GamePlayUI gamePlayUI = new GamePlayUI("http://localhost:8080", authToken, webSocketFacade, playerColorChanged);
                     gamePlayUI.run(); // go to the gamePlayUI
                     OUT.println(RESET_BG_COLOR);
                     OUT.println(RESET_TEXT_COLOR);
@@ -241,8 +243,9 @@ public class PostLogin
                 String gameIdStr = SCANNER.nextLine();
                 int gameID = Integer.parseInt(gameIdStr);
                 OUT.println("You successfully observe the game");
+                webSocketFacade.setColor(ChessGame.TeamColor.WHITE);
                 webSocketFacade.connectPlayer(authToken,  gamesNumber.get(gameID-1));
-                GamePlayUI gamePlayUI = new GamePlayUI("http://localhost:8080", authToken, webSocketFacade);
+                GamePlayUI gamePlayUI = new GamePlayUI("http://localhost:8080", authToken, webSocketFacade, null);
                 gamePlayUI.run();
             }
             OUT.println(RESET_BG_COLOR);

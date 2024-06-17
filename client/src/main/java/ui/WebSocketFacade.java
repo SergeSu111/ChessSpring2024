@@ -32,10 +32,21 @@ public class WebSocketFacade extends Endpoint
     public ChessGame chessGame;
 
     public GameData gameData;
+
+    public ChessGame.TeamColor getColor() {
+        return color;
+    }
+
+    public  void setColor(ChessGame.TeamColor color) {
+        WebSocketFacade.color = color;
+    }
+
     public WebSocketFacade(String url, ChessGame.TeamColor color, ChessGame chessGame)
     {
         this.chessGame = chessGame;
         this.color = color;
+
+
         try{
             url = url.replace("http", "ws");
             URI socketURI = new URI(url + "/ws");
@@ -90,7 +101,7 @@ public class WebSocketFacade extends Endpoint
             BoardUI.callWhiteBoard(out, board); // draw the white board to console
 
         }
-        else
+        else if (color == ChessGame.TeamColor.BLACK)
         {
             BoardUI.callBlackBoard(out, board); // draw the white board to console
         }
