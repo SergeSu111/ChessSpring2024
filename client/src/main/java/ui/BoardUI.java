@@ -35,6 +35,9 @@ public class BoardUI
         String[] lettersInHeaderWhite = {"a", "b", "c", "d", "e", "f", "g", "h"};
         drawHeaders(out, lettersInHeaderWhite);
         drawBoard(out, startRowNumberWhite, board);
+        out.println(RESET_BG_COLOR);
+        out.println(RESET_TEXT_COLOR);
+
     }
 
     public static void callBlackBoard(PrintStream out, ChessBoard board)
@@ -44,6 +47,9 @@ public class BoardUI
         String[] lettersInHeaderBlack = {"h", "g", "f", "e", "d", "c", "b", "a"};
         drawHeaders(out, lettersInHeaderBlack);
         drawBoard(out, startRowNumberBlack, board);
+        out.println(RESET_BG_COLOR);
+        out.println(RESET_TEXT_COLOR);
+
     }
     private static void drawHeaders(PrintStream out, String[] lettersInHeader)
     {
