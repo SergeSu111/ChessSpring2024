@@ -33,12 +33,16 @@ public class GamePlayUI
     private String authToken;
 
     private ChessGame.TeamColor color;
-    public GamePlayUI(String serverUrl, String authToken, WebSocketFacade webSocketFacade, ChessGame.TeamColor color)
+
+    private int gameID;
+    public GamePlayUI(String serverUrl, String authToken, WebSocketFacade webSocketFacade, ChessGame.TeamColor color, int gameID)
     {
         ServerFacade serverfacade = new ServerFacade(serverUrl);
         this.authToken = authToken;
         this.webSocketFacade = webSocketFacade;
         this.color = color;
+        this.gameID = gameID;
+
     }
 
     public void run()
@@ -167,25 +171,37 @@ public class GamePlayUI
 
     public  void makeMove()
     {
-        OUT.println("Please tell me which position you want to make ?");
-        int row = SCANNER.nextInt();
-        int column = SCANNER.nextInt();
-        ChessPosition chessPosition = new ChessPosition(row, column);
-        OUT.println("Please tell me which position you want to go ?");
-        int rowDes = SCANNER.nextInt();
-        int colDes = SCANNER.nextInt();
-        ChessPosition chessPositionDes = new ChessPosition(rowDes, colDes);
-        ChessGame chessGameRecord = webSocketFacade.chessGame;
-        ChessBoard board = chessGameRecord.getBoard();
-        ChessPiece targetPiece = board.getPiece(chessPositionDes);
-        ChessPiece startPiece = board.getPiece(chessPosition);
-        if (startPiece.getPieceType() == ChessPiece.PieceType.PAWN)
+        try
         {
-            if (chessPositionDes.getRow() == 7 || chessPositionDes.getRow() == 8) // pawn promote // do we need to care about the promote situation?
-            {
-                ChessMove theMove = new ChessMove(chessPosition, chessPositionDes, );
-            }
+            OUT.println("Please tell me which position you want to make ?");
+            int row = SCANNER.nextInt();
+            int column = SCANNER.nextInt();
+            ChessPosition chessPosition = new ChessPosition(row, column);
+            OUT.println("Please tell me which position you want to go ?");
+            int rowDes = SCANNER.nextInt();
+            int colDes = SCANNER.nextInt();
+            ChessPosition chessPositionDes = new ChessPosition(rowDes, colDes);
+            ChessGame chessGameRecord = webSocketFacade.chessGame;
+            ChessBoard board = chessGameRecord.getBoard();
+            ChessPiece targetPiece = board.getPiece(chessPositionDes);
+            ChessPiece startPiece = board.getPiece(chessPosition);
+//        if (startPiece.getPieceType() == ChessPiece.PieceType.PAWN)
+//        {
+//            if (chessPositionDes.getRow() == 7 || chessPositionDes.getRow() == 8) // pawn promote // do we need to care about the promote situation?
+//            {
+//                ChessMove theMove = new ChessMove(chessPosition, chessPositionDes, );
+//            }
+//        }
+            ChessMove theMove = new ChessMove(chessPosition, chessPositionDes, null);
+            chessGameRecord.makeMove(theMove);
+
+            webSocketFacade.makeMove(authToken, gameID, theMove);
         }
+        catch (Exception e)
+        {
+            OUT.println(e.getMessage());
+        }
+
 
 
     }

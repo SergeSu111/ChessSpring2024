@@ -209,7 +209,7 @@ public class PostLogin
                         webSocketFacade.connectPlayer(authToken, gamesNumber.get(gameID-1));
                     }
 
-                    GamePlayUI gamePlayUI = new GamePlayUI("http://localhost:8080", authToken, webSocketFacade, playerColorChanged);
+                    GamePlayUI gamePlayUI = new GamePlayUI("http://localhost:8080", authToken, webSocketFacade, playerColorChanged,gamesNumber.get(gameID-1) );
                     gamePlayUI.run(); // go to the gamePlayUI
                     OUT.println(RESET_BG_COLOR);
                     OUT.println(RESET_TEXT_COLOR);
@@ -245,7 +245,7 @@ public class PostLogin
                 OUT.println("You successfully observe the game");
                 webSocketFacade.setColor(ChessGame.TeamColor.WHITE);
                 webSocketFacade.connectPlayer(authToken,  gamesNumber.get(gameID-1));
-                GamePlayUI gamePlayUI = new GamePlayUI("http://localhost:8080", authToken, webSocketFacade, null);
+                GamePlayUI gamePlayUI = new GamePlayUI("http://localhost:8080", authToken, webSocketFacade, null, gamesNumber.get(gameID-1) );
                 gamePlayUI.run();
             }
             OUT.println(RESET_BG_COLOR);
