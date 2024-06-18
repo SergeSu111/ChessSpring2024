@@ -113,12 +113,15 @@ public class BoardUI
         ChessPiece targetPiece = board.getPiece(new ChessPosition(squareRow + 1, boardCol + 1));
         // how can I turned the piece I got onto the board?
 
-        for (ChessMove eachMove : validMoves)
+        if (validMoves != null)
         {
-            if (eachMove.getEndPosition().equals(new ChessPosition(squareRow + 1, boardCol + 1)))
+            for (ChessMove eachMove : validMoves)
             {
-                out.print(SET_BG_COLOR_GREEN);
-                out.print(SET_TEXT_COLOR_RED);
+                if (eachMove.getEndPosition().equals(new ChessPosition(squareRow + 1, boardCol + 1)))
+                {
+                    out.print(SET_BG_COLOR_GREEN);
+                    out.print(SET_TEXT_COLOR_RED);
+                }
             }
         }
 
@@ -142,12 +145,15 @@ public class BoardUI
         out.print(EMPTY.repeat(prefixLength));
         ChessPiece targetPiece = board.getPiece(new ChessPosition(squareRow + 1, boardCol + 1));
 
-        for (ChessMove eachMove : validMoves)
+        if (validMoves != null)
         {
-            if (eachMove.getEndPosition().equals(new ChessPosition(squareRow + 1, boardCol + 1)))
+            for (ChessMove eachMove : validMoves)
             {
-                out.print(SET_BG_COLOR_GREEN);
-                out.print(SET_TEXT_COLOR_RED);
+                if (eachMove.getEndPosition().equals(new ChessPosition(squareRow + 1, boardCol + 1)))
+                {
+                    out.print(SET_BG_COLOR_GREEN);
+                    out.print(SET_TEXT_COLOR_RED);
+                }
             }
         }
 

@@ -167,6 +167,7 @@ public class GamePlayUI
 
     public static void makeMove()
     {
+        OUT.println("Please tell me which move you want to make ?");
 
     }
 
@@ -190,7 +191,7 @@ public class GamePlayUI
         }
         else // Observer
         {
-            OUT.println("Observer cannot move.");
+            BoardUI.callWhiteBoard(OUT, board, potentialMoves);
         }
 
     }
