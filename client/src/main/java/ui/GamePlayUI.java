@@ -141,33 +141,52 @@ public class GamePlayUI
 
     public void redraw()
     {
-//        try
-//        {
-//            SQLAuth sqlAuth = new SQLAuth();
-//            ChessGame chessGameRecord = webSocketFacade.chessGame;
-//            ChessBoard chessBoard = chessGameRecord.getBoard();
-//            String username = sqlAuth.getAuth(this.authToken);
-//            if (color == ChessGame.TeamColor.BLACK)
-//            {
-//                BoardUI.callWhiteBoard(OUT, chessBoard);
-//            }
-//            else if (color == ChessGame.TeamColor.WHITE)
-//            {
-//                BoardUI.callWhiteBoard(OUT, chessBoard);
-//            }
-//            else // Observer
-//            {
-//                BoardUI.callWhiteBoard(OUT, chessBoard);
-//            }
-//
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
+        try
+        {
+            SQLAuth sqlAuth = new SQLAuth();
+            ChessGame chessGameRecord = webSocketFacade.chessGame;
+            ChessBoard chessBoard = chessGameRecord.getBoard();
+            String username = sqlAuth.getAuth(this.authToken);
+            if (color == ChessGame.TeamColor.BLACK)
+            {
+                BoardUI.callWhiteBoard(OUT, chessBoard, null);
+            }
+            else if (color == ChessGame.TeamColor.WHITE)
+            {
+                BoardUI.callWhiteBoard(OUT, chessBoard, null);
+            }
+            else // Observer
+            {
+                BoardUI.callWhiteBoard(OUT, chessBoard, null);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    public static void makeMove()
+    public  void makeMove()
     {
-        OUT.println("Please tell me which move you want to make ?");
+        OUT.println("Please tell me which position you want to make ?");
+        int row = SCANNER.nextInt();
+        int column = SCANNER.nextInt();
+        ChessPosition chessPosition = new ChessPosition(row, column);
+        OUT.println("Please tell me which position you want to go ?");
+        int rowDes = SCANNER.nextInt();
+        int colDes = SCANNER.nextInt();
+        ChessPosition chessPositionDes = new ChessPosition(rowDes, colDes);
+        ChessGame chessGameRecord = webSocketFacade.chessGame;
+        ChessBoard board = chessGameRecord.getBoard();
+        ChessPiece targetPiece = board.getPiece(chessPositionDes);
+        ChessPiece startPiece = board.getPiece(chessPosition);
+        if (startPiece.getPieceType() == ChessPiece.PieceType.PAWN)
+        {
+            if (chessPositionDes.getRow() == 7 || chessPositionDes.getRow() == 8) // pawn promote // do we need to care about the promote situation?
+            {
+                ChessMove theMove = new ChessMove(chessPosition, chessPositionDes, );
+            }
+        }
+
 
     }
 
